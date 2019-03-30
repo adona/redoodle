@@ -1,0 +1,25 @@
+{
+  "name": "redoodle",
+  "version": "1.0.0",
+  "description": "Implement a basic copy of Doodle as a Django + ReactJS exercise.",
+  "main": "index.js",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-react-app": "^3.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adona/redoodle.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adona/redoodle/issues"
+  },
+  "homepage": "https://github.com/adona/redoodle#readme"
+}
