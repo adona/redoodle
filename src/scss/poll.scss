@@ -1,0 +1,144 @@
+* {
+  box-sizing: border-box;
+}
+
+$poll-table-column-width: 72px;
+$poll-table-row-height: 45px;
+
+
+#main {
+  width: 500px;
+  margin: 20px auto;
+  background: rgb(55,152,212);
+}
+
+#poll-container {
+  padding: 40px 0px;
+}
+
+#poll-header {
+  color: white;
+  text-align: center;
+
+  h1 {
+    margin: 0;
+    font-style: italic;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+}
+
+#poll-main {
+  background: rgb(250,247,245);
+  border-radius: 6px;
+  margin: 20px;
+  padding: 20px;
+}
+
+#poll-details {
+  .fas, .far {
+    width: 20px;
+    margin-right: 10px;
+    text-align: center;
+    color: #5d6e79;
+    font-size: 0.875rem;
+  }
+}
+
+#poll-responses-container {
+  margin-top: 40px;
+
+  table {
+    background: white;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid lightgrey;
+  }
+
+  th {
+    font-weight: normal;
+
+    .poll-header-month {
+      font-size: 0.875rem;
+    }
+
+    .poll-header-day {
+      font-size: 1.625rem;
+    }
+
+    .poll-header-weekday, .poll-header-time {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+  }
+
+  .row-editing {
+    background:  #abd4ed;
+  }
+
+  td {
+    width: $poll-table-column-width;
+    height: $poll-table-row-height;
+    text-align: center;
+  }
+
+  td:first-child div {
+    width: 200px;
+    height: 100%;
+    text-align: left;
+
+    .poll-respondent-icon, .poll-delete-respondent {
+      display: inline-block;
+      width: 30px;
+      line-height: $poll-table-row-height;
+      vertical-align: top;
+      text-align: right;
+    }
+
+    .poll-respondent-name {
+      display: inline-block;
+      width: calc(100% - 90px);
+      margin: 0px 10px;
+      line-height: $poll-table-row-height;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .poll-edit-respondent {
+      display: inline-block;
+      width: 40px;
+      line-height: $poll-table-row-height;
+      vertical-align: top;
+      text-align: center;
+      opacity: 0;
+    }
+
+    .poll-edit-respondent:hover{
+      opacity: 1;
+      background: #eaf4fb;
+    }
+
+    // Editing
+
+    .poll-respondent-name-editing {
+      width: calc(100% - 50px);
+      height: calc(100% - 10px);
+      margin: 5px 10px;
+      padding: 0 10px;
+      border-radius: 6px;
+      border: 0px;
+    }
+
+    .poll-respondent-name-editing:focus {
+      outline: 0;
+      border: 2px solid #2475a8;
+      ;
+    }
+  }
+}

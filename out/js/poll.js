@@ -119,6 +119,8 @@ var PollDetails = function (_React$Component4) {
           "p",
           null,
           " ",
+          React.createElement("i", { className: "fas fa-map-marker-alt" }),
+          " ",
           this.props.location,
           " "
         ),
@@ -126,14 +128,22 @@ var PollDetails = function (_React$Component4) {
           "p",
           null,
           " ",
+          React.createElement("i", { className: "fas fa-align-left" }),
+          " ",
           this.props.notes,
           " "
         ),
         React.createElement(
           "p",
           null,
+          " ",
+          React.createElement("i", { className: "far fa-clock" }),
           " All times displayed in ",
-          this.props.timezone,
+          React.createElement(
+            "b",
+            null,
+            this.props.timezone
+          ),
           " "
         )
       );
@@ -153,7 +163,7 @@ var PollResponsesContainer = function (_React$Component5) {
 
     _this5.state = {
       respondents: props.poll.respondents,
-      idxEditing: null
+      idxEditing: 0
     };
     _this5.handleStartEditing = _this5.handleStartEditing.bind(_this5);
     _this5.handleNameChange = _this5.handleNameChange.bind(_this5);
@@ -312,6 +322,7 @@ var PollResponseRow = function (_React$Component7) {
     _this8.handleStartEditing = _this8.handleStartEditing.bind(_this8);
     _this8.handleNameChange = _this8.handleNameChange.bind(_this8);
     _this8.handleAvailabilityChange = _this8.handleAvailabilityChange.bind(_this8);
+    _this8.nameInput = React.createRef();
     return _this8;
   }
 
@@ -337,37 +348,8 @@ var PollResponseRow = function (_React$Component7) {
   }, {
     key: "render",
     value: function render() {
-      var _this9 = this;
-
       var respondent = this.props.respondent;
-      if (this.props.isEditing) {
-        return React.createElement(
-          "tr",
-          null,
-          React.createElement(
-            "td",
-            null,
-            React.createElement("input", {
-              type: "text",
-              value: respondent.name,
-              onChange: this.handleNameChange
-            })
-          ),
-          respondent.responses.map(function (response, dateIdx) {
-            return React.createElement(
-              "td",
-              { key: dateIdx },
-              React.createElement("input", {
-                type: "text",
-                value: response,
-                onChange: function onChange(e) {
-                  return _this9.handleAvailabilityChange(dateIdx, e);
-                }
-              })
-            );
-          })
-        );
-      } else {
+      if (!this.props.isEditing) {
         return React.createElement(
           "tr",
           null,
@@ -376,14 +358,14 @@ var PollResponseRow = function (_React$Component7) {
             null,
             React.createElement(
               "div",
-              { className: "poll-respondent-name" },
-              respondent.name
-            ),
-            React.createElement(
-              "div",
-              { className: "poll-edit-respondent", onClick: this.handleStartEditing
-              },
-              "(Edit)"
+              null,
+              React.createElement("div", { className: "poll-respondent-icon fas fa-user-circle" }),
+              React.createElement(
+                "div",
+                { className: "poll-respondent-name" },
+                respondent.name
+              ),
+              React.createElement("div", { className: "poll-edit-respondent fas fa-pen", onClick: this.handleStartEditing })
             )
           ),
           respondent.responses.map(function (response, idx) {
@@ -394,7 +376,45 @@ var PollResponseRow = function (_React$Component7) {
             );
           })
         );
+      } else {
+        return React.createElement(
+          "tr",
+          { className: "row-editing" },
+          React.createElement(
+            "td",
+            null,
+            React.createElement(
+              "div",
+              null,
+              React.createElement("div", { className: "poll-delete-respondent fas fa-trash" }),
+              React.createElement("input", {
+                className: "poll-respondent-name-editing",
+                ref: this.nameInput,
+                type: "text",
+                value: respondent.name,
+                onChange: this.handleNameChange
+              })
+            )
+          ),
+          respondent.responses.map(function (response, dateIdx) {
+            return React.createElement(
+              "td",
+              { key: dateIdx },
+              response
+            );
+          })
+        );
       }
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      if (this.props.isEditing) this.nameInput.current.focus();
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      if (this.props.isEditing) this.nameInput.current.focus();
     }
   }]);
 

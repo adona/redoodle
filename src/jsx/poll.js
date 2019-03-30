@@ -50,9 +50,9 @@ class PollDetails extends React.Component {
   render() {
     return (
       <div id="poll-details">
-        <p> {this.props.location} </p>
-        <p> {this.props.notes} </p>
-        <p> All times displayed in {this.props.timezone} </p>
+        <p> <i className="fas fa-map-marker-alt"></i> {this.props.location} </p>
+        <p> <i className="fas fa-align-left"></i> {this.props.notes} </p>
+        <p> <i className="far fa-clock"></i> All times displayed in <b>{this.props.timezone}</b> </p>
       </div>
     );
   }
@@ -63,7 +63,7 @@ class PollResponsesContainer extends React.Component {
     super(props);
     this.state = {
       respondents: props.poll.respondents,
-      idxEditing: null
+      idxEditing: 0
     };
     this.handleStartEditing = this.handleStartEditing.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
@@ -156,6 +156,7 @@ class PollResponseRow extends React.Component {
     this.handleStartEditing = this.handleStartEditing.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleAvailabilityChange = this.handleAvailabilityChange.bind(this);
+    this.nameInput = React.createRef();
   }
 
   handleStartEditing(e) {
@@ -176,37 +177,15 @@ class PollResponseRow extends React.Component {
 
   render() {
     var respondent = this.props.respondent;
-    if (this.props.isEditing) {
+    if (!this.props.isEditing) {
       return(
         <tr>
           <td>
-            <input
-              type="text"
-              value={respondent.name}
-              onChange={this.handleNameChange}
-            />
-          </td>
-          {
-            respondent.responses.map(
-              (response, dateIdx) => (
-                <td key={dateIdx}>
-                  <input
-                    type="text"
-                    value={response}
-                    onChange={(e) => this.handleAvailabilityChange(dateIdx, e)}
-                  />
-                </td>
-              ))
-          }
-        </tr>
-      )
-    } else {
-      return(
-        <tr>
-          <td>
-            <div className="poll-respondent-name">{respondent.name}</div>
-            <div className="poll-edit-respondent" onClick={this.handleStartEditing}
-            >(Edit)</div>
+            <div>
+              <div className="poll-respondent-icon fas fa-user-circle"></div>
+              <div className="poll-respondent-name">{respondent.name}</div>
+              <div className="poll-edit-respondent fas fa-pen" onClick={this.handleStartEditing}></div>
+            </div>
           </td>
           {
             respondent.responses.map(
@@ -214,7 +193,47 @@ class PollResponseRow extends React.Component {
           }
         </tr>
       );
+    } else {
+      return(
+        <tr className="row-editing">
+          <td>
+            <div>
+              <div className="poll-delete-respondent fas fa-trash"></div>
+              <input
+                className="poll-respondent-name-editing"
+                ref={this.nameInput}
+                type="text"
+                value={respondent.name}
+                onChange={this.handleNameChange}
+              />
+            </div>
+          </td>
+          {
+            respondent.responses.map(
+              (response, dateIdx) => (
+                <td key={dateIdx}>
+                  {response}
+                    {/* <input
+                      type="text"
+                      value={response}
+                      onChange={(e) => this.handleAvailabilityChange(dateIdx, e)}
+                    /> */}
+                </td>
+              ))
+          }
+        </tr>
+      )
     }
+  }
+
+  componentDidMount() {
+    if (this.props.isEditing)
+      this.nameInput.current.focus();
+  }
+
+  componentDidUpdate() {
+    if (this.props.isEditing)
+      this.nameInput.current.focus();
   }
 }
 
