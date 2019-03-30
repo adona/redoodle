@@ -77,16 +77,6 @@ $poll-table-row-height: 45px;
     }
   }
 
-  .row-editing {
-    background:  #abd4ed;
-  }
-
-  td {
-    width: $poll-table-column-width;
-    height: $poll-table-row-height;
-    text-align: center;
-  }
-
   td:first-child div {
     width: 200px;
     height: 100%;
@@ -141,4 +131,50 @@ $poll-table-row-height: 45px;
       ;
     }
   }
+
+  td {
+    width: $poll-table-column-width;
+    height: $poll-table-row-height;
+    text-align: center;
+  }
+
+  td[response="Y"] {
+    background: #cde9a1;
+    color: #75a527;
+  }
+
+  td[response="M"] {
+    background: #fcf5c5;
+    color: #dabe0b;
+  }
+
+  td[response="N"] {
+    background: #fcede9;
+  }
+
+  .row-editing {
+    background:  #abd4ed;
+
+    td {
+      background: #abd4ed;
+
+      input[type="checkbox"] {
+        -webkit-appearance: none;
+        width: 25px;
+        height: 25px;
+        background-color: white;
+        font-size: 1rem;
+      }
+
+      input[type="checkbox"][response="Y"] {
+        padding: 6px 4.5px 4px;
+        color: #75a527;
+      }
+      input[type="checkbox"][response="M"] {
+        padding: 6px 3.75px 4px 5.25px;
+        color: #dabe0b;
+      }
+    }
+  }
+
 }

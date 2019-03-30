@@ -171,12 +171,20 @@ class PollResponseRow extends React.Component {
 
   handleAvailabilityChange(dateIdx, e) {
     const respondentIdx = this.props.idx;
-    const newAvailability = e.target.value;
+    const previousAvailability = $(e.target).attr("response");
+    const newAvailability = previousAvailability == "Y" ? "M" : (previousAvailability == "M" ? "N" : "Y");
     this.props.onAvailabilityChange(respondentIdx, dateIdx, newAvailability);
   }
 
   render() {
-    var respondent = this.props.respondent;
+    const respondent = this.props.respondent;
+    const symbol_from_response = function(response) {
+      if (response=="Y")
+        return "fas fa-check";
+      if (response=="M")
+        return "fas fa-question";
+      return "";
+    }
     if (!this.props.isEditing) {
       return(
         <tr>
@@ -189,7 +197,10 @@ class PollResponseRow extends React.Component {
           </td>
           {
             respondent.responses.map(
-              (response, idx) => (<td key={idx}>{response}</td>))
+              (response, dateIdx) => (
+                <td key={dateIdx} response={response}>
+                  {<div className={symbol_from_response(response)}></div>}
+                </td>))
           }
         </tr>
       );
@@ -211,13 +222,13 @@ class PollResponseRow extends React.Component {
           {
             respondent.responses.map(
               (response, dateIdx) => (
-                <td key={dateIdx}>
-                  {response}
-                    {/* <input
-                      type="text"
-                      value={response}
-                      onChange={(e) => this.handleAvailabilityChange(dateIdx, e)}
-                    /> */}
+                <td key={dateIdx} response={response}>
+                  <input
+                    type="checkbox"
+                    response={response}
+                    className={symbol_from_response(response)}
+                    onChange={(e) => this.handleAvailabilityChange(dateIdx, e)}
+                  />
                 </td>
               ))
           }

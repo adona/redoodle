@@ -342,13 +342,21 @@ var PollResponseRow = function (_React$Component7) {
     key: "handleAvailabilityChange",
     value: function handleAvailabilityChange(dateIdx, e) {
       var respondentIdx = this.props.idx;
-      var newAvailability = e.target.value;
+      var previousAvailability = $(e.target).attr("response");
+      var newAvailability = previousAvailability == "Y" ? "M" : previousAvailability == "M" ? "N" : "Y";
       this.props.onAvailabilityChange(respondentIdx, dateIdx, newAvailability);
     }
   }, {
     key: "render",
     value: function render() {
+      var _this9 = this;
+
       var respondent = this.props.respondent;
+      var symbol_from_response = function symbol_from_response(response) {
+        if (response == "Y") return "fas fa-check";
+        if (response == "M") return "fas fa-question";
+        return "";
+      };
       if (!this.props.isEditing) {
         return React.createElement(
           "tr",
@@ -368,11 +376,11 @@ var PollResponseRow = function (_React$Component7) {
               React.createElement("div", { className: "poll-edit-respondent fas fa-pen", onClick: this.handleStartEditing })
             )
           ),
-          respondent.responses.map(function (response, idx) {
+          respondent.responses.map(function (response, dateIdx) {
             return React.createElement(
               "td",
-              { key: idx },
-              response
+              { key: dateIdx, response: response },
+              React.createElement("div", { className: symbol_from_response(response) })
             );
           })
         );
@@ -399,8 +407,15 @@ var PollResponseRow = function (_React$Component7) {
           respondent.responses.map(function (response, dateIdx) {
             return React.createElement(
               "td",
-              { key: dateIdx },
-              response
+              { key: dateIdx, response: response },
+              React.createElement("input", {
+                type: "checkbox",
+                response: response,
+                className: symbol_from_response(response),
+                onChange: function onChange(e) {
+                  return _this9.handleAvailabilityChange(dateIdx, e);
+                }
+              })
             );
           })
         );
