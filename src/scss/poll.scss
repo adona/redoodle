@@ -114,6 +114,11 @@ $light-red: #fcede9;
         width: 40px;
         padding: 0px 10px;
         color: $dark-blue;
+        cursor: pointer;
+      }
+
+      #poll-add-participant:hover {
+        background: $light-blue;
       }
     }
 
@@ -147,6 +152,7 @@ $light-red: #fcede9;
         padding-left: 12px;
         padding-right: 8px;
         opacity: 0;
+        cursor: pointer;
       }
     }
 

@@ -162,10 +162,16 @@ var PollParticipantsContainer = function (_React$Component5) {
 
     var _this5 = _possibleConstructorReturn(this, (PollParticipantsContainer.__proto__ || Object.getPrototypeOf(PollParticipantsContainer)).call(this, props));
 
+    var participants = _this5.props.participants;
+    participants.forEach(function (p, idx) {
+      return p.id = idx;
+    }); // Add unique IDs
     _this5.state = {
-      participants: props.participants,
+      participants: _this5.props.participants,
+      nextID: participants.length,
       idxEditing: null
     };
+    _this5.handleAddParticipant = _this5.handleAddParticipant.bind(_this5);
     _this5.handleStartEditing = _this5.handleStartEditing.bind(_this5);
     _this5.handleNameChange = _this5.handleNameChange.bind(_this5);
     _this5.handleAvailabilityChange = _this5.handleAvailabilityChange.bind(_this5);
@@ -174,6 +180,24 @@ var PollParticipantsContainer = function (_React$Component5) {
   }
 
   _createClass(PollParticipantsContainer, [{
+    key: "handleAddParticipant",
+    value: function handleAddParticipant() {
+      var participants = this.state.participants;
+      var newParticipant = {
+        name: "",
+        id: this.state.nextID,
+        availability: this.props.times.map(function (time) {
+          return "N";
+        })
+      };
+      participants.unshift(newParticipant);
+      this.setState({
+        participants: participants,
+        nextID: this.state.nextID + 1,
+        idxEditing: 0
+      });
+    }
+  }, {
     key: "handleStartEditing",
     value: function handleStartEditing(idx) {
       this.setState({
@@ -211,6 +235,7 @@ var PollParticipantsContainer = function (_React$Component5) {
         React.createElement(PollParticipantsTable, {
           times: this.props.times,
           participants: this.state.participants,
+          onAddParticipant: this.handleAddParticipant,
           idxEditing: this.state.idxEditing,
           onStartEditing: this.handleStartEditing,
           onNameChange: this.handleNameChange,
@@ -248,16 +273,17 @@ var PollParticipantsTable = function (_React$Component6) {
           null,
           React.createElement(PollTableSummary, {
             participants: this.props.participants,
-            times: this.props.times
+            times: this.props.times,
+            onAddParticipant: this.props.onAddParticipant
           }),
           this.props.participants.map(function (participant, idx) {
             return _this7.props.idxEditing != idx ? React.createElement(PollParticipantRow, {
-              key: idx,
+              key: participant.id,
               idx: idx,
               participant: participant,
               onStartEditing: _this7.props.onStartEditing
             }) : React.createElement(PollParticipantRowEditing, {
-              key: idx,
+              key: participant.id,
               idx: idx,
               participant: participant,
               onNameChange: _this7.props.onNameChange,
@@ -372,7 +398,11 @@ var PollTableSummary = function (_React$Component8) {
               participants.length,
               " participants"
             ),
-            React.createElement("div", { id: "poll-add-participant", className: "fas fa-plus" })
+            React.createElement("div", {
+              id: "poll-add-participant",
+              className: "fas fa-plus",
+              onClick: this.props.onAddParticipant
+            })
           )
         ),
         times.map(function (time, idx) {

@@ -62,14 +62,33 @@ class PollDetails extends React.Component {
 class PollParticipantsContainer extends React.Component {
   constructor(props) {
     super(props);
+    var participants = this.props.participants;
+    participants.forEach((p, idx) => p.id = idx); // Add unique IDs
     this.state = {
-      participants: props.participants,
-      idxEditing: null
+      participants: this.props.participants,
+      nextID: participants.length,
+      idxEditing: null,
     };
+    this.handleAddParticipant = this.handleAddParticipant.bind(this);
     this.handleStartEditing = this.handleStartEditing.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleAvailabilityChange = this.handleAvailabilityChange.bind(this);
     this.handleStopEditing = this.handleStopEditing.bind(this);
+  }
+
+  handleAddParticipant() {
+    var participants = this.state.participants;
+    const newParticipant = {
+      name: "",
+      id: this.state.nextID,
+      availability: this.props.times.map(time => "N")
+    };
+    participants.unshift(newParticipant);
+    this.setState({
+      participants: participants,
+      nextID: this.state.nextID + 1,
+      idxEditing: 0
+    });
   }
 
   handleStartEditing(idx) {
@@ -105,6 +124,7 @@ class PollParticipantsContainer extends React.Component {
         <PollParticipantsTable 
           times = {this.props.times} 
           participants = {this.state.participants}
+          onAddParticipant = {this.handleAddParticipant}
           idxEditing = {this.state.idxEditing}
           onStartEditing = {this.handleStartEditing}
           onNameChange = {this.handleNameChange}
@@ -125,17 +145,18 @@ class PollParticipantsTable extends React.Component {
           <PollTableSummary 
             participants={this.props.participants}
             times={this.props.times}
+            onAddParticipant={this.props.onAddParticipant}
           />
           {this.props.participants.map(
             (participant, idx) => ( this.props.idxEditing!=idx ? 
               <PollParticipantRow 
-                key={idx}
+                key={participant.id}
                 idx={idx}
                 participant={participant}
                 onStartEditing = {this.props.onStartEditing}
               /> : 
               <PollParticipantRowEditing 
-                key={idx}
+                key={participant.id}
                 idx={idx}
                 participant={participant}
                 onNameChange = {this.props.onNameChange}
@@ -184,7 +205,11 @@ class PollTableSummary extends React.Component {
         <td>
           <div id="poll-participants-summary">
             <div id="poll-n-participants">{participants.length} participants</div>
-            <div id="poll-add-participant" className="fas fa-plus"></div>
+            <div 
+              id="poll-add-participant" 
+              className="fas fa-plus"
+              onClick={this.props.onAddParticipant}
+            />
           </div>
         </td>
         {
