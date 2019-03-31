@@ -147,7 +147,7 @@ class PollParticipantsTable extends React.Component {
 class PollTableHeader extends React.Component {
   render() {
     return(
-      <thead>
+      <thead id="poll-table-header">
         <tr>
           <th/>
           {this.props.times.map(
@@ -180,9 +180,9 @@ class PollParticipantRow extends React.Component {
   render() {
     const participant = this.props.participant;
     return(
-      <tr>
+      <tr className="poll-participant-row" editing="false"> 
         <td>
-          <div>
+          <div className="poll-participant-details">
             <div className="poll-participant-icon fas fa-user-circle"></div>
             <div className="poll-participant-name">{participant.name}</div>
             <div className="poll-participant-edit fas fa-pen" onClick={this.handleStartEditing}></div>
@@ -191,8 +191,11 @@ class PollParticipantRow extends React.Component {
         {
           participant.availability.map(
             (response, dateIdx) => (
-              <td key={dateIdx} response={response}>
-                {<div className={symbol_from_availability(response)}></div>}
+              <td 
+                className="poll-participant-availability" 
+                key={dateIdx} 
+                response={response}>
+                  {<div className={symbol_from_availability(response)}></div>}
               </td>))
         }
       </tr>
@@ -224,12 +227,12 @@ class PollParticipantRowEditing extends React.Component {
   render() {
     const participant = this.props.participant;
     return(
-      <tr className="row-editing">
+      <tr className="poll-participant-row" editing="true">
         <td>
-          <div>
+          <div className="poll-participant-details">
             <div className="poll-participant-delete fas fa-trash"></div>
             <input
-              className="poll-participant-name-editing"
+              className="poll-participant-name-input"
               ref={this.nameInput}
               type="text"
               value={participant.name}
@@ -240,13 +243,16 @@ class PollParticipantRowEditing extends React.Component {
         {
           participant.availability.map(
             (response, dateIdx) => (
-              <td key={dateIdx} response={response}>
-                <input
-                  type="checkbox"
-                  className={"poll-availability-checkbox " + symbol_from_availability(response)}
-                  response={response}
-                  onChange={(e) => this.handleAvailabilityChange(dateIdx, e)}
-                />
+              <td 
+                className="poll-participant-availability" 
+                key={dateIdx} 
+                response={response}>
+                  <input
+                    type="checkbox"
+                    className={"poll-participant-availability-checkbox " + symbol_from_availability(response)}
+                    response={response}
+                    onChange={(e) => this.handleAvailabilityChange(dateIdx, e)}
+                  />
               </td>
             ))
         }
@@ -278,7 +284,7 @@ const POLL = {
   ],
   participants: [
     {
-      name: "Adona Iosif",
+      name: "Adona-Luiza Iosif",
       availability: ["Y", "Y"]
     },
     {

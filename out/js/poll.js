@@ -282,7 +282,7 @@ var PollTableHeader = function (_React$Component7) {
     value: function render() {
       return React.createElement(
         "thead",
-        null,
+        { id: "poll-table-header" },
         React.createElement(
           "tr",
           null,
@@ -356,13 +356,13 @@ var PollParticipantRow = function (_React$Component8) {
       var participant = this.props.participant;
       return React.createElement(
         "tr",
-        null,
+        { className: "poll-participant-row", editing: "false" },
         React.createElement(
           "td",
           null,
           React.createElement(
             "div",
-            null,
+            { className: "poll-participant-details" },
             React.createElement("div", { className: "poll-participant-icon fas fa-user-circle" }),
             React.createElement(
               "div",
@@ -375,7 +375,10 @@ var PollParticipantRow = function (_React$Component8) {
         participant.availability.map(function (response, dateIdx) {
           return React.createElement(
             "td",
-            { key: dateIdx, response: response },
+            {
+              className: "poll-participant-availability",
+              key: dateIdx,
+              response: response },
             React.createElement("div", { className: symbol_from_availability(response) })
           );
         })
@@ -423,16 +426,16 @@ var PollParticipantRowEditing = function (_React$Component9) {
       var participant = this.props.participant;
       return React.createElement(
         "tr",
-        { className: "row-editing" },
+        { className: "poll-participant-row", editing: "true" },
         React.createElement(
           "td",
           null,
           React.createElement(
             "div",
-            null,
+            { className: "poll-participant-details" },
             React.createElement("div", { className: "poll-participant-delete fas fa-trash" }),
             React.createElement("input", {
-              className: "poll-participant-name-editing",
+              className: "poll-participant-name-input",
               ref: this.nameInput,
               type: "text",
               value: participant.name,
@@ -443,10 +446,13 @@ var PollParticipantRowEditing = function (_React$Component9) {
         participant.availability.map(function (response, dateIdx) {
           return React.createElement(
             "td",
-            { key: dateIdx, response: response },
+            {
+              className: "poll-participant-availability",
+              key: dateIdx,
+              response: response },
             React.createElement("input", {
               type: "checkbox",
-              className: "poll-availability-checkbox " + symbol_from_availability(response),
+              className: "poll-participant-availability-checkbox " + symbol_from_availability(response),
               response: response,
               onChange: function onChange(e) {
                 return _this11.handleAvailabilityChange(dateIdx, e);
@@ -480,7 +486,7 @@ var POLL = {
     end: new Date(2019, 4, 3, 23, 0)
   }],
   participants: [{
-    name: "Adona Iosif",
+    name: "Adona-Luiza Iosif",
     availability: ["Y", "Y"]
   }, {
     name: "Angi",

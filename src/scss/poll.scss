@@ -4,6 +4,11 @@
 
 $poll-table-column-width: 72px;
 $poll-table-row-height: 45px;
+$light-green: #cde9a1;
+$dark-green: #75a527;
+$light-yellow: #fcf5c5;
+$dark-yellow: #dabe0b;
+$light-red: #fcede9;
 
 
 #main {
@@ -50,19 +55,19 @@ $poll-table-row-height: 45px;
 
 #poll-participants-container {
   margin-top: 40px;
+}
 
-  table {
-    background: white;
-    border-collapse: collapse;
-  }
+#poll-participants-table {
+  background: white;
+  border-collapse: collapse;
 
   th, td {
     border: 1px solid lightgrey;
   }
 
-  th {
+  #poll-table-header th {
     font-weight: normal;
-
+  
     .poll-table-header-month {
       font-size: 0.875rem;
     }
@@ -77,99 +82,88 @@ $poll-table-row-height: 45px;
     }
   }
 
-  td {
-    width: $poll-table-column-width;
-    height: $poll-table-row-height;
+  .poll-participant-details {
+    width: 250px;
+    text-align: left;
+
+    >div {
+      display: inline-block;
+      vertical-align: middle;
+      line-height: $poll-table-row-height;
+    }
+  }
+
+  .poll-participant-availability {
     text-align: center;
   }
 
-  %poll-participant-before-name {
-    display: inline-block;
-    width: 30px;
-    line-height: $poll-table-row-height;
-    vertical-align: top;
-    text-align: right;
-  }
+  .poll-participant-row[editing="false"] {
 
-  // Rows not being edited
-
-  td:first-child div {
-    width: 200px;
-    height: 100%;
-    text-align: left;
-
-    .poll-participant-icon {
-      @extend %poll-participant-before-name;
-    }
-
-    .poll-participant-name {
-      display: inline-block;
-      width: calc(100% - 90px);
-      margin: 0px 10px;
-      line-height: $poll-table-row-height;
-      text-align: left;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
-    .poll-participant-edit {
-      display: inline-block;
-      width: 40px;
-      line-height: $poll-table-row-height;
-      vertical-align: top;
-      text-align: center;
-      opacity: 0;
-    }
-  }
-
-  td:first-child:hover .poll-participant-edit {
-    opacity: 1;
-    background: #eaf4fb;
-  }
-
-  td[response="Y"] {
-    background: #cde9a1;
-    color: #75a527;
-  }
-  td[response="M"] {
-    background: #fcf5c5;
-    color: #dabe0b;
-  }
-  td[response="N"] {
-    background: #fcede9;
-  }
-
-  // Rows being edited
-
-  .row-editing {
-    background:  #abd4ed;
-
-    td:first-child div {
-
-      .poll-participant-delete {
-        @extend %poll-participant-before-name;
+    .poll-participant-details {
+      .poll-participant-icon {
+        margin-left: 15px;
+        width: 20px;
       }
 
-      .poll-participant-name-editing {
-        width: calc(100% - 50px);
-        height: calc(100% - 10px);
-        margin: 5px 10px;
-        padding: 0 10px;
+      .poll-participant-name {
+        width: calc(100% - 90px);
+        margin-left: 5px;
+        margin-right: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      .poll-participant-edit {
+        width: 40px;
+        padding-left: 12px;
+        padding-right: 8px;
+        opacity: 0;
+      }
+    }
+
+    .poll-participant-details:hover .poll-participant-edit {
+      opacity: 1;
+      background: #eaf4fb;
+    }
+
+    .poll-participant-availability[response="Y"] {
+      background: $light-green;
+      color: $dark-green;
+    }
+    .poll-participant-availability[response="M"] {
+      background: $light-yellow;
+      color: $dark-yellow;
+    }
+    .poll-participant-availability[response="N"] {
+      background: $light-red;
+    }
+  }
+
+  .poll-participant-row[editing="true"] {
+    background:  #abd4ed;
+
+    .poll-participant-details { 
+      .poll-participant-delete {
+        margin-left: 15px;
+        width: 20px;
+      }
+
+      .poll-participant-name-input {
+        width: calc(100% - 90px);
+        margin-left: 5px;
+        margin-right: 50px;
         border-radius: 6px;
         border: 0px;
       }
 
-      .poll-participant-name-editing:focus {
+      .poll-participant-name-input:focus {
         outline: 0;
         border: 2px solid #2475a8;
-        ;
       }
     }
 
-    td {
-      background: #abd4ed;
-
-      .poll-availability-checkbox {
+    .poll-participant-availability {
+      .poll-participant-availability-checkbox {
         -webkit-appearance: none;
         width: 25px;
         height: 25px;
@@ -177,17 +171,17 @@ $poll-table-row-height: 45px;
         font-size: 1rem;
       }
 
-      .poll-availability-checkbox[response="Y"] {
+      .poll-participant-availability-checkbox[response="Y"] {
         margin-top: -1px;
-        padding: 5px 4.5px 5px;
-        color: #75a527;
+        padding: 5px 4.5px;
+        color: $dark-green;
       }
-      .poll-availability-checkbox[response="M"] {
+
+      .poll-participant-availability-checkbox[response="M"] {
         margin-top: -1px;
-        padding: 5px 3.75px 5px 5.25px;
-        color: #dabe0b;
+        padding: 5px 3.5px 5px 5.5px;
+        color: $dark-yellow;
       }
     }
   }
-
 }
