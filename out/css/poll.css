@@ -162,12 +162,14 @@
 }
 
 #poll-responses-container .row-editing td .poll-availability-checkbox[response="Y"] {
-  padding: 6px 4.5px 4px;
+  margin-top: -1px;
+  padding: 7px 4.5px 3px;
   color: #75a527;
 }
 
 #poll-responses-container .row-editing td .poll-availability-checkbox[response="M"] {
-  padding: 6px 3.75px 4px 5.25px;
+  margin-top: -1px;
+  padding: 7px 3.75px 3px 5.25px;
   color: #dabe0b;
 }
 /*# sourceMappingURL=poll.css.map */
