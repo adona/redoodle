@@ -427,8 +427,8 @@ var PollResponseRowEditing = function (_React$Component8) {
             { key: dateIdx, response: response },
             React.createElement("input", {
               type: "checkbox",
+              className: "poll-availability-checkbox " + symbol_from_availability(response),
               response: response,
-              className: symbol_from_availability(response),
               onChange: function onChange(e) {
                 return _this10.handleAvailabilityChange(dateIdx, e);
               }

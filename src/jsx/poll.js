@@ -230,8 +230,8 @@ class PollResponseRowEditing extends React.Component {
               <td key={dateIdx} response={response}>
                 <input
                   type="checkbox"
+                  className={"poll-availability-checkbox " + symbol_from_availability(response)}
                   response={response}
-                  className={symbol_from_availability(response)}
                   onChange={(e) => this.handleAvailabilityChange(dateIdx, e)}
                 />
               </td>

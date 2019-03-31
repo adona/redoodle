@@ -73,18 +73,24 @@
   text-transform: uppercase;
 }
 
-#poll-responses-container td:first-child div {
-  width: 200px;
-  height: 100%;
-  text-align: left;
+#poll-responses-container td {
+  width: 72px;
+  height: 45px;
+  text-align: center;
 }
 
-#poll-responses-container td:first-child div .poll-respondent-icon, #poll-responses-container td:first-child div .poll-delete-respondent {
+#poll-responses-container td:first-child div .poll-respondent-icon, #poll-responses-container .row-editing td:first-child div .poll-delete-respondent {
   display: inline-block;
   width: 30px;
   line-height: 45px;
   vertical-align: top;
   text-align: right;
+}
+
+#poll-responses-container td:first-child div {
+  width: 200px;
+  height: 100%;
+  text-align: left;
 }
 
 #poll-responses-container td:first-child div .poll-respondent-name {
@@ -111,26 +117,6 @@
   background: #eaf4fb;
 }
 
-#poll-responses-container td:first-child div .poll-respondent-name-editing {
-  width: calc(100% - 50px);
-  height: calc(100% - 10px);
-  margin: 5px 10px;
-  padding: 0 10px;
-  border-radius: 6px;
-  border: 0px;
-}
-
-#poll-responses-container td:first-child div .poll-respondent-name-editing:focus {
-  outline: 0;
-  border: 2px solid #2475a8;
-}
-
-#poll-responses-container td {
-  width: 72px;
-  height: 45px;
-  text-align: center;
-}
-
 #poll-responses-container td[response="Y"] {
   background: #cde9a1;
   color: #75a527;
@@ -149,11 +135,25 @@
   background: #abd4ed;
 }
 
+#poll-responses-container .row-editing td:first-child div .poll-respondent-name-editing {
+  width: calc(100% - 50px);
+  height: calc(100% - 10px);
+  margin: 5px 10px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 0px;
+}
+
+#poll-responses-container .row-editing td:first-child div .poll-respondent-name-editing:focus {
+  outline: 0;
+  border: 2px solid #2475a8;
+}
+
 #poll-responses-container .row-editing td {
   background: #abd4ed;
 }
 
-#poll-responses-container .row-editing td input[type="checkbox"] {
+#poll-responses-container .row-editing td .poll-availability-checkbox {
   -webkit-appearance: none;
   width: 25px;
   height: 25px;
@@ -161,12 +161,12 @@
   font-size: 1rem;
 }
 
-#poll-responses-container .row-editing td input[type="checkbox"][response="Y"] {
+#poll-responses-container .row-editing td .poll-availability-checkbox[response="Y"] {
   padding: 6px 4.5px 4px;
   color: #75a527;
 }
 
-#poll-responses-container .row-editing td input[type="checkbox"][response="M"] {
+#poll-responses-container .row-editing td .poll-availability-checkbox[response="M"] {
   padding: 6px 3.75px 4px 5.25px;
   color: #dabe0b;
 }
