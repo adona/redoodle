@@ -163,7 +163,7 @@ var PollResponsesContainer = function (_React$Component5) {
 
     _this5.state = {
       respondents: props.poll.respondents,
-      idxEditing: 0
+      idxEditing: null
     };
     _this5.handleStartEditing = _this5.handleStartEditing.bind(_this5);
     _this5.handleNameChange = _this5.handleNameChange.bind(_this5);
@@ -275,12 +275,15 @@ var PollResponsesTable = function (_React$Component6) {
         );
       });
       var rows = this.props.respondents.map(function (respondent, idx) {
-        return React.createElement(PollResponseRow, {
+        return _this7.props.idxEditing != idx ? React.createElement(PollResponseRow, {
           key: idx,
           idx: idx,
           respondent: respondent,
-          isEditing: _this7.props.idxEditing == idx,
-          onStartEditing: _this7.props.onStartEditing,
+          onStartEditing: _this7.props.onStartEditing
+        }) : React.createElement(PollResponseRowEditing, {
+          key: idx,
+          idx: idx,
+          respondent: respondent,
           onNameChange: _this7.props.onNameChange,
           onAvailabilityChange: _this7.props.onAvailabilityChange
         });
@@ -320,9 +323,6 @@ var PollResponseRow = function (_React$Component7) {
     var _this8 = _possibleConstructorReturn(this, (PollResponseRow.__proto__ || Object.getPrototypeOf(PollResponseRow)).call(this, props));
 
     _this8.handleStartEditing = _this8.handleStartEditing.bind(_this8);
-    _this8.handleNameChange = _this8.handleNameChange.bind(_this8);
-    _this8.handleAvailabilityChange = _this8.handleAvailabilityChange.bind(_this8);
-    _this8.nameInput = React.createRef();
     return _this8;
   }
 
@@ -332,6 +332,56 @@ var PollResponseRow = function (_React$Component7) {
       this.props.onStartEditing(this.props.idx);
     }
   }, {
+    key: "render",
+    value: function render() {
+      var respondent = this.props.respondent;
+      return React.createElement(
+        "tr",
+        null,
+        React.createElement(
+          "td",
+          null,
+          React.createElement(
+            "div",
+            null,
+            React.createElement("div", { className: "poll-respondent-icon fas fa-user-circle" }),
+            React.createElement(
+              "div",
+              { className: "poll-respondent-name" },
+              respondent.name
+            ),
+            React.createElement("div", { className: "poll-edit-respondent fas fa-pen", onClick: this.handleStartEditing })
+          )
+        ),
+        respondent.responses.map(function (response, dateIdx) {
+          return React.createElement(
+            "td",
+            { key: dateIdx, response: response },
+            React.createElement("div", { className: symbol_from_availability(response) })
+          );
+        })
+      );
+    }
+  }]);
+
+  return PollResponseRow;
+}(React.Component);
+
+var PollResponseRowEditing = function (_React$Component8) {
+  _inherits(PollResponseRowEditing, _React$Component8);
+
+  function PollResponseRowEditing(props) {
+    _classCallCheck(this, PollResponseRowEditing);
+
+    var _this9 = _possibleConstructorReturn(this, (PollResponseRowEditing.__proto__ || Object.getPrototypeOf(PollResponseRowEditing)).call(this, props));
+
+    _this9.handleNameChange = _this9.handleNameChange.bind(_this9);
+    _this9.handleAvailabilityChange = _this9.handleAvailabilityChange.bind(_this9);
+    _this9.nameInput = React.createRef();
+    return _this9;
+  }
+
+  _createClass(PollResponseRowEditing, [{
     key: "handleNameChange",
     value: function handleNameChange(e) {
       var respondentIdx = this.props.idx;
@@ -349,91 +399,52 @@ var PollResponseRow = function (_React$Component7) {
   }, {
     key: "render",
     value: function render() {
-      var _this9 = this;
+      var _this10 = this;
 
       var respondent = this.props.respondent;
-      var symbol_from_response = function symbol_from_response(response) {
-        if (response == "Y") return "fas fa-check";
-        if (response == "M") return "fas fa-question";
-        return "";
-      };
-      if (!this.props.isEditing) {
-        return React.createElement(
-          "tr",
+      return React.createElement(
+        "tr",
+        { className: "row-editing" },
+        React.createElement(
+          "td",
           null,
           React.createElement(
-            "td",
+            "div",
             null,
-            React.createElement(
-              "div",
-              null,
-              React.createElement("div", { className: "poll-respondent-icon fas fa-user-circle" }),
-              React.createElement(
-                "div",
-                { className: "poll-respondent-name" },
-                respondent.name
-              ),
-              React.createElement("div", { className: "poll-edit-respondent fas fa-pen", onClick: this.handleStartEditing })
-            )
-          ),
-          respondent.responses.map(function (response, dateIdx) {
-            return React.createElement(
-              "td",
-              { key: dateIdx, response: response },
-              React.createElement("div", { className: symbol_from_response(response) })
-            );
-          })
-        );
-      } else {
-        return React.createElement(
-          "tr",
-          { className: "row-editing" },
-          React.createElement(
+            React.createElement("div", { className: "poll-delete-respondent fas fa-trash" }),
+            React.createElement("input", {
+              className: "poll-respondent-name-editing",
+              ref: this.nameInput,
+              type: "text",
+              value: respondent.name,
+              onChange: this.handleNameChange
+            })
+          )
+        ),
+        respondent.responses.map(function (response, dateIdx) {
+          return React.createElement(
             "td",
-            null,
-            React.createElement(
-              "div",
-              null,
-              React.createElement("div", { className: "poll-delete-respondent fas fa-trash" }),
-              React.createElement("input", {
-                className: "poll-respondent-name-editing",
-                ref: this.nameInput,
-                type: "text",
-                value: respondent.name,
-                onChange: this.handleNameChange
-              })
-            )
-          ),
-          respondent.responses.map(function (response, dateIdx) {
-            return React.createElement(
-              "td",
-              { key: dateIdx, response: response },
-              React.createElement("input", {
-                type: "checkbox",
-                response: response,
-                className: symbol_from_response(response),
-                onChange: function onChange(e) {
-                  return _this9.handleAvailabilityChange(dateIdx, e);
-                }
-              })
-            );
-          })
-        );
-      }
+            { key: dateIdx, response: response },
+            React.createElement("input", {
+              type: "checkbox",
+              response: response,
+              className: symbol_from_availability(response),
+              onChange: function onChange(e) {
+                return _this10.handleAvailabilityChange(dateIdx, e);
+              }
+            })
+          );
+        })
+      );
     }
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      if (this.props.isEditing) this.nameInput.current.focus();
-    }
-  }, {
-    key: "componentDidUpdate",
-    value: function componentDidUpdate() {
-      if (this.props.isEditing) this.nameInput.current.focus();
+      this.nameInput.current.focus();
     }
   }]);
 
-  return PollResponseRow;
+  return PollResponseRowEditing;
 }(React.Component);
 
 var POLL = {
@@ -477,4 +488,10 @@ function time_to_string(date) {
   }
   var time_string = hour + ":" + minute.toString().padStart(2, '0') + " " + period;
   return time_string;
+}
+
+function symbol_from_availability(availability) {
+  if (availability == "Y") return "fas fa-check";
+  if (availability == "M") return "fas fa-question";
+  return "";
 }

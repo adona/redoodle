@@ -63,7 +63,7 @@ class PollResponsesContainer extends React.Component {
     super(props);
     this.state = {
       respondents: props.poll.respondents,
-      idxEditing: 0
+      idxEditing: null
     };
     this.handleStartEditing = this.handleStartEditing.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
@@ -116,7 +116,7 @@ class PollResponsesContainer extends React.Component {
 
 class PollResponsesTable extends React.Component {
   render() {
-    var header_columns = this.props.times.map(
+    const header_columns = this.props.times.map(
       (time, idx) => (
         <th key = {idx} >
           <span className="poll-header-month">{ MONTH_NAMES[time.start.getMonth()].slice(0,3) } </span><br/> 
@@ -127,14 +127,18 @@ class PollResponsesTable extends React.Component {
         </th>
       )
     );
-    var rows = this.props.respondents.map(
-      (respondent, idx) => (
+    const rows = this.props.respondents.map(
+      (respondent, idx) => ( this.props.idxEditing!=idx ? 
         <PollResponseRow 
           key={idx}
           idx={idx}
           respondent={respondent}
-          isEditing={this.props.idxEditing==idx}
           onStartEditing = {this.props.onStartEditing}
+        /> : 
+        <PollResponseRowEditing 
+          key={idx}
+          idx={idx}
+          respondent={respondent}
           onNameChange = {this.props.onNameChange}
           onAvailabilityChange = {this.props.onAvailabilityChange}
         />));
@@ -154,13 +158,41 @@ class PollResponseRow extends React.Component {
   constructor(props) {
     super(props);
     this.handleStartEditing = this.handleStartEditing.bind(this);
-    this.handleNameChange = this.handleNameChange.bind(this);
-    this.handleAvailabilityChange = this.handleAvailabilityChange.bind(this);
-    this.nameInput = React.createRef();
   }
 
   handleStartEditing(e) {
     this.props.onStartEditing(this.props.idx);
+  }
+
+  render() {
+    const respondent = this.props.respondent;
+    return(
+      <tr>
+        <td>
+          <div>
+            <div className="poll-respondent-icon fas fa-user-circle"></div>
+            <div className="poll-respondent-name">{respondent.name}</div>
+            <div className="poll-edit-respondent fas fa-pen" onClick={this.handleStartEditing}></div>
+          </div>
+        </td>
+        {
+          respondent.responses.map(
+            (response, dateIdx) => (
+              <td key={dateIdx} response={response}>
+                {<div className={symbol_from_availability(response)}></div>}
+              </td>))
+        }
+      </tr>
+    );
+  }
+}
+
+class PollResponseRowEditing extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleAvailabilityChange = this.handleAvailabilityChange.bind(this);
+    this.nameInput = React.createRef();
   }
 
   handleNameChange(e) {
@@ -178,75 +210,42 @@ class PollResponseRow extends React.Component {
 
   render() {
     const respondent = this.props.respondent;
-    const symbol_from_response = function(response) {
-      if (response=="Y")
-        return "fas fa-check";
-      if (response=="M")
-        return "fas fa-question";
-      return "";
-    }
-    if (!this.props.isEditing) {
-      return(
-        <tr>
-          <td>
-            <div>
-              <div className="poll-respondent-icon fas fa-user-circle"></div>
-              <div className="poll-respondent-name">{respondent.name}</div>
-              <div className="poll-edit-respondent fas fa-pen" onClick={this.handleStartEditing}></div>
-            </div>
-          </td>
-          {
-            respondent.responses.map(
-              (response, dateIdx) => (
-                <td key={dateIdx} response={response}>
-                  {<div className={symbol_from_response(response)}></div>}
-                </td>))
-          }
-        </tr>
-      );
-    } else {
-      return(
-        <tr className="row-editing">
-          <td>
-            <div>
-              <div className="poll-delete-respondent fas fa-trash"></div>
-              <input
-                className="poll-respondent-name-editing"
-                ref={this.nameInput}
-                type="text"
-                value={respondent.name}
-                onChange={this.handleNameChange}
-              />
-            </div>
-          </td>
-          {
-            respondent.responses.map(
-              (response, dateIdx) => (
-                <td key={dateIdx} response={response}>
-                  <input
-                    type="checkbox"
-                    response={response}
-                    className={symbol_from_response(response)}
-                    onChange={(e) => this.handleAvailabilityChange(dateIdx, e)}
-                  />
-                </td>
-              ))
-          }
-        </tr>
-      )
-    }
+    return(
+      <tr className="row-editing">
+        <td>
+          <div>
+            <div className="poll-delete-respondent fas fa-trash"></div>
+            <input
+              className="poll-respondent-name-editing"
+              ref={this.nameInput}
+              type="text"
+              value={respondent.name}
+              onChange={this.handleNameChange}
+            />
+          </div>
+        </td>
+        {
+          respondent.responses.map(
+            (response, dateIdx) => (
+              <td key={dateIdx} response={response}>
+                <input
+                  type="checkbox"
+                  response={response}
+                  className={symbol_from_availability(response)}
+                  onChange={(e) => this.handleAvailabilityChange(dateIdx, e)}
+                />
+              </td>
+            ))
+        }
+      </tr>
+    )
   }
 
   componentDidMount() {
-    if (this.props.isEditing)
-      this.nameInput.current.focus();
-  }
-
-  componentDidUpdate() {
-    if (this.props.isEditing)
-      this.nameInput.current.focus();
+    this.nameInput.current.focus();
   }
 }
+
 
 const POLL = {
   name: "GoT Marathon!!!",
@@ -298,6 +297,14 @@ function time_to_string(date) {
     period = "pm";
     hour -= 12;
   }
-  var time_string = hour + ":" + minute.toString().padStart(2, '0') + " " + period;
+  const time_string = hour + ":" + minute.toString().padStart(2, '0') + " " + period;
   return time_string;
+}
+
+function symbol_from_availability(availability) {
+  if (availability=="Y")
+    return "fas fa-check";
+  if (availability=="M")
+    return "fas fa-question";
+  return "";
 }
