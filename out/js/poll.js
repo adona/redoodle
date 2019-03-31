@@ -175,6 +175,7 @@ var PollParticipantsContainer = function (_React$Component5) {
     _this5.handleStartEditing = _this5.handleStartEditing.bind(_this5);
     _this5.handleNameChange = _this5.handleNameChange.bind(_this5);
     _this5.handleAvailabilityChange = _this5.handleAvailabilityChange.bind(_this5);
+    _this5.handleDeleteParticipant = _this5.handleDeleteParticipant.bind(_this5);
     _this5.handleStopEditing = _this5.handleStopEditing.bind(_this5);
     return _this5;
   }
@@ -223,6 +224,16 @@ var PollParticipantsContainer = function (_React$Component5) {
       });
     }
   }, {
+    key: "handleDeleteParticipant",
+    value: function handleDeleteParticipant(participantIdx) {
+      var participants = this.state.participants;
+      participants.splice(participantIdx, 1);
+      this.setState({
+        participants: participants,
+        idxEditing: null
+      });
+    }
+  }, {
     key: "handleStopEditing",
     value: function handleStopEditing() {}
   }, {
@@ -239,7 +250,8 @@ var PollParticipantsContainer = function (_React$Component5) {
           idxEditing: this.state.idxEditing,
           onStartEditing: this.handleStartEditing,
           onNameChange: this.handleNameChange,
-          onAvailabilityChange: this.handleAvailabilityChange
+          onAvailabilityChange: this.handleAvailabilityChange,
+          onDeleteParticipant: this.handleDeleteParticipant
         })
       )
       // TODO: Add update button
@@ -287,7 +299,8 @@ var PollParticipantsTable = function (_React$Component6) {
               idx: idx,
               participant: participant,
               onNameChange: _this7.props.onNameChange,
-              onAvailabilityChange: _this7.props.onAvailabilityChange
+              onAvailabilityChange: _this7.props.onAvailabilityChange,
+              onDeleteParticipant: _this7.props.onDeleteParticipant
             });
           })
         )
@@ -523,7 +536,10 @@ var PollParticipantRowEditing = function (_React$Component10) {
           React.createElement(
             "div",
             { className: "poll-participant-details" },
-            React.createElement("div", { className: "poll-participant-delete fas fa-trash" }),
+            React.createElement("div", {
+              className: "poll-participant-delete fas fa-trash",
+              onClick: this.props.onDeleteParticipant
+            }),
             React.createElement("input", {
               className: "poll-participant-name-input",
               ref: this.nameInput,

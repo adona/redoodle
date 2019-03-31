@@ -73,6 +73,7 @@ class PollParticipantsContainer extends React.Component {
     this.handleStartEditing = this.handleStartEditing.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleAvailabilityChange = this.handleAvailabilityChange.bind(this);
+    this.handleDeleteParticipant = this.handleDeleteParticipant.bind(this);
     this.handleStopEditing = this.handleStopEditing.bind(this);
   }
 
@@ -113,6 +114,15 @@ class PollParticipantsContainer extends React.Component {
     });
   }
 
+  handleDeleteParticipant(participantIdx) {
+    var participants = this.state.participants;
+    participants.splice(participantIdx, 1);
+    this.setState({
+      participants: participants,
+      idxEditing: null
+    });
+  }
+
   handleStopEditing() {
 
   }
@@ -129,6 +139,7 @@ class PollParticipantsContainer extends React.Component {
           onStartEditing = {this.handleStartEditing}
           onNameChange = {this.handleNameChange}
           onAvailabilityChange = {this.handleAvailabilityChange}
+          onDeleteParticipant = {this.handleDeleteParticipant}
         />
       </div>
       // TODO: Add update button
@@ -161,6 +172,7 @@ class PollParticipantsTable extends React.Component {
                 participant={participant}
                 onNameChange = {this.props.onNameChange}
                 onAvailabilityChange = {this.props.onAvailabilityChange}
+                onDeleteParticipant = {this.props.onDeleteParticipant}
               />))
             }
         </tbody>
@@ -289,7 +301,10 @@ class PollParticipantRowEditing extends React.Component {
       <tr className="poll-participant-row" editing="true">
         <td>
           <div className="poll-participant-details">
-            <div className="poll-participant-delete fas fa-trash"></div>
+            <div 
+              className="poll-participant-delete fas fa-trash"
+              onClick={this.props.onDeleteParticipant}
+            ></div>
             <input
               className="poll-participant-name-input"
               ref={this.nameInput}

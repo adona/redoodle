@@ -162,6 +162,7 @@
 #poll-participants-table .poll-participant-row[editing="true"] .poll-participant-details .poll-participant-delete {
   margin-left: 15px;
   width: 20px;
+  cursor: pointer;
 }
 
 #poll-participants-table .poll-participant-row[editing="true"] .poll-participant-details .poll-participant-name-input {
