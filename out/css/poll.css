@@ -112,7 +112,7 @@
   opacity: 0;
 }
 
-#poll-responses-container td:first-child div .poll-edit-respondent:hover {
+#poll-responses-container td:first-child:hover .poll-edit-respondent {
   opacity: 1;
   background: #eaf4fb;
 }

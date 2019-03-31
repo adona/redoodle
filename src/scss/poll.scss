@@ -120,11 +120,11 @@ $poll-table-row-height: 45px;
       text-align: center;
       opacity: 0;
     }
+  }
 
-    .poll-edit-respondent:hover{
-      opacity: 1;
-      background: #eaf4fb;
-    }
+  td:first-child:hover .poll-edit-respondent{
+    opacity: 1;
+    background: #eaf4fb;
   }
 
   td[response="Y"] {
