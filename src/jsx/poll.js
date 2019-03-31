@@ -122,6 +122,10 @@ class PollParticipantsTable extends React.Component {
       <table id="poll-participants-table">
         <PollTableHeader times={this.props.times} />
         <tbody>
+          <PollTableSummary 
+            participants={this.props.participants}
+            times={this.props.times}
+          />
           {this.props.participants.map(
             (participant, idx) => ( this.props.idxEditing!=idx ? 
               <PollParticipantRow 
@@ -163,6 +167,36 @@ class PollTableHeader extends React.Component {
           }
         </tr>
       </thead>
+    );
+  }
+}
+
+class PollTableSummary extends React.Component {
+  render() {
+    const participants = this.props.participants;
+    const times = this.props.times;
+    const totals = times.map((time, idx) =>
+      sum(participants.map(p => p.availability[idx] != "N"))
+    );
+
+    return(
+      <tr id="poll-table-summary">
+        <td>
+          <div id="poll-participants-summary">
+            <div id="poll-n-participants">{participants.length} participants</div>
+            <div id="poll-add-participant" className="fas fa-plus"></div>
+          </div>
+        </td>
+        {
+          times.map((time, idx) => 
+            <td key={idx}>
+              <div id="poll-availability-summary" className="fas fa-check">
+                {totals[idx]}
+              </div> 
+            </td>
+          )
+        }
+      </tr>
     );
   }
 }
@@ -326,4 +360,8 @@ function symbol_from_availability(availability) {
   if (availability=="M")
     return "fas fa-question";
   return "";
+}
+
+function sum(arr) {
+  return arr.reduce((a, b) => a+b, 0);
 }

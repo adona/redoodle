@@ -4,6 +4,9 @@
 
 $poll-table-column-width: 72px;
 $poll-table-row-height: 45px;
+$light-blue: #eaf4fb;
+$medium-blue: #abd4ed;
+$dark-blue: #3798d4;
 $light-green: #cde9a1;
 $dark-green: #75a527;
 $light-yellow: #fcf5c5;
@@ -14,7 +17,7 @@ $light-red: #fcede9;
 #main {
   width: 500px;
   margin: 20px auto;
-  background: rgb(55,152,212);
+  background: $dark-blue;
 }
 
 #poll-container {
@@ -82,7 +85,7 @@ $light-red: #fcede9;
     }
   }
 
-  .poll-participant-details {
+  #poll-participants-summary, .poll-participant-details {
     width: 250px;
     text-align: left;
 
@@ -93,9 +96,34 @@ $light-red: #fcede9;
     }
   }
 
-  .poll-participant-availability {
+  #poll-availability-summary, .poll-participant-availability {
     width: $poll-table-column-width;
     text-align: center;
+  }
+
+  .poll-participant-availability {
+    font-size: 1.4rem;
+  }
+
+  #poll-table-summary {
+    #poll-participants-summary {
+      #poll-n-participants {
+        margin-left: 15px;
+        width: calc(100% - 55px);
+        color: grey;
+        font-weight: bold;
+      }
+
+      #poll-add-participant {
+        width: 40px;
+        padding: 0px 10px;
+        color: $dark-blue;
+      }
+    }
+
+    #poll-availability-summary {
+      color: $dark-blue;
+    }
   }
 
   .poll-participant-row[editing="false"] {
@@ -124,7 +152,7 @@ $light-red: #fcede9;
 
     .poll-participant-details:hover .poll-participant-edit {
       opacity: 1;
-      background: #eaf4fb;
+      background: $light-blue;
     }
 
     .poll-participant-availability[response="Y"] {
@@ -141,7 +169,7 @@ $light-red: #fcede9;
   }
 
   .poll-participant-row[editing="true"] {
-    background:  #abd4ed;
+    background: $medium-blue;
 
     .poll-participant-details { 
       .poll-participant-delete {

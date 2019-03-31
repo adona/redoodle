@@ -246,6 +246,10 @@ var PollParticipantsTable = function (_React$Component6) {
         React.createElement(
           "tbody",
           null,
+          React.createElement(PollTableSummary, {
+            participants: this.props.participants,
+            times: this.props.times
+          }),
           this.props.participants.map(function (participant, idx) {
             return _this7.props.idxEditing != idx ? React.createElement(PollParticipantRow, {
               key: idx,
@@ -333,16 +337,72 @@ var PollTableHeader = function (_React$Component7) {
   return PollTableHeader;
 }(React.Component);
 
-var PollParticipantRow = function (_React$Component8) {
-  _inherits(PollParticipantRow, _React$Component8);
+var PollTableSummary = function (_React$Component8) {
+  _inherits(PollTableSummary, _React$Component8);
+
+  function PollTableSummary() {
+    _classCallCheck(this, PollTableSummary);
+
+    return _possibleConstructorReturn(this, (PollTableSummary.__proto__ || Object.getPrototypeOf(PollTableSummary)).apply(this, arguments));
+  }
+
+  _createClass(PollTableSummary, [{
+    key: "render",
+    value: function render() {
+      var participants = this.props.participants;
+      var times = this.props.times;
+      var totals = times.map(function (time, idx) {
+        return sum(participants.map(function (p) {
+          return p.availability[idx] != "N";
+        }));
+      });
+
+      return React.createElement(
+        "tr",
+        { id: "poll-table-summary" },
+        React.createElement(
+          "td",
+          null,
+          React.createElement(
+            "div",
+            { id: "poll-participants-summary" },
+            React.createElement(
+              "div",
+              { id: "poll-n-participants" },
+              participants.length,
+              " participants"
+            ),
+            React.createElement("div", { id: "poll-add-participant", className: "fas fa-plus" })
+          )
+        ),
+        times.map(function (time, idx) {
+          return React.createElement(
+            "td",
+            { key: idx },
+            React.createElement(
+              "div",
+              { id: "poll-availability-summary", className: "fas fa-check" },
+              totals[idx]
+            )
+          );
+        })
+      );
+    }
+  }]);
+
+  return PollTableSummary;
+}(React.Component);
+
+var PollParticipantRow = function (_React$Component9) {
+  _inherits(PollParticipantRow, _React$Component9);
 
   function PollParticipantRow(props) {
     _classCallCheck(this, PollParticipantRow);
 
-    var _this9 = _possibleConstructorReturn(this, (PollParticipantRow.__proto__ || Object.getPrototypeOf(PollParticipantRow)).call(this, props));
+    var _this10 = _possibleConstructorReturn(this, (PollParticipantRow.__proto__ || Object.getPrototypeOf(PollParticipantRow)).call(this, props));
 
-    _this9.handleStartEditing = _this9.handleStartEditing.bind(_this9);
-    return _this9;
+    _this10.handleStartEditing = _this10.handleStartEditing.bind(_this10);
+    return _this10;
   }
 
   _createClass(PollParticipantRow, [{
@@ -389,18 +449,18 @@ var PollParticipantRow = function (_React$Component8) {
   return PollParticipantRow;
 }(React.Component);
 
-var PollParticipantRowEditing = function (_React$Component9) {
-  _inherits(PollParticipantRowEditing, _React$Component9);
+var PollParticipantRowEditing = function (_React$Component10) {
+  _inherits(PollParticipantRowEditing, _React$Component10);
 
   function PollParticipantRowEditing(props) {
     _classCallCheck(this, PollParticipantRowEditing);
 
-    var _this10 = _possibleConstructorReturn(this, (PollParticipantRowEditing.__proto__ || Object.getPrototypeOf(PollParticipantRowEditing)).call(this, props));
+    var _this11 = _possibleConstructorReturn(this, (PollParticipantRowEditing.__proto__ || Object.getPrototypeOf(PollParticipantRowEditing)).call(this, props));
 
-    _this10.handleNameChange = _this10.handleNameChange.bind(_this10);
-    _this10.handleAvailabilityChange = _this10.handleAvailabilityChange.bind(_this10);
-    _this10.nameInput = React.createRef();
-    return _this10;
+    _this11.handleNameChange = _this11.handleNameChange.bind(_this11);
+    _this11.handleAvailabilityChange = _this11.handleAvailabilityChange.bind(_this11);
+    _this11.nameInput = React.createRef();
+    return _this11;
   }
 
   _createClass(PollParticipantRowEditing, [{
@@ -421,7 +481,7 @@ var PollParticipantRowEditing = function (_React$Component9) {
   }, {
     key: "render",
     value: function render() {
-      var _this11 = this;
+      var _this12 = this;
 
       var participant = this.props.participant;
       return React.createElement(
@@ -455,7 +515,7 @@ var PollParticipantRowEditing = function (_React$Component9) {
               className: "poll-participant-availability-checkbox " + symbol_from_availability(response),
               response: response,
               onChange: function onChange(e) {
-                return _this11.handleAvailabilityChange(dateIdx, e);
+                return _this12.handleAvailabilityChange(dateIdx, e);
               }
             })
           );
@@ -519,4 +579,10 @@ function symbol_from_availability(availability) {
   if (availability == "Y") return "fas fa-check";
   if (availability == "M") return "fas fa-question";
   return "";
+}
+
+function sum(arr) {
+  return arr.reduce(function (a, b) {
+    return a + b;
+  }, 0);
 }

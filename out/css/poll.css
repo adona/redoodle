@@ -73,20 +73,41 @@
   text-transform: uppercase;
 }
 
-#poll-participants-table .poll-participant-details {
+#poll-participants-table #poll-participants-summary, #poll-participants-table .poll-participant-details {
   width: 250px;
   text-align: left;
 }
 
-#poll-participants-table .poll-participant-details > div {
+#poll-participants-table #poll-participants-summary > div, #poll-participants-table .poll-participant-details > div {
   display: inline-block;
   vertical-align: middle;
   line-height: 45px;
 }
 
-#poll-participants-table .poll-participant-availability {
+#poll-participants-table #poll-availability-summary, #poll-participants-table .poll-participant-availability {
   width: 72px;
   text-align: center;
+}
+
+#poll-participants-table .poll-participant-availability {
+  font-size: 1.4rem;
+}
+
+#poll-participants-table #poll-table-summary #poll-participants-summary #poll-n-participants {
+  margin-left: 15px;
+  width: calc(100% - 55px);
+  color: grey;
+  font-weight: bold;
+}
+
+#poll-participants-table #poll-table-summary #poll-participants-summary #poll-add-participant {
+  width: 40px;
+  padding: 0px 10px;
+  color: #3798d4;
+}
+
+#poll-participants-table #poll-table-summary #poll-availability-summary {
+  color: #3798d4;
 }
 
 #poll-participants-table .poll-participant-row[editing="false"] .poll-participant-details .poll-participant-icon {
