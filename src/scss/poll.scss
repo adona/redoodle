@@ -101,10 +101,6 @@ $light-red: #fcede9;
     text-align: center;
   }
 
-  .poll-participant-availability {
-    font-size: 1.4rem;
-  }
-
   #poll-table-summary {
     #poll-participants-summary {
       #poll-n-participants {
@@ -124,6 +120,10 @@ $light-red: #fcede9;
     #poll-availability-summary {
       color: $dark-blue;
     }
+  }
+
+  .poll-participant-availability {
+    font-size: 1.4rem;
   }
 
   .poll-participant-row[editing="false"] {

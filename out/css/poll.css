@@ -89,10 +89,6 @@
   text-align: center;
 }
 
-#poll-participants-table .poll-participant-availability {
-  font-size: 1.4rem;
-}
-
 #poll-participants-table #poll-table-summary #poll-participants-summary #poll-n-participants {
   margin-left: 15px;
   width: calc(100% - 55px);
@@ -108,6 +104,10 @@
 
 #poll-participants-table #poll-table-summary #poll-availability-summary {
   color: #3798d4;
+}
+
+#poll-participants-table .poll-participant-availability {
+  font-size: 1.4rem;
 }
 
 #poll-participants-table .poll-participant-row[editing="false"] .poll-participant-details .poll-participant-icon {
