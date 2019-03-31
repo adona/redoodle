@@ -118,40 +118,51 @@ class PollParticipantsContainer extends React.Component {
 
 class PollParticipantsTable extends React.Component {
   render() {
-    const header_columns = this.props.times.map(
-      (time, idx) => (
-        <th key = {idx} >
-          <span className="poll-table-header-month">{ MONTH_NAMES[time.start.getMonth()].slice(0,3) } </span><br/> 
-          <span className="poll-table-header-day">{ time.start.getDate() } </span><br/>
-          <span className="poll-table-header-weekday">{ DAY_NAMES[time.start.getDay()].slice(0,3) }</span><br/>
-          <span className="poll-table-header-time">{ time_to_string(time.start) }</span><br/>
-          <span className="poll-table-header-time">{ time_to_string(time.end) }</span><br/>
-        </th>
-      )
-    );
-    const rows = this.props.participants.map(
-      (participant, idx) => ( this.props.idxEditing!=idx ? 
-        <PollParticipantRow 
-          key={idx}
-          idx={idx}
-          participant={participant}
-          onStartEditing = {this.props.onStartEditing}
-        /> : 
-        <PollParticipantRowEditing 
-          key={idx}
-          idx={idx}
-          participant={participant}
-          onNameChange = {this.props.onNameChange}
-          onAvailabilityChange = {this.props.onAvailabilityChange}
-        />));
-      
     return (
       <table id="poll-participants-table">
-        <thead><tr><th/>{header_columns}</tr></thead>
+        <PollTableHeader times={this.props.times} />
         <tbody>
-          {rows}
+          {this.props.participants.map(
+            (participant, idx) => ( this.props.idxEditing!=idx ? 
+              <PollParticipantRow 
+                key={idx}
+                idx={idx}
+                participant={participant}
+                onStartEditing = {this.props.onStartEditing}
+              /> : 
+              <PollParticipantRowEditing 
+                key={idx}
+                idx={idx}
+                participant={participant}
+                onNameChange = {this.props.onNameChange}
+                onAvailabilityChange = {this.props.onAvailabilityChange}
+              />))
+            }
         </tbody>
       </table>
+    );
+  }
+}
+
+class PollTableHeader extends React.Component {
+  render() {
+    return(
+      <thead>
+        <tr>
+          <th/>
+          {this.props.times.map(
+            (time, idx) => (
+              <th key = {idx} >
+                <span className="poll-table-header-month">{ MONTH_NAMES[time.start.getMonth()].slice(0,3) } </span><br/> 
+                <span className="poll-table-header-day">{ time.start.getDate() } </span><br/>
+                <span className="poll-table-header-weekday">{ DAY_NAMES[time.start.getDay()].slice(0,3) }</span><br/>
+                <span className="poll-table-header-time">{ time_to_string(time.start) }</span><br/>
+                <span className="poll-table-header-time">{ time_to_string(time.end) }</span><br/>
+              </th>
+            ))
+          }
+        </tr>
+      </thead>
     );
   }
 }

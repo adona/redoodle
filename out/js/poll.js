@@ -239,76 +239,27 @@ var PollParticipantsTable = function (_React$Component6) {
     value: function render() {
       var _this7 = this;
 
-      var header_columns = this.props.times.map(function (time, idx) {
-        return React.createElement(
-          "th",
-          { key: idx },
-          React.createElement(
-            "span",
-            { className: "poll-table-header-month" },
-            MONTH_NAMES[time.start.getMonth()].slice(0, 3),
-            " "
-          ),
-          React.createElement("br", null),
-          React.createElement(
-            "span",
-            { className: "poll-table-header-day" },
-            time.start.getDate(),
-            " "
-          ),
-          React.createElement("br", null),
-          React.createElement(
-            "span",
-            { className: "poll-table-header-weekday" },
-            DAY_NAMES[time.start.getDay()].slice(0, 3)
-          ),
-          React.createElement("br", null),
-          React.createElement(
-            "span",
-            { className: "poll-table-header-time" },
-            time_to_string(time.start)
-          ),
-          React.createElement("br", null),
-          React.createElement(
-            "span",
-            { className: "poll-table-header-time" },
-            time_to_string(time.end)
-          ),
-          React.createElement("br", null)
-        );
-      });
-      var rows = this.props.participants.map(function (participant, idx) {
-        return _this7.props.idxEditing != idx ? React.createElement(PollParticipantRow, {
-          key: idx,
-          idx: idx,
-          participant: participant,
-          onStartEditing: _this7.props.onStartEditing
-        }) : React.createElement(PollParticipantRowEditing, {
-          key: idx,
-          idx: idx,
-          participant: participant,
-          onNameChange: _this7.props.onNameChange,
-          onAvailabilityChange: _this7.props.onAvailabilityChange
-        });
-      });
-
       return React.createElement(
         "table",
         { id: "poll-participants-table" },
-        React.createElement(
-          "thead",
-          null,
-          React.createElement(
-            "tr",
-            null,
-            React.createElement("th", null),
-            header_columns
-          )
-        ),
+        React.createElement(PollTableHeader, { times: this.props.times }),
         React.createElement(
           "tbody",
           null,
-          rows
+          this.props.participants.map(function (participant, idx) {
+            return _this7.props.idxEditing != idx ? React.createElement(PollParticipantRow, {
+              key: idx,
+              idx: idx,
+              participant: participant,
+              onStartEditing: _this7.props.onStartEditing
+            }) : React.createElement(PollParticipantRowEditing, {
+              key: idx,
+              idx: idx,
+              participant: participant,
+              onNameChange: _this7.props.onNameChange,
+              onAvailabilityChange: _this7.props.onAvailabilityChange
+            });
+          })
         )
       );
     }
@@ -317,16 +268,81 @@ var PollParticipantsTable = function (_React$Component6) {
   return PollParticipantsTable;
 }(React.Component);
 
-var PollParticipantRow = function (_React$Component7) {
-  _inherits(PollParticipantRow, _React$Component7);
+var PollTableHeader = function (_React$Component7) {
+  _inherits(PollTableHeader, _React$Component7);
+
+  function PollTableHeader() {
+    _classCallCheck(this, PollTableHeader);
+
+    return _possibleConstructorReturn(this, (PollTableHeader.__proto__ || Object.getPrototypeOf(PollTableHeader)).apply(this, arguments));
+  }
+
+  _createClass(PollTableHeader, [{
+    key: "render",
+    value: function render() {
+      return React.createElement(
+        "thead",
+        null,
+        React.createElement(
+          "tr",
+          null,
+          React.createElement("th", null),
+          this.props.times.map(function (time, idx) {
+            return React.createElement(
+              "th",
+              { key: idx },
+              React.createElement(
+                "span",
+                { className: "poll-table-header-month" },
+                MONTH_NAMES[time.start.getMonth()].slice(0, 3),
+                " "
+              ),
+              React.createElement("br", null),
+              React.createElement(
+                "span",
+                { className: "poll-table-header-day" },
+                time.start.getDate(),
+                " "
+              ),
+              React.createElement("br", null),
+              React.createElement(
+                "span",
+                { className: "poll-table-header-weekday" },
+                DAY_NAMES[time.start.getDay()].slice(0, 3)
+              ),
+              React.createElement("br", null),
+              React.createElement(
+                "span",
+                { className: "poll-table-header-time" },
+                time_to_string(time.start)
+              ),
+              React.createElement("br", null),
+              React.createElement(
+                "span",
+                { className: "poll-table-header-time" },
+                time_to_string(time.end)
+              ),
+              React.createElement("br", null)
+            );
+          })
+        )
+      );
+    }
+  }]);
+
+  return PollTableHeader;
+}(React.Component);
+
+var PollParticipantRow = function (_React$Component8) {
+  _inherits(PollParticipantRow, _React$Component8);
 
   function PollParticipantRow(props) {
     _classCallCheck(this, PollParticipantRow);
 
-    var _this8 = _possibleConstructorReturn(this, (PollParticipantRow.__proto__ || Object.getPrototypeOf(PollParticipantRow)).call(this, props));
+    var _this9 = _possibleConstructorReturn(this, (PollParticipantRow.__proto__ || Object.getPrototypeOf(PollParticipantRow)).call(this, props));
 
-    _this8.handleStartEditing = _this8.handleStartEditing.bind(_this8);
-    return _this8;
+    _this9.handleStartEditing = _this9.handleStartEditing.bind(_this9);
+    return _this9;
   }
 
   _createClass(PollParticipantRow, [{
@@ -370,18 +386,18 @@ var PollParticipantRow = function (_React$Component7) {
   return PollParticipantRow;
 }(React.Component);
 
-var PollParticipantRowEditing = function (_React$Component8) {
-  _inherits(PollParticipantRowEditing, _React$Component8);
+var PollParticipantRowEditing = function (_React$Component9) {
+  _inherits(PollParticipantRowEditing, _React$Component9);
 
   function PollParticipantRowEditing(props) {
     _classCallCheck(this, PollParticipantRowEditing);
 
-    var _this9 = _possibleConstructorReturn(this, (PollParticipantRowEditing.__proto__ || Object.getPrototypeOf(PollParticipantRowEditing)).call(this, props));
+    var _this10 = _possibleConstructorReturn(this, (PollParticipantRowEditing.__proto__ || Object.getPrototypeOf(PollParticipantRowEditing)).call(this, props));
 
-    _this9.handleNameChange = _this9.handleNameChange.bind(_this9);
-    _this9.handleAvailabilityChange = _this9.handleAvailabilityChange.bind(_this9);
-    _this9.nameInput = React.createRef();
-    return _this9;
+    _this10.handleNameChange = _this10.handleNameChange.bind(_this10);
+    _this10.handleAvailabilityChange = _this10.handleAvailabilityChange.bind(_this10);
+    _this10.nameInput = React.createRef();
+    return _this10;
   }
 
   _createClass(PollParticipantRowEditing, [{
@@ -402,7 +418,7 @@ var PollParticipantRowEditing = function (_React$Component8) {
   }, {
     key: "render",
     value: function render() {
-      var _this10 = this;
+      var _this11 = this;
 
       var participant = this.props.participant;
       return React.createElement(
@@ -433,7 +449,7 @@ var PollParticipantRowEditing = function (_React$Component8) {
               className: "poll-availability-checkbox " + symbol_from_availability(response),
               response: response,
               onChange: function onChange(e) {
-                return _this10.handleAvailabilityChange(dateIdx, e);
+                return _this11.handleAvailabilityChange(dateIdx, e);
               }
             })
           );
