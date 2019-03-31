@@ -38,9 +38,9 @@ class PollMain extends React.Component {
           notes = {poll.notes}
           timezone = {poll.timezone}
         />
-        <PollResponsesContainer 
+        <PollParticipantsContainer 
           times = {poll.times}
-          respondents = {poll.respondents}
+          participants = {poll.participants}
         />
       </div>
     );
@@ -59,11 +59,11 @@ class PollDetails extends React.Component {
   }
 }
 
-class PollResponsesContainer extends React.Component {
+class PollParticipantsContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      respondents: props.respondents,
+      participants: props.participants,
       idxEditing: null
     };
     this.handleStartEditing = this.handleStartEditing.bind(this);
@@ -78,19 +78,19 @@ class PollResponsesContainer extends React.Component {
     });
   }
 
-  handleNameChange(respondentIdx, name) {
-    var respondents = this.state.respondents;
-    respondents[respondentIdx].name = name;
+  handleNameChange(participantIdx, name) {
+    var participants = this.state.participants;
+    participants[participantIdx].name = name;
     this.setState({
-      respondents: respondents
+      participants: participants
     });
   }
 
-  handleAvailabilityChange(respondentIdx, dateIdx, newAvailability) {
-    var respondents = this.state.respondents;
-    respondents[respondentIdx].responses[dateIdx] = newAvailability;
+  handleAvailabilityChange(participantIdx, dateIdx, newAvailability) {
+    var participants = this.state.participants;
+    participants[participantIdx].availability[dateIdx] = newAvailability;
     this.setState({
-      respondents: respondents
+      participants: participants
     });
   }
 
@@ -101,10 +101,10 @@ class PollResponsesContainer extends React.Component {
   render() {
     const poll = this.props.poll;
     return (
-      <div id="poll-responses-container">
-        <PollResponsesTable 
+      <div id="poll-participants-container">
+        <PollParticipantsTable 
           times = {this.props.times} 
-          respondents = {this.state.respondents}
+          participants = {this.state.participants}
           idxEditing = {this.state.idxEditing}
           onStartEditing = {this.handleStartEditing}
           onNameChange = {this.handleNameChange}
@@ -116,37 +116,37 @@ class PollResponsesContainer extends React.Component {
   }
 }
 
-class PollResponsesTable extends React.Component {
+class PollParticipantsTable extends React.Component {
   render() {
     const header_columns = this.props.times.map(
       (time, idx) => (
         <th key = {idx} >
-          <span className="poll-header-month">{ MONTH_NAMES[time.start.getMonth()].slice(0,3) } </span><br/> 
-          <span className="poll-header-day">{ time.start.getDate() } </span><br/>
-          <span className="poll-header-weekday">{ DAY_NAMES[time.start.getDay()].slice(0,3) }</span><br/>
-          <span className="poll-header-time">{ time_to_string(time.start) }</span><br/>
-          <span className="poll-header-time">{ time_to_string(time.end) }</span><br/>
+          <span className="poll-table-header-month">{ MONTH_NAMES[time.start.getMonth()].slice(0,3) } </span><br/> 
+          <span className="poll-table-header-day">{ time.start.getDate() } </span><br/>
+          <span className="poll-table-header-weekday">{ DAY_NAMES[time.start.getDay()].slice(0,3) }</span><br/>
+          <span className="poll-table-header-time">{ time_to_string(time.start) }</span><br/>
+          <span className="poll-table-header-time">{ time_to_string(time.end) }</span><br/>
         </th>
       )
     );
-    const rows = this.props.respondents.map(
-      (respondent, idx) => ( this.props.idxEditing!=idx ? 
-        <PollResponseRow 
+    const rows = this.props.participants.map(
+      (participant, idx) => ( this.props.idxEditing!=idx ? 
+        <PollParticipantRow 
           key={idx}
           idx={idx}
-          respondent={respondent}
+          participant={participant}
           onStartEditing = {this.props.onStartEditing}
         /> : 
-        <PollResponseRowEditing 
+        <PollParticipantRowEditing 
           key={idx}
           idx={idx}
-          respondent={respondent}
+          participant={participant}
           onNameChange = {this.props.onNameChange}
           onAvailabilityChange = {this.props.onAvailabilityChange}
         />));
       
     return (
-      <table id="poll-responses-table">
+      <table id="poll-participants-table">
         <thead><tr><th/>{header_columns}</tr></thead>
         <tbody>
           {rows}
@@ -156,7 +156,7 @@ class PollResponsesTable extends React.Component {
   }
 }
 
-class PollResponseRow extends React.Component {
+class PollParticipantRow extends React.Component {
   constructor(props) {
     super(props);
     this.handleStartEditing = this.handleStartEditing.bind(this);
@@ -167,18 +167,18 @@ class PollResponseRow extends React.Component {
   }
 
   render() {
-    const respondent = this.props.respondent;
+    const participant = this.props.participant;
     return(
       <tr>
         <td>
           <div>
-            <div className="poll-respondent-icon fas fa-user-circle"></div>
-            <div className="poll-respondent-name">{respondent.name}</div>
-            <div className="poll-edit-respondent fas fa-pen" onClick={this.handleStartEditing}></div>
+            <div className="poll-participant-icon fas fa-user-circle"></div>
+            <div className="poll-participant-name">{participant.name}</div>
+            <div className="poll-participant-edit fas fa-pen" onClick={this.handleStartEditing}></div>
           </div>
         </td>
         {
-          respondent.responses.map(
+          participant.availability.map(
             (response, dateIdx) => (
               <td key={dateIdx} response={response}>
                 {<div className={symbol_from_availability(response)}></div>}
@@ -189,7 +189,7 @@ class PollResponseRow extends React.Component {
   }
 }
 
-class PollResponseRowEditing extends React.Component {
+class PollParticipantRowEditing extends React.Component {
   constructor(props) {
     super(props);
     this.handleNameChange = this.handleNameChange.bind(this);
@@ -198,36 +198,36 @@ class PollResponseRowEditing extends React.Component {
   }
 
   handleNameChange(e) {
-    const respondentIdx = this.props.idx;
+    const participantIdx = this.props.idx;
     const newName = e.target.value;
-    this.props.onNameChange(respondentIdx, newName);
+    this.props.onNameChange(participantIdx, newName);
   }
 
   handleAvailabilityChange(dateIdx, e) {
-    const respondentIdx = this.props.idx;
+    const participantIdx = this.props.idx;
     const previousAvailability = $(e.target).attr("response");
     const newAvailability = previousAvailability == "Y" ? "M" : (previousAvailability == "M" ? "N" : "Y");
-    this.props.onAvailabilityChange(respondentIdx, dateIdx, newAvailability);
+    this.props.onAvailabilityChange(participantIdx, dateIdx, newAvailability);
   }
 
   render() {
-    const respondent = this.props.respondent;
+    const participant = this.props.participant;
     return(
       <tr className="row-editing">
         <td>
           <div>
-            <div className="poll-delete-respondent fas fa-trash"></div>
+            <div className="poll-participant-delete fas fa-trash"></div>
             <input
-              className="poll-respondent-name-editing"
+              className="poll-participant-name-editing"
               ref={this.nameInput}
               type="text"
-              value={respondent.name}
+              value={participant.name}
               onChange={this.handleNameChange}
             />
           </div>
         </td>
         {
-          respondent.responses.map(
+          participant.availability.map(
             (response, dateIdx) => (
               <td key={dateIdx} response={response}>
                 <input
@@ -265,18 +265,18 @@ const POLL = {
       end: new Date(2019, 4, 3, 23, 0)
     }
   ],
-  respondents: [
+  participants: [
     {
       name: "Adona Iosif",
-      responses: ["Y", "Y"]
+      availability: ["Y", "Y"]
     },
     {
       name: "Angi",
-      responses: ["M", "Y"]
+      availability: ["M", "Y"]
     },
     {
       name: "Maria",
-      responses: ["N", "N"]
+      availability: ["N", "N"]
     }
   ]
 }

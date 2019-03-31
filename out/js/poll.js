@@ -90,9 +90,9 @@ var PollMain = function (_React$Component3) {
           notes: poll.notes,
           timezone: poll.timezone
         }),
-        React.createElement(PollResponsesContainer, {
+        React.createElement(PollParticipantsContainer, {
           times: poll.times,
-          respondents: poll.respondents
+          participants: poll.participants
         })
       );
     }
@@ -154,16 +154,16 @@ var PollDetails = function (_React$Component4) {
   return PollDetails;
 }(React.Component);
 
-var PollResponsesContainer = function (_React$Component5) {
-  _inherits(PollResponsesContainer, _React$Component5);
+var PollParticipantsContainer = function (_React$Component5) {
+  _inherits(PollParticipantsContainer, _React$Component5);
 
-  function PollResponsesContainer(props) {
-    _classCallCheck(this, PollResponsesContainer);
+  function PollParticipantsContainer(props) {
+    _classCallCheck(this, PollParticipantsContainer);
 
-    var _this5 = _possibleConstructorReturn(this, (PollResponsesContainer.__proto__ || Object.getPrototypeOf(PollResponsesContainer)).call(this, props));
+    var _this5 = _possibleConstructorReturn(this, (PollParticipantsContainer.__proto__ || Object.getPrototypeOf(PollParticipantsContainer)).call(this, props));
 
     _this5.state = {
-      respondents: props.respondents,
+      participants: props.participants,
       idxEditing: null
     };
     _this5.handleStartEditing = _this5.handleStartEditing.bind(_this5);
@@ -173,7 +173,7 @@ var PollResponsesContainer = function (_React$Component5) {
     return _this5;
   }
 
-  _createClass(PollResponsesContainer, [{
+  _createClass(PollParticipantsContainer, [{
     key: "handleStartEditing",
     value: function handleStartEditing(idx) {
       this.setState({
@@ -182,20 +182,20 @@ var PollResponsesContainer = function (_React$Component5) {
     }
   }, {
     key: "handleNameChange",
-    value: function handleNameChange(respondentIdx, name) {
-      var respondents = this.state.respondents;
-      respondents[respondentIdx].name = name;
+    value: function handleNameChange(participantIdx, name) {
+      var participants = this.state.participants;
+      participants[participantIdx].name = name;
       this.setState({
-        respondents: respondents
+        participants: participants
       });
     }
   }, {
     key: "handleAvailabilityChange",
-    value: function handleAvailabilityChange(respondentIdx, dateIdx, newAvailability) {
-      var respondents = this.state.respondents;
-      respondents[respondentIdx].responses[dateIdx] = newAvailability;
+    value: function handleAvailabilityChange(participantIdx, dateIdx, newAvailability) {
+      var participants = this.state.participants;
+      participants[participantIdx].availability[dateIdx] = newAvailability;
       this.setState({
-        respondents: respondents
+        participants: participants
       });
     }
   }, {
@@ -207,10 +207,10 @@ var PollResponsesContainer = function (_React$Component5) {
       var poll = this.props.poll;
       return React.createElement(
         "div",
-        { id: "poll-responses-container" },
-        React.createElement(PollResponsesTable, {
+        { id: "poll-participants-container" },
+        React.createElement(PollParticipantsTable, {
           times: this.props.times,
-          respondents: this.state.respondents,
+          participants: this.state.participants,
           idxEditing: this.state.idxEditing,
           onStartEditing: this.handleStartEditing,
           onNameChange: this.handleNameChange,
@@ -222,19 +222,19 @@ var PollResponsesContainer = function (_React$Component5) {
     }
   }]);
 
-  return PollResponsesContainer;
+  return PollParticipantsContainer;
 }(React.Component);
 
-var PollResponsesTable = function (_React$Component6) {
-  _inherits(PollResponsesTable, _React$Component6);
+var PollParticipantsTable = function (_React$Component6) {
+  _inherits(PollParticipantsTable, _React$Component6);
 
-  function PollResponsesTable() {
-    _classCallCheck(this, PollResponsesTable);
+  function PollParticipantsTable() {
+    _classCallCheck(this, PollParticipantsTable);
 
-    return _possibleConstructorReturn(this, (PollResponsesTable.__proto__ || Object.getPrototypeOf(PollResponsesTable)).apply(this, arguments));
+    return _possibleConstructorReturn(this, (PollParticipantsTable.__proto__ || Object.getPrototypeOf(PollParticipantsTable)).apply(this, arguments));
   }
 
-  _createClass(PollResponsesTable, [{
+  _createClass(PollParticipantsTable, [{
     key: "render",
     value: function render() {
       var _this7 = this;
@@ -245,48 +245,48 @@ var PollResponsesTable = function (_React$Component6) {
           { key: idx },
           React.createElement(
             "span",
-            { className: "poll-header-month" },
+            { className: "poll-table-header-month" },
             MONTH_NAMES[time.start.getMonth()].slice(0, 3),
             " "
           ),
           React.createElement("br", null),
           React.createElement(
             "span",
-            { className: "poll-header-day" },
+            { className: "poll-table-header-day" },
             time.start.getDate(),
             " "
           ),
           React.createElement("br", null),
           React.createElement(
             "span",
-            { className: "poll-header-weekday" },
+            { className: "poll-table-header-weekday" },
             DAY_NAMES[time.start.getDay()].slice(0, 3)
           ),
           React.createElement("br", null),
           React.createElement(
             "span",
-            { className: "poll-header-time" },
+            { className: "poll-table-header-time" },
             time_to_string(time.start)
           ),
           React.createElement("br", null),
           React.createElement(
             "span",
-            { className: "poll-header-time" },
+            { className: "poll-table-header-time" },
             time_to_string(time.end)
           ),
           React.createElement("br", null)
         );
       });
-      var rows = this.props.respondents.map(function (respondent, idx) {
-        return _this7.props.idxEditing != idx ? React.createElement(PollResponseRow, {
+      var rows = this.props.participants.map(function (participant, idx) {
+        return _this7.props.idxEditing != idx ? React.createElement(PollParticipantRow, {
           key: idx,
           idx: idx,
-          respondent: respondent,
+          participant: participant,
           onStartEditing: _this7.props.onStartEditing
-        }) : React.createElement(PollResponseRowEditing, {
+        }) : React.createElement(PollParticipantRowEditing, {
           key: idx,
           idx: idx,
-          respondent: respondent,
+          participant: participant,
           onNameChange: _this7.props.onNameChange,
           onAvailabilityChange: _this7.props.onAvailabilityChange
         });
@@ -294,7 +294,7 @@ var PollResponsesTable = function (_React$Component6) {
 
       return React.createElement(
         "table",
-        { id: "poll-responses-table" },
+        { id: "poll-participants-table" },
         React.createElement(
           "thead",
           null,
@@ -314,22 +314,22 @@ var PollResponsesTable = function (_React$Component6) {
     }
   }]);
 
-  return PollResponsesTable;
+  return PollParticipantsTable;
 }(React.Component);
 
-var PollResponseRow = function (_React$Component7) {
-  _inherits(PollResponseRow, _React$Component7);
+var PollParticipantRow = function (_React$Component7) {
+  _inherits(PollParticipantRow, _React$Component7);
 
-  function PollResponseRow(props) {
-    _classCallCheck(this, PollResponseRow);
+  function PollParticipantRow(props) {
+    _classCallCheck(this, PollParticipantRow);
 
-    var _this8 = _possibleConstructorReturn(this, (PollResponseRow.__proto__ || Object.getPrototypeOf(PollResponseRow)).call(this, props));
+    var _this8 = _possibleConstructorReturn(this, (PollParticipantRow.__proto__ || Object.getPrototypeOf(PollParticipantRow)).call(this, props));
 
     _this8.handleStartEditing = _this8.handleStartEditing.bind(_this8);
     return _this8;
   }
 
-  _createClass(PollResponseRow, [{
+  _createClass(PollParticipantRow, [{
     key: "handleStartEditing",
     value: function handleStartEditing(e) {
       this.props.onStartEditing(this.props.idx);
@@ -337,7 +337,7 @@ var PollResponseRow = function (_React$Component7) {
   }, {
     key: "render",
     value: function render() {
-      var respondent = this.props.respondent;
+      var participant = this.props.participant;
       return React.createElement(
         "tr",
         null,
@@ -347,16 +347,16 @@ var PollResponseRow = function (_React$Component7) {
           React.createElement(
             "div",
             null,
-            React.createElement("div", { className: "poll-respondent-icon fas fa-user-circle" }),
+            React.createElement("div", { className: "poll-participant-icon fas fa-user-circle" }),
             React.createElement(
               "div",
-              { className: "poll-respondent-name" },
-              respondent.name
+              { className: "poll-participant-name" },
+              participant.name
             ),
-            React.createElement("div", { className: "poll-edit-respondent fas fa-pen", onClick: this.handleStartEditing })
+            React.createElement("div", { className: "poll-participant-edit fas fa-pen", onClick: this.handleStartEditing })
           )
         ),
-        respondent.responses.map(function (response, dateIdx) {
+        participant.availability.map(function (response, dateIdx) {
           return React.createElement(
             "td",
             { key: dateIdx, response: response },
@@ -367,16 +367,16 @@ var PollResponseRow = function (_React$Component7) {
     }
   }]);
 
-  return PollResponseRow;
+  return PollParticipantRow;
 }(React.Component);
 
-var PollResponseRowEditing = function (_React$Component8) {
-  _inherits(PollResponseRowEditing, _React$Component8);
+var PollParticipantRowEditing = function (_React$Component8) {
+  _inherits(PollParticipantRowEditing, _React$Component8);
 
-  function PollResponseRowEditing(props) {
-    _classCallCheck(this, PollResponseRowEditing);
+  function PollParticipantRowEditing(props) {
+    _classCallCheck(this, PollParticipantRowEditing);
 
-    var _this9 = _possibleConstructorReturn(this, (PollResponseRowEditing.__proto__ || Object.getPrototypeOf(PollResponseRowEditing)).call(this, props));
+    var _this9 = _possibleConstructorReturn(this, (PollParticipantRowEditing.__proto__ || Object.getPrototypeOf(PollParticipantRowEditing)).call(this, props));
 
     _this9.handleNameChange = _this9.handleNameChange.bind(_this9);
     _this9.handleAvailabilityChange = _this9.handleAvailabilityChange.bind(_this9);
@@ -384,27 +384,27 @@ var PollResponseRowEditing = function (_React$Component8) {
     return _this9;
   }
 
-  _createClass(PollResponseRowEditing, [{
+  _createClass(PollParticipantRowEditing, [{
     key: "handleNameChange",
     value: function handleNameChange(e) {
-      var respondentIdx = this.props.idx;
+      var participantIdx = this.props.idx;
       var newName = e.target.value;
-      this.props.onNameChange(respondentIdx, newName);
+      this.props.onNameChange(participantIdx, newName);
     }
   }, {
     key: "handleAvailabilityChange",
     value: function handleAvailabilityChange(dateIdx, e) {
-      var respondentIdx = this.props.idx;
+      var participantIdx = this.props.idx;
       var previousAvailability = $(e.target).attr("response");
       var newAvailability = previousAvailability == "Y" ? "M" : previousAvailability == "M" ? "N" : "Y";
-      this.props.onAvailabilityChange(respondentIdx, dateIdx, newAvailability);
+      this.props.onAvailabilityChange(participantIdx, dateIdx, newAvailability);
     }
   }, {
     key: "render",
     value: function render() {
       var _this10 = this;
 
-      var respondent = this.props.respondent;
+      var participant = this.props.participant;
       return React.createElement(
         "tr",
         { className: "row-editing" },
@@ -414,17 +414,17 @@ var PollResponseRowEditing = function (_React$Component8) {
           React.createElement(
             "div",
             null,
-            React.createElement("div", { className: "poll-delete-respondent fas fa-trash" }),
+            React.createElement("div", { className: "poll-participant-delete fas fa-trash" }),
             React.createElement("input", {
-              className: "poll-respondent-name-editing",
+              className: "poll-participant-name-editing",
               ref: this.nameInput,
               type: "text",
-              value: respondent.name,
+              value: participant.name,
               onChange: this.handleNameChange
             })
           )
         ),
-        respondent.responses.map(function (response, dateIdx) {
+        participant.availability.map(function (response, dateIdx) {
           return React.createElement(
             "td",
             { key: dateIdx, response: response },
@@ -447,7 +447,7 @@ var PollResponseRowEditing = function (_React$Component8) {
     }
   }]);
 
-  return PollResponseRowEditing;
+  return PollParticipantRowEditing;
 }(React.Component);
 
 var POLL = {
@@ -463,15 +463,15 @@ var POLL = {
     start: new Date(2019, 4, 3, 20, 0),
     end: new Date(2019, 4, 3, 23, 0)
   }],
-  respondents: [{
+  participants: [{
     name: "Adona Iosif",
-    responses: ["Y", "Y"]
+    availability: ["Y", "Y"]
   }, {
     name: "Angi",
-    responses: ["M", "Y"]
+    availability: ["M", "Y"]
   }, {
     name: "Maria",
-    responses: ["N", "N"]
+    availability: ["N", "N"]
   }]
 };
 

@@ -43,43 +43,43 @@
   font-size: 0.875rem;
 }
 
-#poll-responses-container {
+#poll-participants-container {
   margin-top: 40px;
 }
 
-#poll-responses-container table {
+#poll-participants-container table {
   background: white;
   border-collapse: collapse;
 }
 
-#poll-responses-container th, #poll-responses-container td {
+#poll-participants-container th, #poll-participants-container td {
   border: 1px solid lightgrey;
 }
 
-#poll-responses-container th {
+#poll-participants-container th {
   font-weight: normal;
 }
 
-#poll-responses-container th .poll-header-month {
+#poll-participants-container th .poll-table-header-month {
   font-size: 0.875rem;
 }
 
-#poll-responses-container th .poll-header-day {
+#poll-participants-container th .poll-table-header-day {
   font-size: 1.625rem;
 }
 
-#poll-responses-container th .poll-header-weekday, #poll-responses-container th .poll-header-time {
+#poll-participants-container th .poll-table-header-weekday, #poll-participants-container th .poll-table-header-time {
   font-size: 0.75rem;
   text-transform: uppercase;
 }
 
-#poll-responses-container td {
+#poll-participants-container td {
   width: 72px;
   height: 45px;
   text-align: center;
 }
 
-#poll-responses-container td:first-child div .poll-respondent-icon, #poll-responses-container .row-editing td:first-child div .poll-delete-respondent {
+#poll-participants-container td:first-child div .poll-participant-icon, #poll-participants-container .row-editing td:first-child div .poll-participant-delete {
   display: inline-block;
   width: 30px;
   line-height: 45px;
@@ -87,13 +87,13 @@
   text-align: right;
 }
 
-#poll-responses-container td:first-child div {
+#poll-participants-container td:first-child div {
   width: 200px;
   height: 100%;
   text-align: left;
 }
 
-#poll-responses-container td:first-child div .poll-respondent-name {
+#poll-participants-container td:first-child div .poll-participant-name {
   display: inline-block;
   width: calc(100% - 90px);
   margin: 0px 10px;
@@ -103,7 +103,7 @@
   overflow: hidden;
 }
 
-#poll-responses-container td:first-child div .poll-edit-respondent {
+#poll-participants-container td:first-child div .poll-participant-edit {
   display: inline-block;
   width: 40px;
   line-height: 45px;
@@ -112,30 +112,30 @@
   opacity: 0;
 }
 
-#poll-responses-container td:first-child:hover .poll-edit-respondent {
+#poll-participants-container td:first-child:hover .poll-participant-edit {
   opacity: 1;
   background: #eaf4fb;
 }
 
-#poll-responses-container td[response="Y"] {
+#poll-participants-container td[response="Y"] {
   background: #cde9a1;
   color: #75a527;
 }
 
-#poll-responses-container td[response="M"] {
+#poll-participants-container td[response="M"] {
   background: #fcf5c5;
   color: #dabe0b;
 }
 
-#poll-responses-container td[response="N"] {
+#poll-participants-container td[response="N"] {
   background: #fcede9;
 }
 
-#poll-responses-container .row-editing {
+#poll-participants-container .row-editing {
   background: #abd4ed;
 }
 
-#poll-responses-container .row-editing td:first-child div .poll-respondent-name-editing {
+#poll-participants-container .row-editing td:first-child div .poll-participant-name-editing {
   width: calc(100% - 50px);
   height: calc(100% - 10px);
   margin: 5px 10px;
@@ -144,16 +144,16 @@
   border: 0px;
 }
 
-#poll-responses-container .row-editing td:first-child div .poll-respondent-name-editing:focus {
+#poll-participants-container .row-editing td:first-child div .poll-participant-name-editing:focus {
   outline: 0;
   border: 2px solid #2475a8;
 }
 
-#poll-responses-container .row-editing td {
+#poll-participants-container .row-editing td {
   background: #abd4ed;
 }
 
-#poll-responses-container .row-editing td .poll-availability-checkbox {
+#poll-participants-container .row-editing td .poll-availability-checkbox {
   -webkit-appearance: none;
   width: 25px;
   height: 25px;
@@ -161,13 +161,13 @@
   font-size: 1rem;
 }
 
-#poll-responses-container .row-editing td .poll-availability-checkbox[response="Y"] {
+#poll-participants-container .row-editing td .poll-availability-checkbox[response="Y"] {
   margin-top: -1px;
   padding: 5px 4.5px 5px;
   color: #75a527;
 }
 
-#poll-responses-container .row-editing td .poll-availability-checkbox[response="M"] {
+#poll-participants-container .row-editing td .poll-availability-checkbox[response="M"] {
   margin-top: -1px;
   padding: 5px 3.75px 5px 5.25px;
   color: #dabe0b;

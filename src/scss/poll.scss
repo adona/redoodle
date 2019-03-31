@@ -48,7 +48,7 @@ $poll-table-row-height: 45px;
   }
 }
 
-#poll-responses-container {
+#poll-participants-container {
   margin-top: 40px;
 
   table {
@@ -63,15 +63,15 @@ $poll-table-row-height: 45px;
   th {
     font-weight: normal;
 
-    .poll-header-month {
+    .poll-table-header-month {
       font-size: 0.875rem;
     }
 
-    .poll-header-day {
+    .poll-table-header-day {
       font-size: 1.625rem;
     }
 
-    .poll-header-weekday, .poll-header-time {
+    .poll-table-header-weekday, .poll-table-header-time {
       font-size: 0.75rem;
       text-transform: uppercase;
     }
@@ -83,7 +83,7 @@ $poll-table-row-height: 45px;
     text-align: center;
   }
 
-  %poll-respondent-before-name {
+  %poll-participant-before-name {
     display: inline-block;
     width: 30px;
     line-height: $poll-table-row-height;
@@ -98,11 +98,11 @@ $poll-table-row-height: 45px;
     height: 100%;
     text-align: left;
 
-    .poll-respondent-icon {
-      @extend %poll-respondent-before-name;
+    .poll-participant-icon {
+      @extend %poll-participant-before-name;
     }
 
-    .poll-respondent-name {
+    .poll-participant-name {
       display: inline-block;
       width: calc(100% - 90px);
       margin: 0px 10px;
@@ -112,7 +112,7 @@ $poll-table-row-height: 45px;
       overflow: hidden;
     }
 
-    .poll-edit-respondent {
+    .poll-participant-edit {
       display: inline-block;
       width: 40px;
       line-height: $poll-table-row-height;
@@ -122,7 +122,7 @@ $poll-table-row-height: 45px;
     }
   }
 
-  td:first-child:hover .poll-edit-respondent{
+  td:first-child:hover .poll-participant-edit {
     opacity: 1;
     background: #eaf4fb;
   }
@@ -146,11 +146,11 @@ $poll-table-row-height: 45px;
 
     td:first-child div {
 
-      .poll-delete-respondent {
-        @extend %poll-respondent-before-name;
+      .poll-participant-delete {
+        @extend %poll-participant-before-name;
       }
 
-      .poll-respondent-name-editing {
+      .poll-participant-name-editing {
         width: calc(100% - 50px);
         height: calc(100% - 10px);
         margin: 5px 10px;
@@ -159,7 +159,7 @@ $poll-table-row-height: 45px;
         border: 0px;
       }
 
-      .poll-respondent-name-editing:focus {
+      .poll-participant-name-editing:focus {
         outline: 0;
         border: 2px solid #2475a8;
         ;
