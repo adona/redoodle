@@ -163,13 +163,13 @@
 
 #poll-responses-container .row-editing td .poll-availability-checkbox[response="Y"] {
   margin-top: -1px;
-  padding: 7px 4.5px 3px;
+  padding: 5px 4.5px 5px;
   color: #75a527;
 }
 
 #poll-responses-container .row-editing td .poll-availability-checkbox[response="M"] {
   margin-top: -1px;
-  padding: 7px 3.75px 3px 5.25px;
+  padding: 5px 3.75px 5px 5.25px;
   color: #dabe0b;
 }
 /*# sourceMappingURL=poll.css.map */
