@@ -91,7 +91,8 @@ var PollMain = function (_React$Component3) {
           timezone: poll.timezone
         }),
         React.createElement(PollResponsesContainer, {
-          poll: poll
+          times: poll.times,
+          respondents: poll.respondents
         })
       );
     }
@@ -162,7 +163,7 @@ var PollResponsesContainer = function (_React$Component5) {
     var _this5 = _possibleConstructorReturn(this, (PollResponsesContainer.__proto__ || Object.getPrototypeOf(PollResponsesContainer)).call(this, props));
 
     _this5.state = {
-      respondents: props.poll.respondents,
+      respondents: props.respondents,
       idxEditing: null
     };
     _this5.handleStartEditing = _this5.handleStartEditing.bind(_this5);
@@ -208,14 +209,16 @@ var PollResponsesContainer = function (_React$Component5) {
         "div",
         { id: "poll-responses-container" },
         React.createElement(PollResponsesTable, {
-          times: poll.times,
+          times: this.props.times,
           respondents: this.state.respondents,
           idxEditing: this.state.idxEditing,
           onStartEditing: this.handleStartEditing,
           onNameChange: this.handleNameChange,
           onAvailabilityChange: this.handleAvailabilityChange
         })
-      );
+      )
+      // TODO: Add update button
+      ;
     }
   }]);
 

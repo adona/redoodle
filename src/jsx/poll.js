@@ -39,7 +39,8 @@ class PollMain extends React.Component {
           timezone = {poll.timezone}
         />
         <PollResponsesContainer 
-          poll = {poll}
+          times = {poll.times}
+          respondents = {poll.respondents}
         />
       </div>
     );
@@ -62,7 +63,7 @@ class PollResponsesContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      respondents: props.poll.respondents,
+      respondents: props.respondents,
       idxEditing: null
     };
     this.handleStartEditing = this.handleStartEditing.bind(this);
@@ -102,7 +103,7 @@ class PollResponsesContainer extends React.Component {
     return (
       <div id="poll-responses-container">
         <PollResponsesTable 
-          times = {poll.times} 
+          times = {this.props.times} 
           respondents = {this.state.respondents}
           idxEditing = {this.state.idxEditing}
           onStartEditing = {this.handleStartEditing}
@@ -110,6 +111,7 @@ class PollResponsesContainer extends React.Component {
           onAvailabilityChange = {this.handleAvailabilityChange}
         />
       </div>
+      // TODO: Add update button
     )
   }
 }
