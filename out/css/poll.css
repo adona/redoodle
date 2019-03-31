@@ -85,6 +85,7 @@
 }
 
 #poll-participants-table .poll-participant-availability {
+  width: 72px;
   text-align: center;
 }
 
@@ -138,10 +139,12 @@
 
 #poll-participants-table .poll-participant-row[editing="true"] .poll-participant-details .poll-participant-name-input {
   width: calc(100% - 90px);
+  height: 35px;
   margin-left: 5px;
   margin-right: 50px;
   border-radius: 6px;
   border: 0px;
+  padding: 0 10px;
 }
 
 #poll-participants-table .poll-participant-row[editing="true"] .poll-participant-details .poll-participant-name-input:focus {

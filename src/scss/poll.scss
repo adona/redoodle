@@ -94,6 +94,7 @@ $light-red: #fcede9;
   }
 
   .poll-participant-availability {
+    width: $poll-table-column-width;
     text-align: center;
   }
 
@@ -150,10 +151,12 @@ $light-red: #fcede9;
 
       .poll-participant-name-input {
         width: calc(100% - 90px);
+        height: 35px;
         margin-left: 5px;
         margin-right: 50px;
         border-radius: 6px;
         border: 0px;
+        padding: 0 10px;
       }
 
       .poll-participant-name-input:focus {
