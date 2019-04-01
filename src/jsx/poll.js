@@ -68,6 +68,7 @@ class PollParticipantsContainer extends React.Component {
       participants: this.props.participants,
       nextID: participants.length,
       idxEditing: null,
+      isNewParticipant: null
     };
     this.handleAddParticipant = this.handleAddParticipant.bind(this);
     this.handleStartEditing = this.handleStartEditing.bind(this);
@@ -88,13 +89,15 @@ class PollParticipantsContainer extends React.Component {
     this.setState({
       participants: participants,
       nextID: this.state.nextID + 1,
-      idxEditing: 0
+      idxEditing: 0,
+      isNewParticipant: true
     });
   }
 
   handleStartEditing(idx) {
     this.setState({
-      idxEditing: idx
+      idxEditing: idx,
+      isNewParticipant: false
     });
   }
 
@@ -141,8 +144,14 @@ class PollParticipantsContainer extends React.Component {
           onAvailabilityChange = {this.handleAvailabilityChange}
           onDeleteParticipant = {this.handleDeleteParticipant}
         />
+        <PollSubmitButton 
+          idxEditing = {this.state.idxEditing}
+          isNewParticipant = {this.state.isNewParticipant}
+          participant = {this.state.idxEditing != null ? 
+            this.state.participants[this.state.idxEditing] : null
+          }
+        />
       </div>
-      // TODO: Add update button
     )
   }
 }
@@ -340,6 +349,30 @@ class PollParticipantRowEditing extends React.Component {
   }
 }
 
+class PollSubmitButton extends React.Component {
+  render() {
+    if (this.props.idxEditing == null) 
+      return null;
+
+    const participant = this.props.participant;
+    const action = this.props.isNewParticipant ? "Send" : "Update";
+    const isDisabled = participant.name == "";
+    const cannotAttend = sum(participant.availability.map(a => a!="N")) == 0;
+    const note = isDisabled ? "Enter your name first" : (cannotAttend ? "Cannot attend" : null);
+    const hasNote = note != null;
+    // TODO: Add cancel option
+    
+    return(
+      <div id="poll-submit-button" 
+        isdisabled={isDisabled.toString()} 
+        cannotattend={cannotAttend.toString()} 
+        hasnote={hasNote.toString()}>
+          <div id="poll-submit-action">{action}</div>
+          <div id="poll-submit-note">{note}</div>
+      </div>
+    );
+  }
+}
 
 const POLL = {
   name: "GoT Marathon!!!",

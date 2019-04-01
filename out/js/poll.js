@@ -169,7 +169,8 @@ var PollParticipantsContainer = function (_React$Component5) {
     _this5.state = {
       participants: _this5.props.participants,
       nextID: participants.length,
-      idxEditing: null
+      idxEditing: null,
+      isNewParticipant: null
     };
     _this5.handleAddParticipant = _this5.handleAddParticipant.bind(_this5);
     _this5.handleStartEditing = _this5.handleStartEditing.bind(_this5);
@@ -195,14 +196,16 @@ var PollParticipantsContainer = function (_React$Component5) {
       this.setState({
         participants: participants,
         nextID: this.state.nextID + 1,
-        idxEditing: 0
+        idxEditing: 0,
+        isNewParticipant: true
       });
     }
   }, {
     key: "handleStartEditing",
     value: function handleStartEditing(idx) {
       this.setState({
-        idxEditing: idx
+        idxEditing: idx,
+        isNewParticipant: false
       });
     }
   }, {
@@ -252,10 +255,13 @@ var PollParticipantsContainer = function (_React$Component5) {
           onNameChange: this.handleNameChange,
           onAvailabilityChange: this.handleAvailabilityChange,
           onDeleteParticipant: this.handleDeleteParticipant
+        }),
+        React.createElement(PollSubmitButton, {
+          idxEditing: this.state.idxEditing,
+          isNewParticipant: this.state.isNewParticipant,
+          participant: this.state.idxEditing != null ? this.state.participants[this.state.idxEditing] : null
         })
-      )
-      // TODO: Add update button
-      ;
+      );
     }
   }]);
 
@@ -577,6 +583,53 @@ var PollParticipantRowEditing = function (_React$Component10) {
   }]);
 
   return PollParticipantRowEditing;
+}(React.Component);
+
+var PollSubmitButton = function (_React$Component11) {
+  _inherits(PollSubmitButton, _React$Component11);
+
+  function PollSubmitButton() {
+    _classCallCheck(this, PollSubmitButton);
+
+    return _possibleConstructorReturn(this, (PollSubmitButton.__proto__ || Object.getPrototypeOf(PollSubmitButton)).apply(this, arguments));
+  }
+
+  _createClass(PollSubmitButton, [{
+    key: "render",
+    value: function render() {
+      if (this.props.idxEditing == null) return null;
+
+      var participant = this.props.participant;
+      var action = this.props.isNewParticipant ? "Send" : "Update";
+      var isDisabled = participant.name == "";
+      var cannotAttend = sum(participant.availability.map(function (a) {
+        return a != "N";
+      })) == 0;
+      var note = isDisabled ? "Enter your name first" : cannotAttend ? "Cannot attend" : null;
+      var hasNote = note != null;
+      // TODO: Add cancel option
+
+      return React.createElement(
+        "div",
+        { id: "poll-submit-button",
+          isdisabled: isDisabled.toString(),
+          cannotattend: cannotAttend.toString(),
+          hasnote: hasNote.toString() },
+        React.createElement(
+          "div",
+          { id: "poll-submit-action" },
+          action
+        ),
+        React.createElement(
+          "div",
+          { id: "poll-submit-note" },
+          note
+        )
+      );
+    }
+  }]);
+
+  return PollSubmitButton;
 }(React.Component);
 
 var POLL = {

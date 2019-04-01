@@ -12,10 +12,13 @@ $dark-green: #75a527;
 $light-yellow: #fcf5c5;
 $dark-yellow: #dabe0b;
 $light-red: #fcede9;
+$light-grey: #c5cdd3;
+$dark-grey: #8696a2;
+
 
 
 #main {
-  width: 500px;
+  width: fit-content;
   margin: 20px auto;
   background: $dark-blue;
 }
@@ -48,7 +51,6 @@ $light-red: #fcede9;
 
 #poll-details {
   .fas, .far {
-    width: 20px;
     margin-right: 10px;
     text-align: center;
     color: #5d6e79;
@@ -223,3 +225,40 @@ $light-red: #fcede9;
     }
   }
 }
+
+#poll-submit-button {
+  margin-top: 10px;
+  margin-left: auto;
+  width: fit-content;
+  height: 50px;
+  line-height: 15px;
+  white-space: nowrap;
+  padding: 10px;
+  text-align: center;
+  border-radius: 6px;
+  border: 1px solid;
+
+  #poll-submit-action {
+    font-weight: bold;
+  }
+}
+
+#poll-submit-button[isDisabled="true"] {
+  background: $light-grey;
+  border-color: $light-grey;
+  color: $dark-grey;
+}
+
+#poll-submit-button[isDisabled="false"][cannotAttend="true"] {
+  border-color: $light-grey;
+  background: white;
+  color: $dark-grey;
+}
+
+#poll-submit-button[isDisabled="false"][cannotAttend="false"] {
+  border-color: $dark-blue;
+  background: $dark-blue;
+  color: white;
+  padding: 17.5px 40px;
+}
+
