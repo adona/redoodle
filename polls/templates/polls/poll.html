@@ -1,4 +1,5 @@
 <!doctype html>
+{% load static %}
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -14,12 +15,12 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.0/css/all.css">
 
-    <link rel="stylesheet" href="out/css/poll.css">
+    <link rel="stylesheet" href="{% static 'polls/out/css/poll.css' %}">
 
     <title>Doodle</title>
   </head>
   <body>
     <div id="main"></div>
-    <script src="out/js/poll.js"></script>
+    <script src="{% static 'polls/out/js/poll.js' %}"></script>
   </body>
 </html>
