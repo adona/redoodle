@@ -310,6 +310,7 @@ class PollParticipantRowEditing extends React.Component {
               ref={this.nameInput}
               type="text"
               value={participant.name}
+              placeholder="Enter your name"
               onChange={this.handleNameChange}
             />
           </div>

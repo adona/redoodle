@@ -545,6 +545,7 @@ var PollParticipantRowEditing = function (_React$Component10) {
               ref: this.nameInput,
               type: "text",
               value: participant.name,
+              placeholder: "Enter your name",
               onChange: this.handleNameChange
             })
           )
