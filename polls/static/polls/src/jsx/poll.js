@@ -154,6 +154,7 @@ class PollParticipantsContainer extends React.Component {
 
 class PollParticipantsTable extends React.Component {
   render() {
+    const isEditing = this.props.idxEditing!=null;
     return (
       <table id="poll-participants-table">
         <PollTableHeader polltimes={this.props.polltimes} />
@@ -161,6 +162,7 @@ class PollParticipantsTable extends React.Component {
           <PollTableSummary 
             polltimes={this.props.polltimes}
             participants={this.props.participants}
+            isEditable={!isEditing}
             onAddParticipant={this.props.onAddParticipant}
           />
           {this.props.participants.map(
@@ -169,6 +171,7 @@ class PollParticipantsTable extends React.Component {
                 key={idx}
                 idx={idx}
                 participant={participant}
+                isEditable={!isEditing}
                 onStartEditing = {this.props.onStartEditing}
               /> : 
               <PollParticipantRowEditing 
@@ -228,11 +231,12 @@ class PollTableSummary extends React.Component {
         <td>
           <div id="poll-participants-summary">
             <div id="poll-n-participants">{participants.length} participants</div>
-            <div 
-              id="poll-add-participant" 
-              className="fas fa-plus"
-              onClick={this.props.onAddParticipant}
-            />
+            { !this.props.isEditable ? "" :
+              <div 
+                id="poll-add-participant" 
+                className="fas fa-plus"
+                onClick={this.props.onAddParticipant}
+              /> }
           </div>
         </td>
         {
@@ -267,7 +271,8 @@ class PollParticipantRow extends React.Component {
           <div className="poll-participant-details">
             <div className="poll-participant-icon fas fa-user-circle"></div>
             <div className="poll-participant-name">{participant.name}</div>
-            <div className="poll-participant-edit fas fa-pen" onClick={this.handleStartEditing}></div>
+            { !this.props.isEditable ? "" :
+              <div className="poll-participant-edit fas fa-pen" onClick={this.handleStartEditing}></div> }
           </div>
         </td>
         {

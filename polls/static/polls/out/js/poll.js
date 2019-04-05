@@ -278,6 +278,7 @@ var PollParticipantsTable = function (_React$Component6) {
     value: function render() {
       var _this7 = this;
 
+      var isEditing = this.props.idxEditing != null;
       return React.createElement(
         "table",
         { id: "poll-participants-table" },
@@ -288,6 +289,7 @@ var PollParticipantsTable = function (_React$Component6) {
           React.createElement(PollTableSummary, {
             polltimes: this.props.polltimes,
             participants: this.props.participants,
+            isEditable: !isEditing,
             onAddParticipant: this.props.onAddParticipant
           }),
           this.props.participants.map(function (participant, idx) {
@@ -295,6 +297,7 @@ var PollParticipantsTable = function (_React$Component6) {
               key: idx,
               idx: idx,
               participant: participant,
+              isEditable: !isEditing,
               onStartEditing: _this7.props.onStartEditing
             }) : React.createElement(PollParticipantRowEditing, {
               key: idx,
@@ -418,7 +421,7 @@ var PollTableSummary = function (_React$Component8) {
               participants.length,
               " participants"
             ),
-            React.createElement("div", {
+            !this.props.isEditable ? "" : React.createElement("div", {
               id: "poll-add-participant",
               className: "fas fa-plus",
               onClick: this.props.onAddParticipant
@@ -479,7 +482,7 @@ var PollParticipantRow = function (_React$Component9) {
               { className: "poll-participant-name" },
               participant.name
             ),
-            React.createElement("div", { className: "poll-participant-edit fas fa-pen", onClick: this.handleStartEditing })
+            !this.props.isEditable ? "" : React.createElement("div", { className: "poll-participant-edit fas fa-pen", onClick: this.handleStartEditing })
           )
         ),
         participant.availability.map(function (response, idx) {
