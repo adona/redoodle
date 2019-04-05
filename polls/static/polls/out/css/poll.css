@@ -142,17 +142,17 @@
   background: #eaf4fb;
 }
 
-#poll-participants-table .poll-participant-row[editing="false"] .poll-participant-availability[response="Y"] {
+#poll-participants-table .poll-participant-row[editing="false"] .poll-participant-availability[availability="Y"] {
   background: #cde9a1;
   color: #75a527;
 }
 
-#poll-participants-table .poll-participant-row[editing="false"] .poll-participant-availability[response="M"] {
+#poll-participants-table .poll-participant-row[editing="false"] .poll-participant-availability[availability="M"] {
   background: #fcf5c5;
   color: #dabe0b;
 }
 
-#poll-participants-table .poll-participant-row[editing="false"] .poll-participant-availability[response="N"] {
+#poll-participants-table .poll-participant-row[editing="false"] .poll-participant-availability[availability="N"] {
   background: #fcede9;
 }
 
@@ -189,14 +189,12 @@
   font-size: 1rem;
 }
 
-#poll-participants-table .poll-participant-row[editing="true"] .poll-participant-availability .poll-participant-availability-checkbox[response="Y"] {
-  margin-top: -1px;
+#poll-participants-table .poll-participant-row[editing="true"] .poll-participant-availability .poll-participant-availability-checkbox[availability="Y"] {
   padding: 5px 4.5px;
   color: #75a527;
 }
 
-#poll-participants-table .poll-participant-row[editing="true"] .poll-participant-availability .poll-participant-availability-checkbox[response="M"] {
-  margin-top: -1px;
+#poll-participants-table .poll-participant-row[editing="true"] .poll-participant-availability .poll-participant-availability-checkbox[availability="M"] {
   padding: 5px 3.5px 5px 5.5px;
   color: #dabe0b;
 }

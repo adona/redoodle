@@ -161,15 +161,15 @@ $dark-grey: #8696a2;
       background: $light-blue;
     }
 
-    .poll-participant-availability[response="Y"] {
+    .poll-participant-availability[availability="Y"] {
       background: $light-green;
       color: $dark-green;
     }
-    .poll-participant-availability[response="M"] {
+    .poll-participant-availability[availability="M"] {
       background: $light-yellow;
       color: $dark-yellow;
     }
-    .poll-participant-availability[response="N"] {
+    .poll-participant-availability[availability="N"] {
       background: $light-red;
     }
   }
@@ -209,14 +209,12 @@ $dark-grey: #8696a2;
         font-size: 1rem;
       }
 
-      .poll-participant-availability-checkbox[response="Y"] {
-        margin-top: -1px;
+      .poll-participant-availability-checkbox[availability="Y"] {
         padding: 5px 4.5px;
         color: $dark-green;
       }
 
-      .poll-participant-availability-checkbox[response="M"] {
-        margin-top: -1px;
+      .poll-participant-availability-checkbox[availability="M"] {
         padding: 5px 3.5px 5px 5.5px;
         color: $dark-yellow;
       }

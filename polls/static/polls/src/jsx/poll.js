@@ -19,10 +19,11 @@ class PollContainer extends React.Component {
 
 class PollHeader extends React.Component {
   render() {
+    const author = this.props.author;
     return (
       <div id="poll-header">
         <h1>{this.props.name}</h1>
-        <p>{this.props.author} • 1h hours ago • Print</p>
+        <p>{author.first_name} {author.last_name} • 1h hours ago • Print</p>
       </div>
     );
   }
@@ -39,7 +40,7 @@ class PollMain extends React.Component {
           timezone = {poll.timezone}
         />
         <PollParticipantsContainer 
-          times = {poll.times}
+          polltimes = {poll.polltimes}
           participants = {poll.participants}
         />
       </div>
@@ -62,11 +63,8 @@ class PollDetails extends React.Component {
 class PollParticipantsContainer extends React.Component {
   constructor(props) {
     super(props);
-    var participants = this.props.participants;
-    participants.forEach((p, idx) => p.id = idx); // Add unique IDs
     this.state = {
       participants: this.props.participants,
-      nextID: participants.length,
       idxEditing: null,
       isNewParticipant: null
     };
@@ -81,22 +79,21 @@ class PollParticipantsContainer extends React.Component {
   handleAddParticipant() {
     var participants = this.state.participants;
     const newParticipant = {
+      id: null,
       name: "",
-      id: this.state.nextID,
-      availability: this.props.times.map(time => "N")
+      availability: this.props.polltimes.map(polltime => ({availability: "N"}))
     };
     participants.unshift(newParticipant);
     this.setState({
       participants: participants,
-      nextID: this.state.nextID + 1,
       idxEditing: 0,
       isNewParticipant: true
     });
   }
 
-  handleStartEditing(idx) {
+  handleStartEditing(participantIdx) {
     this.setState({
-      idxEditing: idx,
+      idxEditing: participantIdx,
       isNewParticipant: false
     });
   }
@@ -109,9 +106,9 @@ class PollParticipantsContainer extends React.Component {
     });
   }
 
-  handleAvailabilityChange(participantIdx, dateIdx, newAvailability) {
+  handleAvailabilityChange(participantIdx, polltimeIdx, newAvailability) {
     var participants = this.state.participants;
-    participants[participantIdx].availability[dateIdx] = newAvailability;
+    participants[participantIdx].availability[polltimeIdx] = {availability: newAvailability};
     this.setState({
       participants: participants
     });
@@ -131,15 +128,14 @@ class PollParticipantsContainer extends React.Component {
   }
 
   render() {
-    const poll = this.props.poll;
     return (
       <div id="poll-participants-container">
         <PollParticipantsTable 
-          times = {this.props.times} 
+          polltimes = {this.props.polltimes} 
           participants = {this.state.participants}
           onAddParticipant = {this.handleAddParticipant}
-          idxEditing = {this.state.idxEditing}
           onStartEditing = {this.handleStartEditing}
+          idxEditing = {this.state.idxEditing}
           onNameChange = {this.handleNameChange}
           onAvailabilityChange = {this.handleAvailabilityChange}
           onDeleteParticipant = {this.handleDeleteParticipant}
@@ -147,8 +143,8 @@ class PollParticipantsContainer extends React.Component {
         <PollSubmitButton 
           idxEditing = {this.state.idxEditing}
           isNewParticipant = {this.state.isNewParticipant}
-          participant = {this.state.idxEditing != null ? 
-            this.state.participants[this.state.idxEditing] : null
+          participant = {this.state.idxEditing == null ? null : 
+            this.state.participants[this.state.idxEditing]
           }
         />
       </div>
@@ -160,23 +156,23 @@ class PollParticipantsTable extends React.Component {
   render() {
     return (
       <table id="poll-participants-table">
-        <PollTableHeader times={this.props.times} />
+        <PollTableHeader polltimes={this.props.polltimes} />
         <tbody>
           <PollTableSummary 
+            polltimes={this.props.polltimes}
             participants={this.props.participants}
-            times={this.props.times}
             onAddParticipant={this.props.onAddParticipant}
           />
           {this.props.participants.map(
             (participant, idx) => ( this.props.idxEditing!=idx ? 
               <PollParticipantRow 
-                key={participant.id}
+                key={idx}
                 idx={idx}
                 participant={participant}
                 onStartEditing = {this.props.onStartEditing}
               /> : 
               <PollParticipantRowEditing 
-                key={participant.id}
+                key={idx}
                 idx={idx}
                 participant={participant}
                 onNameChange = {this.props.onNameChange}
@@ -192,21 +188,27 @@ class PollParticipantsTable extends React.Component {
 
 class PollTableHeader extends React.Component {
   render() {
+    const polltimes = this.props.polltimes;
+    var columns = [];
+    for (var idx=0; idx<polltimes.length; idx++) {
+      const time = polltimes[idx];
+      const start_time = new Date(time.start);
+      const end_time = new Date(time.end);
+      columns.push(
+        <th key = {idx} >
+        <span className="poll-table-header-month">{ MONTH_NAMES[start_time.getMonth()].slice(0,3) } </span><br/> 
+        <span className="poll-table-header-day">{ start_time.getDate() } </span><br/>
+        <span className="poll-table-header-weekday">{ DAY_NAMES[start_time.getDay()].slice(0,3) }</span><br/>
+        <span className="poll-table-header-time">{ time_to_string(start_time) }</span><br/>
+        <span className="poll-table-header-time">{ time_to_string(end_time) }</span><br/>
+      </th>
+      );
+    }
     return(
       <thead id="poll-table-header">
         <tr>
           <th/>
-          {this.props.times.map(
-            (time, idx) => (
-              <th key = {idx} >
-                <span className="poll-table-header-month">{ MONTH_NAMES[time.start.getMonth()].slice(0,3) } </span><br/> 
-                <span className="poll-table-header-day">{ time.start.getDate() } </span><br/>
-                <span className="poll-table-header-weekday">{ DAY_NAMES[time.start.getDay()].slice(0,3) }</span><br/>
-                <span className="poll-table-header-time">{ time_to_string(time.start) }</span><br/>
-                <span className="poll-table-header-time">{ time_to_string(time.end) }</span><br/>
-              </th>
-            ))
-          }
+          {columns}
         </tr>
       </thead>
     );
@@ -215,11 +217,11 @@ class PollTableHeader extends React.Component {
 
 class PollTableSummary extends React.Component {
   render() {
+    const polltimes = this.props.polltimes;
     const participants = this.props.participants;
-    const times = this.props.times;
-    const totals = times.map((time, idx) =>
-      sum(participants.map(p => p.availability[idx] != "N"))
-    );
+    var totals = [];
+    for (var idx=0; idx<polltimes.length; idx++)
+      totals[idx] = sum(participants.map(p => p.availability[idx].availability != "N"));
 
     return(
       <tr id="poll-table-summary">
@@ -234,7 +236,7 @@ class PollTableSummary extends React.Component {
           </div>
         </td>
         {
-          times.map((time, idx) => 
+          polltimes.map((polltime, idx) => 
             <td key={idx}>
               <div id="poll-availability-summary" className="fas fa-check">
                 {totals[idx]}
@@ -270,12 +272,12 @@ class PollParticipantRow extends React.Component {
         </td>
         {
           participant.availability.map(
-            (response, dateIdx) => (
+            (response, idx) => (
               <td 
                 className="poll-participant-availability" 
-                key={dateIdx} 
-                response={response}>
-                  {<div className={symbol_from_availability(response)}></div>}
+                key={idx} 
+                availability={response.availability}>
+                  {<div className={symbol_from_availability(response.availability)}></div>}
               </td>))
         }
       </tr>
@@ -288,6 +290,7 @@ class PollParticipantRowEditing extends React.Component {
     super(props);
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleAvailabilityChange = this.handleAvailabilityChange.bind(this);
+    this.handleDeleteParticipant = this.handleDeleteParticipant.bind(this);
     this.nameInput = React.createRef();
   }
 
@@ -297,11 +300,15 @@ class PollParticipantRowEditing extends React.Component {
     this.props.onNameChange(participantIdx, newName);
   }
 
-  handleAvailabilityChange(dateIdx, e) {
+  handleAvailabilityChange(polltimeIdx, e) {
     const participantIdx = this.props.idx;
-    const previousAvailability = $(e.target).attr("response");
+    const previousAvailability = $(e.target).attr("availability");
     const newAvailability = previousAvailability == "Y" ? "M" : (previousAvailability == "M" ? "N" : "Y");
-    this.props.onAvailabilityChange(participantIdx, dateIdx, newAvailability);
+    this.props.onAvailabilityChange(participantIdx, polltimeIdx, newAvailability);
+  }
+
+  handleDeleteParticipant(e) {
+    this.props.onDeleteParticipant(this.props.idx);
   }
 
   render() {
@@ -312,7 +319,7 @@ class PollParticipantRowEditing extends React.Component {
           <div className="poll-participant-details">
             <div 
               className="poll-participant-delete fas fa-trash"
-              onClick={this.props.onDeleteParticipant}
+              onClick={this.handleDeleteParticipant}
             ></div>
             <input
               className="poll-participant-name-input"
@@ -326,16 +333,15 @@ class PollParticipantRowEditing extends React.Component {
         </td>
         {
           participant.availability.map(
-            (response, dateIdx) => (
+            (response, polltimeIdx) => (
               <td 
                 className="poll-participant-availability" 
-                key={dateIdx} 
-                response={response}>
+                key={polltimeIdx}>
                   <input
                     type="checkbox"
-                    className={"poll-participant-availability-checkbox " + symbol_from_availability(response)}
-                    response={response}
-                    onChange={(e) => this.handleAvailabilityChange(dateIdx, e)}
+                    className={"poll-participant-availability-checkbox " + symbol_from_availability(response.availability)}
+                    availability={response.availability}
+                    onChange={(e) => this.handleAvailabilityChange(polltimeIdx, e)}
                   />
               </td>
             ))
@@ -357,7 +363,7 @@ class PollSubmitButton extends React.Component {
     const participant = this.props.participant;
     const action = this.props.isNewParticipant ? "Send" : "Update";
     const isDisabled = participant.name == "";
-    const cannotAttend = sum(participant.availability.map(a => a!="N")) == 0;
+    const cannotAttend = sum(participant.availability.map(a => a.availability!="N")) == 0;
     const note = isDisabled ? "Enter your name first" : (cannotAttend ? "Cannot attend" : null);
     const hasNote = note != null;
     // TODO: Add cancel option
@@ -373,44 +379,6 @@ class PollSubmitButton extends React.Component {
     );
   }
 }
-
-const POLL = {
-  name: "GoT Marathon!!!",
-  author: "Adona Iosif",
-  location: "My place",
-  notes: "Winter is finally here!",
-  timezone: "America/New York",
-  times: [
-    {
-      start: new Date(2019, 4, 2, 20, 0),
-      end: new Date(2019, 4, 2, 23, 0)
-    },
-    {
-      start: new Date(2019, 4, 3, 20, 0),
-      end: new Date(2019, 4, 3, 23, 0)
-    }
-  ],
-  participants: [
-    {
-      name: "Adona-Luiza Iosif",
-      availability: ["Y", "Y"]
-    },
-    {
-      name: "Angi",
-      availability: ["M", "Y"]
-    },
-    {
-      name: "Maria",
-      availability: ["N", "N"]
-    }
-  ]
-}
-
-
-ReactDOM.render(
-  <PollContainer poll={POLL} />,
-  $('#main')[0]
-);
 
 // Helper functions
 
@@ -439,3 +407,50 @@ function symbol_from_availability(availability) {
 function sum(arr) {
   return arr.reduce((a, b) => a+b, 0);
 }
+
+// Load and render the poll
+
+var poll = $("#main").attr("poll");
+poll = JSON.parse(poll);
+console.log(poll);
+
+ReactDOM.render(
+  <PollContainer poll={poll} />,
+  $('#main')[0]
+);
+
+// Example poll:
+// poll = { 
+//   id: 1,
+//   name: "GoT Marathon!!!",
+//   author: {
+//     id: 1,
+//     first_name: "Adona",
+//     last_name: "Iosif",
+//     email: "adona.iosif@gmail.com"
+//   },
+//   location: "My place",
+//   notes: "Winter is finally here!",
+//   timezone: "America/New York",
+//   polltimes: [
+//     { id: 1, start: "2019-05-02T20:00:00Z", end: "2019-05-02T23:00:00Z" },
+//     { id: 2, start: "2019-05-03T20:00:00Z", end: "2019-05-03T23:00:00Z" }
+//   ],
+//   participants: [
+//     {
+//       id: 1, 
+//       name: "Adona-Luiza Iosif", 
+//       availability: [ {availability: "Y"}, {availability: "Y"} ]
+//     },
+//     {
+//       id: 2, 
+//       name: "Angi", 
+//       availability: [ {availability: "M"}, {availability: "Y"} ]
+//     },
+//     {
+//       id: 3, 
+//       name: "Maria", 
+//       availability: [ {availability: "N"}, {availability: "N"} ]
+//     }
+//   ]
+// };

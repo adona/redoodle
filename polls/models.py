@@ -10,48 +10,53 @@ class User(models.Model):
     return f"{self.first_name} {self.last_name} ({self.email})"
 
 class Poll(models.Model):
+  name = models.CharField(max_length=100)
   author = models.ForeignKey(User, on_delete=models.CASCADE)
   location = models.CharField(max_length=50)
   notes = models.CharField(max_length=1000)
   timezone = models.CharField(max_length=50)
   def __str__(self):
-    times = list(map(str, self.polltime_set.all()))
-    participants = list(map(str, self.participant_set.all()))
-
+    times = list(map(str, self.polltimes.all()))
+    participants = list(map(str, self.participants.all()))
     poll_string = [
+      f"Name: {self.name}",
       f"Author: {self.author}",
+      f"Location: {self.location}",
       f"Notes: {self.notes}",
+      f"Timezone: {self.timezone}",
       "",
       "Times:"
     ] + times + [
       "",
       "Participants:"
     ] + participants
-    
     poll_string = "\n".join(poll_string)
     return poll_string
 
-
 class PollTime(models.Model):
-  poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+  poll = models.ForeignKey(Poll, related_name="polltimes", on_delete=models.CASCADE)
   start = models.DateTimeField()
   end = models.DateTimeField()
+  class Meta:
+    ordering = ('start', 'end', )
   def __str__(self):
     return f"{self.start} - {self.end}"
 
 
 class Participant(models.Model):
-  poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+  poll = models.ForeignKey(Poll, related_name="participants", on_delete=models.CASCADE)
   name = models.CharField(max_length=50)
   def __str__(self):
-    return f"{self.name}"
+    availability = list(map(str,self.availability.all()))
+    return f"{self.name}: {availability}"
 
 
 class Availability(models.Model):
-  poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
-  participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
+  participant = models.ForeignKey(Participant, related_name="availability", on_delete=models.CASCADE)
   poll_time = models.ForeignKey(PollTime, on_delete=models.CASCADE)
   availability = models.CharField(max_length=1)
+  class Meta:
+    ordering = ('poll_time', )
   def __str__(self):
     return f"{self.availability}"
 

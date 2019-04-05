@@ -48,6 +48,7 @@ var PollHeader = function (_React$Component2) {
   _createClass(PollHeader, [{
     key: "render",
     value: function render() {
+      var author = this.props.author;
       return React.createElement(
         "div",
         { id: "poll-header" },
@@ -59,7 +60,9 @@ var PollHeader = function (_React$Component2) {
         React.createElement(
           "p",
           null,
-          this.props.author,
+          author.first_name,
+          " ",
+          author.last_name,
           " \u2022 1h hours ago \u2022 Print"
         )
       );
@@ -91,7 +94,7 @@ var PollMain = function (_React$Component3) {
           timezone: poll.timezone
         }),
         React.createElement(PollParticipantsContainer, {
-          times: poll.times,
+          polltimes: poll.polltimes,
           participants: poll.participants
         })
       );
@@ -162,13 +165,8 @@ var PollParticipantsContainer = function (_React$Component5) {
 
     var _this5 = _possibleConstructorReturn(this, (PollParticipantsContainer.__proto__ || Object.getPrototypeOf(PollParticipantsContainer)).call(this, props));
 
-    var participants = _this5.props.participants;
-    participants.forEach(function (p, idx) {
-      return p.id = idx;
-    }); // Add unique IDs
     _this5.state = {
       participants: _this5.props.participants,
-      nextID: participants.length,
       idxEditing: null,
       isNewParticipant: null
     };
@@ -186,25 +184,24 @@ var PollParticipantsContainer = function (_React$Component5) {
     value: function handleAddParticipant() {
       var participants = this.state.participants;
       var newParticipant = {
+        id: null,
         name: "",
-        id: this.state.nextID,
-        availability: this.props.times.map(function (time) {
-          return "N";
+        availability: this.props.polltimes.map(function (polltime) {
+          return { availability: "N" };
         })
       };
       participants.unshift(newParticipant);
       this.setState({
         participants: participants,
-        nextID: this.state.nextID + 1,
         idxEditing: 0,
         isNewParticipant: true
       });
     }
   }, {
     key: "handleStartEditing",
-    value: function handleStartEditing(idx) {
+    value: function handleStartEditing(participantIdx) {
       this.setState({
-        idxEditing: idx,
+        idxEditing: participantIdx,
         isNewParticipant: false
       });
     }
@@ -219,9 +216,9 @@ var PollParticipantsContainer = function (_React$Component5) {
     }
   }, {
     key: "handleAvailabilityChange",
-    value: function handleAvailabilityChange(participantIdx, dateIdx, newAvailability) {
+    value: function handleAvailabilityChange(participantIdx, polltimeIdx, newAvailability) {
       var participants = this.state.participants;
-      participants[participantIdx].availability[dateIdx] = newAvailability;
+      participants[participantIdx].availability[polltimeIdx] = { availability: newAvailability };
       this.setState({
         participants: participants
       });
@@ -242,16 +239,15 @@ var PollParticipantsContainer = function (_React$Component5) {
   }, {
     key: "render",
     value: function render() {
-      var poll = this.props.poll;
       return React.createElement(
         "div",
         { id: "poll-participants-container" },
         React.createElement(PollParticipantsTable, {
-          times: this.props.times,
+          polltimes: this.props.polltimes,
           participants: this.state.participants,
           onAddParticipant: this.handleAddParticipant,
-          idxEditing: this.state.idxEditing,
           onStartEditing: this.handleStartEditing,
+          idxEditing: this.state.idxEditing,
           onNameChange: this.handleNameChange,
           onAvailabilityChange: this.handleAvailabilityChange,
           onDeleteParticipant: this.handleDeleteParticipant
@@ -259,7 +255,7 @@ var PollParticipantsContainer = function (_React$Component5) {
         React.createElement(PollSubmitButton, {
           idxEditing: this.state.idxEditing,
           isNewParticipant: this.state.isNewParticipant,
-          participant: this.state.idxEditing != null ? this.state.participants[this.state.idxEditing] : null
+          participant: this.state.idxEditing == null ? null : this.state.participants[this.state.idxEditing]
         })
       );
     }
@@ -285,23 +281,23 @@ var PollParticipantsTable = function (_React$Component6) {
       return React.createElement(
         "table",
         { id: "poll-participants-table" },
-        React.createElement(PollTableHeader, { times: this.props.times }),
+        React.createElement(PollTableHeader, { polltimes: this.props.polltimes }),
         React.createElement(
           "tbody",
           null,
           React.createElement(PollTableSummary, {
+            polltimes: this.props.polltimes,
             participants: this.props.participants,
-            times: this.props.times,
             onAddParticipant: this.props.onAddParticipant
           }),
           this.props.participants.map(function (participant, idx) {
             return _this7.props.idxEditing != idx ? React.createElement(PollParticipantRow, {
-              key: participant.id,
+              key: idx,
               idx: idx,
               participant: participant,
               onStartEditing: _this7.props.onStartEditing
             }) : React.createElement(PollParticipantRowEditing, {
-              key: participant.id,
+              key: idx,
               idx: idx,
               participant: participant,
               onNameChange: _this7.props.onNameChange,
@@ -329,6 +325,49 @@ var PollTableHeader = function (_React$Component7) {
   _createClass(PollTableHeader, [{
     key: "render",
     value: function render() {
+      var polltimes = this.props.polltimes;
+      var columns = [];
+      for (var idx = 0; idx < polltimes.length; idx++) {
+        var time = polltimes[idx];
+        var start_time = new Date(time.start);
+        var end_time = new Date(time.end);
+        columns.push(React.createElement(
+          "th",
+          { key: idx },
+          React.createElement(
+            "span",
+            { className: "poll-table-header-month" },
+            MONTH_NAMES[start_time.getMonth()].slice(0, 3),
+            " "
+          ),
+          React.createElement("br", null),
+          React.createElement(
+            "span",
+            { className: "poll-table-header-day" },
+            start_time.getDate(),
+            " "
+          ),
+          React.createElement("br", null),
+          React.createElement(
+            "span",
+            { className: "poll-table-header-weekday" },
+            DAY_NAMES[start_time.getDay()].slice(0, 3)
+          ),
+          React.createElement("br", null),
+          React.createElement(
+            "span",
+            { className: "poll-table-header-time" },
+            time_to_string(start_time)
+          ),
+          React.createElement("br", null),
+          React.createElement(
+            "span",
+            { className: "poll-table-header-time" },
+            time_to_string(end_time)
+          ),
+          React.createElement("br", null)
+        ));
+      }
       return React.createElement(
         "thead",
         { id: "poll-table-header" },
@@ -336,44 +375,7 @@ var PollTableHeader = function (_React$Component7) {
           "tr",
           null,
           React.createElement("th", null),
-          this.props.times.map(function (time, idx) {
-            return React.createElement(
-              "th",
-              { key: idx },
-              React.createElement(
-                "span",
-                { className: "poll-table-header-month" },
-                MONTH_NAMES[time.start.getMonth()].slice(0, 3),
-                " "
-              ),
-              React.createElement("br", null),
-              React.createElement(
-                "span",
-                { className: "poll-table-header-day" },
-                time.start.getDate(),
-                " "
-              ),
-              React.createElement("br", null),
-              React.createElement(
-                "span",
-                { className: "poll-table-header-weekday" },
-                DAY_NAMES[time.start.getDay()].slice(0, 3)
-              ),
-              React.createElement("br", null),
-              React.createElement(
-                "span",
-                { className: "poll-table-header-time" },
-                time_to_string(time.start)
-              ),
-              React.createElement("br", null),
-              React.createElement(
-                "span",
-                { className: "poll-table-header-time" },
-                time_to_string(time.end)
-              ),
-              React.createElement("br", null)
-            );
-          })
+          columns
         )
       );
     }
@@ -394,15 +396,14 @@ var PollTableSummary = function (_React$Component8) {
   _createClass(PollTableSummary, [{
     key: "render",
     value: function render() {
+      var polltimes = this.props.polltimes;
       var participants = this.props.participants;
-      var times = this.props.times;
-      var totals = times.map(function (time, idx) {
-        return sum(participants.map(function (p) {
-          return p.availability[idx] != "N";
+      var totals = [];
+      for (var idx = 0; idx < polltimes.length; idx++) {
+        totals[idx] = sum(participants.map(function (p) {
+          return p.availability[idx].availability != "N";
         }));
-      });
-
-      return React.createElement(
+      }return React.createElement(
         "tr",
         { id: "poll-table-summary" },
         React.createElement(
@@ -424,7 +425,7 @@ var PollTableSummary = function (_React$Component8) {
             })
           )
         ),
-        times.map(function (time, idx) {
+        polltimes.map(function (polltime, idx) {
           return React.createElement(
             "td",
             { key: idx },
@@ -481,14 +482,14 @@ var PollParticipantRow = function (_React$Component9) {
             React.createElement("div", { className: "poll-participant-edit fas fa-pen", onClick: this.handleStartEditing })
           )
         ),
-        participant.availability.map(function (response, dateIdx) {
+        participant.availability.map(function (response, idx) {
           return React.createElement(
             "td",
             {
               className: "poll-participant-availability",
-              key: dateIdx,
-              response: response },
-            React.createElement("div", { className: symbol_from_availability(response) })
+              key: idx,
+              availability: response.availability },
+            React.createElement("div", { className: symbol_from_availability(response.availability) })
           );
         })
       );
@@ -508,6 +509,7 @@ var PollParticipantRowEditing = function (_React$Component10) {
 
     _this11.handleNameChange = _this11.handleNameChange.bind(_this11);
     _this11.handleAvailabilityChange = _this11.handleAvailabilityChange.bind(_this11);
+    _this11.handleDeleteParticipant = _this11.handleDeleteParticipant.bind(_this11);
     _this11.nameInput = React.createRef();
     return _this11;
   }
@@ -521,11 +523,16 @@ var PollParticipantRowEditing = function (_React$Component10) {
     }
   }, {
     key: "handleAvailabilityChange",
-    value: function handleAvailabilityChange(dateIdx, e) {
+    value: function handleAvailabilityChange(polltimeIdx, e) {
       var participantIdx = this.props.idx;
-      var previousAvailability = $(e.target).attr("response");
+      var previousAvailability = $(e.target).attr("availability");
       var newAvailability = previousAvailability == "Y" ? "M" : previousAvailability == "M" ? "N" : "Y";
-      this.props.onAvailabilityChange(participantIdx, dateIdx, newAvailability);
+      this.props.onAvailabilityChange(participantIdx, polltimeIdx, newAvailability);
+    }
+  }, {
+    key: "handleDeleteParticipant",
+    value: function handleDeleteParticipant(e) {
+      this.props.onDeleteParticipant(this.props.idx);
     }
   }, {
     key: "render",
@@ -544,7 +551,7 @@ var PollParticipantRowEditing = function (_React$Component10) {
             { className: "poll-participant-details" },
             React.createElement("div", {
               className: "poll-participant-delete fas fa-trash",
-              onClick: this.props.onDeleteParticipant
+              onClick: this.handleDeleteParticipant
             }),
             React.createElement("input", {
               className: "poll-participant-name-input",
@@ -556,19 +563,18 @@ var PollParticipantRowEditing = function (_React$Component10) {
             })
           )
         ),
-        participant.availability.map(function (response, dateIdx) {
+        participant.availability.map(function (response, polltimeIdx) {
           return React.createElement(
             "td",
             {
               className: "poll-participant-availability",
-              key: dateIdx,
-              response: response },
+              key: polltimeIdx },
             React.createElement("input", {
               type: "checkbox",
-              className: "poll-participant-availability-checkbox " + symbol_from_availability(response),
-              response: response,
+              className: "poll-participant-availability-checkbox " + symbol_from_availability(response.availability),
+              availability: response.availability,
               onChange: function onChange(e) {
-                return _this12.handleAvailabilityChange(dateIdx, e);
+                return _this12.handleAvailabilityChange(polltimeIdx, e);
               }
             })
           );
@@ -603,7 +609,7 @@ var PollSubmitButton = function (_React$Component11) {
       var action = this.props.isNewParticipant ? "Send" : "Update";
       var isDisabled = participant.name == "";
       var cannotAttend = sum(participant.availability.map(function (a) {
-        return a != "N";
+        return a.availability != "N";
       })) == 0;
       var note = isDisabled ? "Enter your name first" : cannotAttend ? "Cannot attend" : null;
       var hasNote = note != null;
@@ -632,33 +638,6 @@ var PollSubmitButton = function (_React$Component11) {
   return PollSubmitButton;
 }(React.Component);
 
-var POLL = {
-  name: "GoT Marathon!!!",
-  author: "Adona Iosif",
-  location: "My place",
-  notes: "Winter is finally here!",
-  timezone: "America/New York",
-  times: [{
-    start: new Date(2019, 4, 2, 20, 0),
-    end: new Date(2019, 4, 2, 23, 0)
-  }, {
-    start: new Date(2019, 4, 3, 20, 0),
-    end: new Date(2019, 4, 3, 23, 0)
-  }],
-  participants: [{
-    name: "Adona-Luiza Iosif",
-    availability: ["Y", "Y"]
-  }, {
-    name: "Angi",
-    availability: ["M", "Y"]
-  }, {
-    name: "Maria",
-    availability: ["N", "N"]
-  }]
-};
-
-ReactDOM.render(React.createElement(PollContainer, { poll: POLL }), $('#main')[0]);
-
 // Helper functions
 
 function time_to_string(date) {
@@ -686,3 +665,47 @@ function sum(arr) {
     return a + b;
   }, 0);
 }
+
+// Load and render the poll
+
+var poll = $("#main").attr("poll");
+poll = JSON.parse(poll);
+console.log(poll);
+
+ReactDOM.render(React.createElement(PollContainer, { poll: poll }), $('#main')[0]);
+
+// Example poll:
+// poll = { 
+//   id: 1,
+//   name: "GoT Marathon!!!",
+//   author: {
+//     id: 1,
+//     first_name: "Adona",
+//     last_name: "Iosif",
+//     email: "adona.iosif@gmail.com"
+//   },
+//   location: "My place",
+//   notes: "Winter is finally here!",
+//   timezone: "America/New York",
+//   polltimes: [
+//     { id: 1, start: "2019-05-02T20:00:00Z", end: "2019-05-02T23:00:00Z" },
+//     { id: 2, start: "2019-05-03T20:00:00Z", end: "2019-05-03T23:00:00Z" }
+//   ],
+//   participants: [
+//     {
+//       id: 1, 
+//       name: "Adona-Luiza Iosif", 
+//       availability: [ {availability: "Y"}, {availability: "Y"} ]
+//     },
+//     {
+//       id: 2, 
+//       name: "Angi", 
+//       availability: [ {availability: "M"}, {availability: "Y"} ]
+//     },
+//     {
+//       id: 3, 
+//       name: "Maria", 
+//       availability: [ {availability: "N"}, {availability: "N"} ]
+//     }
+//   ]
+// };
