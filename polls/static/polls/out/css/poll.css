@@ -212,6 +212,7 @@
   text-align: center;
   border-radius: 6px;
   border: 1px solid;
+  cursor: pointer;
 }
 
 #poll-submit-button #poll-submit-action {
@@ -222,6 +223,7 @@
   background: #c5cdd3;
   border-color: #c5cdd3;
   color: #8696a2;
+  cursor: not-allowed;
 }
 
 #poll-submit-button[isDisabled="false"][cannotAttend="true"] {
