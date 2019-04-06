@@ -140,13 +140,14 @@ class PollParticipantsContainer extends React.Component {
           onAvailabilityChange = {this.handleAvailabilityChange}
           onDeleteParticipant = {this.handleDeleteParticipant}
         />
-        <PollSubmitButton 
-          idxEditing = {this.state.idxEditing}
-          isNewParticipant = {this.state.isNewParticipant}
-          participant = {this.state.idxEditing == null ? null : 
-            this.state.participants[this.state.idxEditing]
-          }
-        />
+        { this.state.idxEditing == null ? "" : 
+          <PollSubmitButton 
+            idxEditing = {this.state.idxEditing}
+            isNewParticipant = {this.state.isNewParticipant}
+            participant = {this.state.participants[this.state.idxEditing]}
+            onStopEditing = {this.handleStopEditing}
+          />
+        }
       </div>
     )
   }
@@ -361,23 +362,35 @@ class PollParticipantRowEditing extends React.Component {
 }
 
 class PollSubmitButton extends React.Component {
-  render() {
-    if (this.props.idxEditing == null) 
-      return null;
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
+  isDisabled() {
+    return this.props.participant.name == "";
+  }
+
+  handleSubmit(e) {
+    if (!this.isDisabled())
+      this.props.onStopEditing();
+  }
+
+  render() {
     const participant = this.props.participant;
     const action = this.props.isNewParticipant ? "Send" : "Update";
-    const isDisabled = participant.name == "";
     const cannotAttend = sum(participant.availability.map(a => a.availability!="N")) == 0;
-    const note = isDisabled ? "Enter your name first" : (cannotAttend ? "Cannot attend" : null);
+    const note = this.isDisabled() ? "Enter your name first" : (cannotAttend ? "Cannot attend" : null);
     const hasNote = note != null;
     // TODO: Add cancel option
     
     return(
       <div id="poll-submit-button" 
-        isdisabled={isDisabled.toString()} 
+        isdisabled={this.isDisabled().toString()} 
         cannotattend={cannotAttend.toString()} 
-        hasnote={hasNote.toString()}>
+        hasnote={hasNote.toString()}
+        onClick={this.handleSubmit}
+        >
           <div id="poll-submit-action">{action}</div>
           <div id="poll-submit-note">{note}</div>
       </div>

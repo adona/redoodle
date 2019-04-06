@@ -252,10 +252,11 @@ var PollParticipantsContainer = function (_React$Component5) {
           onAvailabilityChange: this.handleAvailabilityChange,
           onDeleteParticipant: this.handleDeleteParticipant
         }),
-        React.createElement(PollSubmitButton, {
+        this.state.idxEditing == null ? "" : React.createElement(PollSubmitButton, {
           idxEditing: this.state.idxEditing,
           isNewParticipant: this.state.isNewParticipant,
-          participant: this.state.idxEditing == null ? null : this.state.participants[this.state.idxEditing]
+          participant: this.state.participants[this.state.idxEditing],
+          onStopEditing: this.handleStopEditing
         })
       );
     }
@@ -597,33 +598,45 @@ var PollParticipantRowEditing = function (_React$Component10) {
 var PollSubmitButton = function (_React$Component11) {
   _inherits(PollSubmitButton, _React$Component11);
 
-  function PollSubmitButton() {
+  function PollSubmitButton(props) {
     _classCallCheck(this, PollSubmitButton);
 
-    return _possibleConstructorReturn(this, (PollSubmitButton.__proto__ || Object.getPrototypeOf(PollSubmitButton)).apply(this, arguments));
+    var _this13 = _possibleConstructorReturn(this, (PollSubmitButton.__proto__ || Object.getPrototypeOf(PollSubmitButton)).call(this, props));
+
+    _this13.handleSubmit = _this13.handleSubmit.bind(_this13);
+    return _this13;
   }
 
   _createClass(PollSubmitButton, [{
+    key: "isDisabled",
+    value: function isDisabled() {
+      return this.props.participant.name == "";
+    }
+  }, {
+    key: "handleSubmit",
+    value: function handleSubmit(e) {
+      if (!this.isDisabled()) this.props.onStopEditing();
+    }
+  }, {
     key: "render",
     value: function render() {
-      if (this.props.idxEditing == null) return null;
-
       var participant = this.props.participant;
       var action = this.props.isNewParticipant ? "Send" : "Update";
-      var isDisabled = participant.name == "";
       var cannotAttend = sum(participant.availability.map(function (a) {
         return a.availability != "N";
       })) == 0;
-      var note = isDisabled ? "Enter your name first" : cannotAttend ? "Cannot attend" : null;
+      var note = this.isDisabled() ? "Enter your name first" : cannotAttend ? "Cannot attend" : null;
       var hasNote = note != null;
       // TODO: Add cancel option
 
       return React.createElement(
         "div",
         { id: "poll-submit-button",
-          isdisabled: isDisabled.toString(),
+          isdisabled: this.isDisabled().toString(),
           cannotattend: cannotAttend.toString(),
-          hasnote: hasNote.toString() },
+          hasnote: hasNote.toString(),
+          onClick: this.handleSubmit
+        },
         React.createElement(
           "div",
           { id: "poll-submit-action" },
