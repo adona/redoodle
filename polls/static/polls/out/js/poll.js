@@ -235,7 +235,14 @@ var PollParticipantsContainer = function (_React$Component5) {
     }
   }, {
     key: "handleStopEditing",
-    value: function handleStopEditing() {}
+    value: function handleStopEditing() {
+      editedParticipant = this.state.participants[this.state.idxEditing];
+      $.post("update-participant", JSON.stringify(editedParticipant));
+      this.setState({
+        idxEditing: null,
+        isNewParticipant: null
+      });
+    }
   }, {
     key: "render",
     value: function render() {

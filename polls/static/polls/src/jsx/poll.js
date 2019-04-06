@@ -124,7 +124,12 @@ class PollParticipantsContainer extends React.Component {
   }
 
   handleStopEditing() {
-
+    editedParticipant = this.state.participants[this.state.idxEditing];
+    $.post("update-participant", JSON.stringify(editedParticipant));
+    this.setState({
+      idxEditing: null,
+      isNewParticipant: null
+    });
   }
 
   render() {
