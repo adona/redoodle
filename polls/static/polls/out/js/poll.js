@@ -233,8 +233,13 @@ var PollParticipantsContainer = function (_React$Component5) {
 
       var participants = this.state.participants;
       var updatedParticipant = participants[this.state.idxEditing];
-      $.post("update-participant", JSON.stringify(updatedParticipant)).done(function (updatedParticipant) {
-        participants[_this6.state.idxEditing] = updatedParticipant;
+      var method = this.state.isNewParticipant ? "POST" : "PUT";
+      $.ajax({
+        url: "update-participant",
+        type: method,
+        data: JSON.stringify(updatedParticipant)
+      }).done(function (updatedParticipant) {
+        if (_this6.state.isNewParticipant) participants[_this6.state.idxEditing] = updatedParticipant;
         _this6.setState({
           participants: participants,
           idxEditing: null,
@@ -266,9 +271,9 @@ var PollParticipantsContainer = function (_React$Component5) {
         deleteParticipant();
       } else {
         $.ajax({
-          url: "delete-participant",
+          url: "update-participant",
           type: "DELETE",
-          data: JSON.stringify(deletedParticipant)
+          data: JSON.stringify({ id: deletedParticipant["id"] })
         }).done(deleteParticipant).fail(function () {
           // TODO: Handle failure case (at the very least alert the user, perhaps different responses depending on the error message)
           console.log("Failed to delete participant.");

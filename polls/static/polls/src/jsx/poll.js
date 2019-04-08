@@ -119,13 +119,16 @@ class PollParticipantsContainer extends React.Component {
 
   handleStopEditing() {
     var participants = this.state.participants;
-    var updatedParticipant = participants[this.state.idxEditing];
-    $.post(
-      "update-participant", 
-      JSON.stringify(updatedParticipant)
-    )
+    const updatedParticipant = participants[this.state.idxEditing];
+    const method = this.state.isNewParticipant ? "POST" : "PUT";
+    $.ajax({
+      url: "update-participant", 
+      type: method,
+      data: JSON.stringify(updatedParticipant)
+    })
     .done((updatedParticipant) => {
-      participants[this.state.idxEditing] = updatedParticipant;
+      if(this.state.isNewParticipant)
+        participants[this.state.idxEditing] = updatedParticipant;
       this.setState({
         participants: participants,
         idxEditing: null,
@@ -155,9 +158,9 @@ class PollParticipantsContainer extends React.Component {
       deleteParticipant();
     } else {
       $.ajax({
-        url: "delete-participant", 
+        url: "update-participant", 
         type: "DELETE", 
-        data: JSON.stringify(deletedParticipant)
+        data: JSON.stringify({id: deletedParticipant["id"]})
       })
       .done(deleteParticipant)
       .fail(() => {
