@@ -229,24 +229,51 @@ var PollParticipantsContainer = function (_React$Component5) {
   }, {
     key: "handleStopEditing",
     value: function handleStopEditing() {
-      editedParticipant = this.state.participants[this.state.idxEditing];
-      $.post("update-participant", JSON.stringify(editedParticipant));
-      this.setState({
-        idxEditing: null,
-        isNewParticipant: null
+      var _this6 = this;
+
+      var participants = this.state.participants;
+      var updatedParticipant = participants[this.state.idxEditing];
+      $.post("update-participant", JSON.stringify(updatedParticipant)).done(function (updatedParticipant) {
+        participants[_this6.state.idxEditing] = updatedParticipant;
+        _this6.setState({
+          participants: participants,
+          idxEditing: null,
+          isNewParticipant: null
+        });
+        console.log("Participant updated.");
+      }).fail(function () {
+        // TODO: Handle failure case (at the very least alert the user, perhaps different responses depending on the error message)
+        console.log("Failed to update participant.");
       });
     }
   }, {
     key: "handleDeleteParticipant",
     value: function handleDeleteParticipant(participantIdx) {
+      var _this7 = this;
+
       var participants = this.state.participants;
-      var participant = participants[participantIdx];
-      $.ajax({ url: "delete-participant", type: "DELETE", data: { participant_id: participant["id"] } });
-      participants.splice(participantIdx, 1);
-      this.setState({
-        participants: participants,
-        idxEditing: null
-      });
+      var deletedParticipant = participants[participantIdx];
+      var deleteParticipant = function deleteParticipant() {
+        participants.splice(participantIdx, 1);
+        _this7.setState({
+          participants: participants,
+          idxEditing: null,
+          isNewParticipant: null
+        });
+        console.log("Participant deleted.");
+      };
+      if (this.state.isNewParticipant) {
+        deleteParticipant();
+      } else {
+        $.ajax({
+          url: "delete-participant",
+          type: "DELETE",
+          data: JSON.stringify(deletedParticipant)
+        }).done(deleteParticipant).fail(function () {
+          // TODO: Handle failure case (at the very least alert the user, perhaps different responses depending on the error message)
+          console.log("Failed to delete participant.");
+        });
+      }
     }
   }, {
     key: "render",
@@ -289,7 +316,7 @@ var PollParticipantsTable = function (_React$Component6) {
   _createClass(PollParticipantsTable, [{
     key: "render",
     value: function render() {
-      var _this7 = this;
+      var _this9 = this;
 
       var isEditing = this.props.idxEditing != null;
       return React.createElement(
@@ -306,19 +333,19 @@ var PollParticipantsTable = function (_React$Component6) {
             onAddParticipant: this.props.onAddParticipant
           }),
           this.props.participants.map(function (participant, idx) {
-            return _this7.props.idxEditing != idx ? React.createElement(PollParticipantRow, {
+            return _this9.props.idxEditing != idx ? React.createElement(PollParticipantRow, {
               key: idx,
               idx: idx,
               participant: participant,
               isEditable: !isEditing,
-              onStartEditing: _this7.props.onStartEditing
+              onStartEditing: _this9.props.onStartEditing
             }) : React.createElement(PollParticipantRowEditing, {
               key: idx,
               idx: idx,
               participant: participant,
-              onNameChange: _this7.props.onNameChange,
-              onAvailabilityChange: _this7.props.onAvailabilityChange,
-              onDeleteParticipant: _this7.props.onDeleteParticipant
+              onNameChange: _this9.props.onNameChange,
+              onAvailabilityChange: _this9.props.onAvailabilityChange,
+              onDeleteParticipant: _this9.props.onDeleteParticipant
             });
           })
         )
@@ -465,10 +492,10 @@ var PollParticipantRow = function (_React$Component9) {
   function PollParticipantRow(props) {
     _classCallCheck(this, PollParticipantRow);
 
-    var _this10 = _possibleConstructorReturn(this, (PollParticipantRow.__proto__ || Object.getPrototypeOf(PollParticipantRow)).call(this, props));
+    var _this12 = _possibleConstructorReturn(this, (PollParticipantRow.__proto__ || Object.getPrototypeOf(PollParticipantRow)).call(this, props));
 
-    _this10.handleStartEditing = _this10.handleStartEditing.bind(_this10);
-    return _this10;
+    _this12.handleStartEditing = _this12.handleStartEditing.bind(_this12);
+    return _this12;
   }
 
   _createClass(PollParticipantRow, [{
@@ -521,13 +548,13 @@ var PollParticipantRowEditing = function (_React$Component10) {
   function PollParticipantRowEditing(props) {
     _classCallCheck(this, PollParticipantRowEditing);
 
-    var _this11 = _possibleConstructorReturn(this, (PollParticipantRowEditing.__proto__ || Object.getPrototypeOf(PollParticipantRowEditing)).call(this, props));
+    var _this13 = _possibleConstructorReturn(this, (PollParticipantRowEditing.__proto__ || Object.getPrototypeOf(PollParticipantRowEditing)).call(this, props));
 
-    _this11.handleNameChange = _this11.handleNameChange.bind(_this11);
-    _this11.handleAvailabilityChange = _this11.handleAvailabilityChange.bind(_this11);
-    _this11.handleDeleteParticipant = _this11.handleDeleteParticipant.bind(_this11);
-    _this11.nameInput = React.createRef();
-    return _this11;
+    _this13.handleNameChange = _this13.handleNameChange.bind(_this13);
+    _this13.handleAvailabilityChange = _this13.handleAvailabilityChange.bind(_this13);
+    _this13.handleDeleteParticipant = _this13.handleDeleteParticipant.bind(_this13);
+    _this13.nameInput = React.createRef();
+    return _this13;
   }
 
   _createClass(PollParticipantRowEditing, [{
@@ -553,7 +580,7 @@ var PollParticipantRowEditing = function (_React$Component10) {
   }, {
     key: "render",
     value: function render() {
-      var _this12 = this;
+      var _this14 = this;
 
       var participant = this.props.participant;
       return React.createElement(
@@ -590,7 +617,7 @@ var PollParticipantRowEditing = function (_React$Component10) {
               className: "poll-participant-availability-checkbox " + symbol_from_availability(response.availability),
               availability: response.availability,
               onChange: function onChange(e) {
-                return _this12.handleAvailabilityChange(polltimeIdx, e);
+                return _this14.handleAvailabilityChange(polltimeIdx, e);
               }
             })
           );
@@ -613,10 +640,10 @@ var PollSubmitButton = function (_React$Component11) {
   function PollSubmitButton(props) {
     _classCallCheck(this, PollSubmitButton);
 
-    var _this13 = _possibleConstructorReturn(this, (PollSubmitButton.__proto__ || Object.getPrototypeOf(PollSubmitButton)).call(this, props));
+    var _this15 = _possibleConstructorReturn(this, (PollSubmitButton.__proto__ || Object.getPrototypeOf(PollSubmitButton)).call(this, props));
 
-    _this13.handleSubmit = _this13.handleSubmit.bind(_this13);
-    return _this13;
+    _this15.handleSubmit = _this15.handleSubmit.bind(_this15);
+    return _this15;
   }
 
   _createClass(PollSubmitButton, [{

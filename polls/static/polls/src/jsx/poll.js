@@ -118,23 +118,53 @@ class PollParticipantsContainer extends React.Component {
   }
 
   handleStopEditing() {
-    editedParticipant = this.state.participants[this.state.idxEditing];
-    $.post("update-participant", JSON.stringify(editedParticipant));
-    this.setState({
-      idxEditing: null,
-      isNewParticipant: null
+    var participants = this.state.participants;
+    var updatedParticipant = participants[this.state.idxEditing];
+    $.post(
+      "update-participant", 
+      JSON.stringify(updatedParticipant)
+    )
+    .done((updatedParticipant) => {
+      participants[this.state.idxEditing] = updatedParticipant;
+      this.setState({
+        participants: participants,
+        idxEditing: null,
+        isNewParticipant: null
+      });
+      console.log("Participant updated.");
+    })
+    .fail(() => {
+      // TODO: Handle failure case (at the very least alert the user, perhaps different responses depending on the error message)
+      console.log("Failed to update participant.");
     });
   }
 
   handleDeleteParticipant(participantIdx) {
     var participants = this.state.participants;
-    var participant = participants[participantIdx]
-    $.ajax({url: "delete-participant", type: "DELETE", data: {participant_id: participant["id"]}});
-    participants.splice(participantIdx, 1);
-    this.setState({
-      participants: participants,
-      idxEditing: null
-    });
+    var deletedParticipant = participants[participantIdx];
+    var deleteParticipant = () => {
+      participants.splice(participantIdx, 1);
+      this.setState({
+        participants: participants,
+        idxEditing: null,
+        isNewParticipant: null
+      });
+      console.log("Participant deleted.");
+    }
+    if (this.state.isNewParticipant) {
+      deleteParticipant();
+    } else {
+      $.ajax({
+        url: "delete-participant", 
+        type: "DELETE", 
+        data: JSON.stringify(deletedParticipant)
+      })
+      .done(deleteParticipant)
+      .fail(() => {
+        // TODO: Handle failure case (at the very least alert the user, perhaps different responses depending on the error message)
+        console.log("Failed to delete participant.");
+      });
+    }
   }
 
   render() {

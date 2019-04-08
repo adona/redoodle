@@ -1,10 +1,9 @@
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, QueryDict
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from polls.models import *
 from polls.serializers import *
 import json
-from pprint import pprint
 
 
 # Create your views here.
@@ -22,21 +21,21 @@ def update_participant(request):
   if (participant_data["id"] == None):  # New participant
     poll = Poll.objects.get(pk=1)
     serializer = ParticipantSerializer(data=participant_data)
-    if serializer.is_valid():
-      serializer.save(poll=poll)
+    if serializer.is_valid(raise_exception=True):
+      participant = serializer.save(poll=poll)
       print("Participant created.")
   else:
     participant = Participant.objects.get(pk=participant_data["id"])
     serializer = ParticipantSerializer(participant, data=participant_data)
-    if serializer.is_valid():
-      serializer.save()
+    if serializer.is_valid(raise_exception=True):
+      participant = serializer.save()
       print("Participant updated.")
-  return HttpResponse("")
+  return JsonResponse(serializer.data)
 
 @csrf_exempt
 def delete_participant(request):
-  participant_id = QueryDict(request.body)["participant_id"]
-  participant = Participant.objects.get(pk=participant_id)
+  participant_data = json.loads(request.body)
+  participant = Participant.objects.get(pk=participant_data["id"])
   participant.delete()
   print("Participant deleted.")
   return HttpResponse("")
