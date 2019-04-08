@@ -42,7 +42,6 @@ class PollTime(models.Model):
   def __str__(self):
     return f"{self.start} - {self.end}"
 
-
 class Participant(models.Model):
   poll = models.ForeignKey(Poll, related_name="participants", on_delete=models.CASCADE)
   name = models.CharField(max_length=50)
@@ -50,13 +49,12 @@ class Participant(models.Model):
     availability = list(map(str,self.availability.all()))
     return f"{self.name}: {availability}"
 
-
 class Availability(models.Model):
   participant = models.ForeignKey(Participant, related_name="availability", on_delete=models.CASCADE)
-  poll_time = models.ForeignKey(PollTime, on_delete=models.CASCADE)
+  polltime = models.ForeignKey(PollTime, on_delete=models.CASCADE)
   availability = models.CharField(max_length=1)
   class Meta:
-    ordering = ('poll_time', )
+    ordering = ('polltime', )
   def __str__(self):
     return f"{self.availability}"
 

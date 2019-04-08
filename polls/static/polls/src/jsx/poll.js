@@ -81,7 +81,10 @@ class PollParticipantsContainer extends React.Component {
     const newParticipant = {
       id: null,
       name: "",
-      availability: this.props.polltimes.map(polltime => ({availability: "N"}))
+      availability: this.props.polltimes.map(polltime => ({
+        polltime: polltime.id,
+        availability: "N"
+      }))
     };
     participants.unshift(newParticipant);
     this.setState({
@@ -98,9 +101,9 @@ class PollParticipantsContainer extends React.Component {
     });
   }
 
-  handleNameChange(participantIdx, name) {
+  handleNameChange(participantIdx, newName) {
     var participants = this.state.participants;
-    participants[participantIdx].name = name;
+    participants[participantIdx].name = newName;
     this.setState({
       participants: participants
     });
@@ -108,18 +111,9 @@ class PollParticipantsContainer extends React.Component {
 
   handleAvailabilityChange(participantIdx, polltimeIdx, newAvailability) {
     var participants = this.state.participants;
-    participants[participantIdx].availability[polltimeIdx] = {availability: newAvailability};
+    participants[participantIdx].availability[polltimeIdx].availability = newAvailability;
     this.setState({
       participants: participants
-    });
-  }
-
-  handleDeleteParticipant(participantIdx) {
-    var participants = this.state.participants;
-    participants.splice(participantIdx, 1);
-    this.setState({
-      participants: participants,
-      idxEditing: null
     });
   }
 
@@ -129,6 +123,17 @@ class PollParticipantsContainer extends React.Component {
     this.setState({
       idxEditing: null,
       isNewParticipant: null
+    });
+  }
+
+  handleDeleteParticipant(participantIdx) {
+    var participants = this.state.participants;
+    var participant = participants[participantIdx]
+    $.ajax({url: "delete-participant", type: "DELETE", data: {participant_id: participant["id"]}});
+    participants.splice(participantIdx, 1);
+    this.setState({
+      participants: participants,
+      idxEditing: null
     });
   }
 

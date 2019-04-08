@@ -187,7 +187,10 @@ var PollParticipantsContainer = function (_React$Component5) {
         id: null,
         name: "",
         availability: this.props.polltimes.map(function (polltime) {
-          return { availability: "N" };
+          return {
+            polltime: polltime.id,
+            availability: "N"
+          };
         })
       };
       participants.unshift(newParticipant);
@@ -207,9 +210,9 @@ var PollParticipantsContainer = function (_React$Component5) {
     }
   }, {
     key: "handleNameChange",
-    value: function handleNameChange(participantIdx, name) {
+    value: function handleNameChange(participantIdx, newName) {
       var participants = this.state.participants;
-      participants[participantIdx].name = name;
+      participants[participantIdx].name = newName;
       this.setState({
         participants: participants
       });
@@ -218,19 +221,9 @@ var PollParticipantsContainer = function (_React$Component5) {
     key: "handleAvailabilityChange",
     value: function handleAvailabilityChange(participantIdx, polltimeIdx, newAvailability) {
       var participants = this.state.participants;
-      participants[participantIdx].availability[polltimeIdx] = { availability: newAvailability };
+      participants[participantIdx].availability[polltimeIdx].availability = newAvailability;
       this.setState({
         participants: participants
-      });
-    }
-  }, {
-    key: "handleDeleteParticipant",
-    value: function handleDeleteParticipant(participantIdx) {
-      var participants = this.state.participants;
-      participants.splice(participantIdx, 1);
-      this.setState({
-        participants: participants,
-        idxEditing: null
       });
     }
   }, {
@@ -241,6 +234,18 @@ var PollParticipantsContainer = function (_React$Component5) {
       this.setState({
         idxEditing: null,
         isNewParticipant: null
+      });
+    }
+  }, {
+    key: "handleDeleteParticipant",
+    value: function handleDeleteParticipant(participantIdx) {
+      var participants = this.state.participants;
+      var participant = participants[participantIdx];
+      $.ajax({ url: "delete-participant", type: "DELETE", data: { participant_id: participant["id"] } });
+      participants.splice(participantIdx, 1);
+      this.setState({
+        participants: participants,
+        idxEditing: null
       });
     }
   }, {
