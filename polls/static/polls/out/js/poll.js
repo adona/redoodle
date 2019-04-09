@@ -235,7 +235,7 @@ var PollParticipantsContainer = function (_React$Component5) {
       var updatedParticipant = participants[this.state.idxEditing];
       var method = this.state.isNewParticipant ? "POST" : "PUT";
       $.ajax({
-        url: "update-participant",
+        url: "",
         type: method,
         data: JSON.stringify(updatedParticipant)
       }).done(function (updatedParticipant) {
@@ -271,7 +271,7 @@ var PollParticipantsContainer = function (_React$Component5) {
         deleteParticipant();
       } else {
         $.ajax({
-          url: "update-participant",
+          url: "",
           type: "DELETE",
           data: JSON.stringify({ id: deletedParticipant["id"] })
         }).done(deleteParticipant).fail(function () {

@@ -122,7 +122,7 @@ class PollParticipantsContainer extends React.Component {
     const updatedParticipant = participants[this.state.idxEditing];
     const method = this.state.isNewParticipant ? "POST" : "PUT";
     $.ajax({
-      url: "update-participant", 
+      url: "", 
       type: method,
       data: JSON.stringify(updatedParticipant)
     })
@@ -158,7 +158,7 @@ class PollParticipantsContainer extends React.Component {
       deleteParticipant();
     } else {
       $.ajax({
-        url: "update-participant", 
+        url: "", 
         type: "DELETE", 
         data: JSON.stringify({id: deletedParticipant["id"]})
       })

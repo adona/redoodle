@@ -1,6 +1,6 @@
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework import status
 from polls.models import *
 from polls.serializers import *
@@ -9,18 +9,20 @@ import json
 
 # Create your views here.
 
-def participate_poll(request):
-  poll = Poll.objects.get(pk=1) # For now use a hardcoded poll ID during development
-  poll = PollSerializer(poll).data
-  poll = json.dumps(poll)
-  return render(request, "polls/poll.html", {"poll": poll})
+class ParticipatePoll(APIView):
+  renderer_classes = (JSONRenderer, TemplateHTMLRenderer,)
 
-class UpdateParticipant(APIView):
+  def get(self, request):
+    poll = Poll.objects.all()[0] # For now just use the 1st poll in the database
+    poll = PollSerializer(poll).data
+    poll = json.dumps(poll)
+    return Response({"poll": poll}, template_name="polls/poll.html")
+
   def post(self, request):
     participant_data = json.loads(request.body)
     serializer = ParticipantSerializer(data=participant_data)
     if serializer.is_valid(raise_exception=True):
-      poll = Poll.objects.get(pk=1)
+      poll = Poll.objects.all()[0]
       serializer.save(poll=poll)
       print("Participant created.")
       return Response(serializer.data, status=status.HTTP_200_OK)
