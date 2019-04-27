@@ -14,26 +14,19 @@ class ParticipantSerializer(serializers.ModelSerializer):
     depth = 1
   
   def create(self, validated_data):
-    # Create the participant
-    validated_data.pop("availability")
+    validated_availability_list = validated_data.pop("availability")
     participant = Participant.objects.create(**validated_data)
-    # Create their availability
-    for availability_data in self.initial_data["availability"]:
-      serializer = AvailabilitySerializer(data=availability_data)
-      if serializer.is_valid(raise_exception=True):
-        serializer.save(participant=participant)
+    for validated_availability in validated_availability_list:
+      Availability.objects.create(participant=participant, **validated_availability)
     return participant
 
   def update(self, instance, validated_data):
-    # Update the participant
-    instance.name = validated_data.get("name", instance.name)
+    instance.name = validated_data["name"]
     instance.save()
-    # Update their availability
-    for availability_data in self.initial_data["availability"]:
-      availability_instance = Availability.objects.get(pk=availability_data["id"])
-      serializer = AvailabilitySerializer(availability_instance, data=availability_data)
-      if serializer.is_valid(raise_exception=True):
-        serializer.save()
+    for i, validated_availability in enumerate(validated_data["availability"]):
+      availability_instance = instance.availability.all()[i]
+      availability_instance.availability = validated_availability["availability"]
+      availability_instance.save()
     return instance
 
 class PollTimeSerializer(serializers.ModelSerializer):
