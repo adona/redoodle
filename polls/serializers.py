@@ -13,6 +13,15 @@ class ParticipantSerializer(serializers.ModelSerializer):
     model = Participant
     fields = ("id", "poll", "name", "availability", )
   
+  def validate_poll(self, value):
+    """
+    Check that, if updating a participant, the poll provided matches the poll currently associated with the participant
+    (Participant updates are not allowed to change the associated poll)
+    """
+    if self.instance != None:
+      if (self.instance.poll != value):
+        raise serializers.ValidationError("Poll incorrect (does not match poll currently associated with participant)")
+    return value
   def create(self, validated_data):
     validated_availability_list = validated_data.pop("availability")
     participant = Participant.objects.create(**validated_data)
