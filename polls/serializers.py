@@ -45,10 +45,11 @@ class ParticipantSerializer(serializers.ModelSerializer):
   def update(self, instance, validated_data):
     instance.name = validated_data["name"]
     instance.save()
-    for i, validated_availability in enumerate(validated_data["availability"]):
-      availability_instance = instance.availability.all()[i]
-      availability_instance.availability = validated_availability["availability"]
-      availability_instance.save()
+    availability_instance = instance.availability.all()
+    validated_availability_data = validated_data["availability"]
+    for i in range(len(validated_availability_data)):
+      availability_instance[i].availability = validated_availability_data[i]["availability"]
+      availability_instance[i].save()
     return instance
 
 class PollTimeSerializer(serializers.ModelSerializer):
