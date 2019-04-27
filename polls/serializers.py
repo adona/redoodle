@@ -2,6 +2,7 @@ from polls.models import *
 from rest_framework import serializers
 
 class AvailabilitySerializer(serializers.ModelSerializer):
+  availability = serializers.ChoiceField(choices=["Y", "M", "N"])
   class Meta: 
     model = Availability
     fields = ("polltime", "availability", )
