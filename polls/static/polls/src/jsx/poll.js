@@ -39,7 +39,8 @@ class PollMain extends React.Component {
           notes = {poll.notes}
           timezone = {poll.timezone}
         />
-        <PollParticipantsContainer 
+        <PollParticipantsContainer
+          pollid = {poll.id}
           polltimes = {poll.polltimes}
           participants = {poll.participants}
         />
@@ -79,7 +80,7 @@ class PollParticipantsContainer extends React.Component {
   handleAddParticipant() {
     var participants = this.state.participants;
     const newParticipant = {
-      id: null,
+      poll: this.props.pollid,
       name: "",
       availability: this.props.polltimes.map(polltime => ({
         polltime: polltime.id,

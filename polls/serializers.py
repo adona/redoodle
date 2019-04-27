@@ -10,8 +10,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
   availability = AvailabilitySerializer(many=True)
   class Meta: 
     model = Participant
-    fields = ("id", "name", "availability", )
-    depth = 1
+    fields = ("id", "poll", "name", "availability", )
   
   def create(self, validated_data):
     validated_availability_list = validated_data.pop("availability")

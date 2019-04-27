@@ -94,6 +94,7 @@ var PollMain = function (_React$Component3) {
           timezone: poll.timezone
         }),
         React.createElement(PollParticipantsContainer, {
+          pollid: poll.id,
           polltimes: poll.polltimes,
           participants: poll.participants
         })
@@ -184,7 +185,7 @@ var PollParticipantsContainer = function (_React$Component5) {
     value: function handleAddParticipant() {
       var participants = this.state.participants;
       var newParticipant = {
-        id: null,
+        poll: this.props.pollid,
         name: "",
         availability: this.props.polltimes.map(function (polltime) {
           return {

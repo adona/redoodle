@@ -22,8 +22,7 @@ class ParticipatePoll(APIView):
     participant_data = json.loads(request.body)
     serializer = ParticipantSerializer(data=participant_data)
     if serializer.is_valid(raise_exception=True):
-      poll = Poll.objects.all()[0]
-      serializer.save(poll=poll)
+      serializer.save()
       print("Participant created.")
       return Response(serializer.data, status=status.HTTP_200_OK)
 
