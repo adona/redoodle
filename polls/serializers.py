@@ -4,7 +4,7 @@ from rest_framework import serializers
 class AvailabilitySerializer(serializers.ModelSerializer):
   class Meta: 
     model = Availability
-    fields = ("id", "polltime", "availability", )
+    fields = ("polltime", "availability", )
 
 class ParticipantSerializer(serializers.ModelSerializer):
   availability = AvailabilitySerializer(many=True)
