@@ -2,6 +2,7 @@
 
 from django.db import migrations
 from datetime import datetime
+import pytz
 
 def add_example_poll(apps, schema_editor):
     Poll = apps.get_model("polls", "Poll")
@@ -11,44 +12,45 @@ def add_example_poll(apps, schema_editor):
     Availability = apps.get_model("polls", "Availability")
 
     poll = Poll.objects.create(
-    name="GoT Marathon!!!",
-    author=User.objects.create(
-        first_name="Adona",
-        last_name="Iosif",
-        email="adona.iosif@gmail.com"
-    ),
-    location="My place",
-    notes="Winter is finally here!",
-    timezone="America/New York"
+        name="GoT Marathon!!!",
+        author=User.objects.create(
+            first_name="Adona",
+            last_name="Iosif",
+            email="adona.iosif@gmail.com"
+        ),
+        location="My place",
+        notes="Winter is finally here!",
+        timezone="America/New York"
     )
 
+    timezone = pytz.timezone("America/New_York")
     time1 = PollTime.objects.create(
-    poll=poll,
-    start=datetime(2019, 4, 2, 20, 0),
-    end=datetime(2019, 4, 2, 23, 0)
+        poll=poll,
+        start=datetime(2019, 4, 2, 20, 0, tzinfo=timezone),
+        end=datetime(2019, 4, 2, 23, 0, tzinfo=timezone)
     )
 
     time2 = PollTime.objects.create(
-    poll=poll,
-    start=datetime(2019, 4, 3, 20, 0),
-    end=datetime(2019, 4, 3, 23, 0)
+        poll=poll,
+        start=datetime(2019, 4, 3, 20, 0, tzinfo=timezone),
+        end=datetime(2019, 4, 3, 23, 0, tzinfo=timezone)
     )
 
     p1 = Participant.objects.create(
-    poll=poll,
-    name="Adona Iosif"
+        poll=poll,
+        name="Adona Iosif"
     )
 
     Availability.objects.create(
-    participant=p1,
-    polltime=time1,
-    availability="M"
+        participant=p1,
+        polltime=time1,
+        availability="M"
     )
 
     Availability.objects.create(
-    participant=p1,
-    polltime=time2,
-    availability="Y"
+        participant=p1,
+        polltime=time2,
+        availability="Y"
     )
 
 
