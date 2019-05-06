@@ -27,6 +27,8 @@ class ParticipantSerializer(serializers.ModelSerializer):
     """
     Check that the availability list contains one entry for each poll time, in the correct order
     """
+    # NOTE: Doing this as object-level validation rather than validate_availability
+    # because we need access to other object fields (namely polltimes) to do the validation
     availability = data["availability"]
     polltimes = data["poll"].polltimes.all()
     if len(availability) != len(polltimes):
