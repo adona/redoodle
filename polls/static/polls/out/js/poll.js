@@ -727,9 +727,9 @@ function sum(arr) {
   }, 0);
 }
 
-// Load and render the poll
+// Load parameters and render page
 
-var poll = $("#main").attr("poll");
+var poll = $("body").attr("poll");
 poll = JSON.parse(poll);
 console.log(poll);
 

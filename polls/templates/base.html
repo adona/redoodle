@@ -1,0 +1,31 @@
+<!doctype html>
+{% load static from staticfiles %}
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <!-- React -->
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.0/css/all.css">
+
+    <link rel="stylesheet" href="{% static 'polls/out/css/base.css' %}">
+
+    {% block head %}
+    {% endblock %}
+  </head>
+  <body {% block mainparams %} {% endblock %}>
+    {% block header %}
+    {% endblock %}
+    <div id="main" >
+    </div>
+    {% block footer %}
+    {% endblock %}
+  </body>
+</html>

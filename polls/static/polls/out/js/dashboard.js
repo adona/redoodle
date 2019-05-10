@@ -319,13 +319,13 @@ var DashboardPollPreview = function (_React$Component10) {
     key: "render",
     value: function render() {
       var poll = this.props.poll;
-      var poll_url = $("#main").attr("poll_url").replace("0", poll.id);
+      var pollURL = basePollURL.replace("0", poll.id);
       return React.createElement(
         "div",
         { className: "dashboard-poll-preview" },
         React.createElement(
           "a",
-          { href: poll_url },
+          { href: pollURL },
           React.createElement(
             "div",
             { className: "poll-preview-icon" },
@@ -362,12 +362,14 @@ var DashboardPollPreview = function (_React$Component10) {
   return DashboardPollPreview;
 }(React.Component);
 
-// Load and render the polls list
+// Load parameters and render page
 
-var userEmail = $("#main").attr("email");
+var userEmail = $("body").attr("email");
 
-var pollsList = $("#main").attr("polls_list");
+var pollsList = $("body").attr("polls_list");
 pollsList = JSON.parse(pollsList);
 console.log(pollsList);
+
+var basePollURL = $("body").attr("poll_url");
 
 ReactDOM.render(React.createElement(DashboardContainer, { pollsList: pollsList }), $('#main')[0]);

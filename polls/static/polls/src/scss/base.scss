@@ -1,0 +1,15 @@
+@import 'vars';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: $dark-blue;
+}
+
+#main {
+  background: white;
+  border-radius: 3px;
+  margin: 20px auto;
+}

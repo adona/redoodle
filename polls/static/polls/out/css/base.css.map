@@ -1,0 +1,10 @@
+{
+    "version": 3,
+    "mappings": "AAEA,AAAA,CAAC,CAAC;EACA,UAAU,EAAE,UAAU;CACvB;;AAED,AAAA,IAAI,CAAC;EACH,UAAU,ECHA,OAAO;CDIlB;;AAED,AAAA,KAAK,CAAC;EACJ,UAAU,EAAE,KAAK;EACjB,aAAa,EAAE,GAAG;EAClB,MAAM,EAAE,SAAS;CAClB",
+    "sources": [
+        "../../src/scss/base.scss",
+        "../../src/scss/_vars.scss"
+    ],
+    "names": [],
+    "file": "base.css"
+}

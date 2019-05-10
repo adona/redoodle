@@ -157,10 +157,10 @@ class DashboardPollsList extends React.Component {
 class DashboardPollPreview extends React.Component {
   render() {
     const poll = this.props.poll;
-    const poll_url = $("#main").attr("poll_url").replace("0", poll.id);
+    const pollURL = basePollURL.replace("0", poll.id);
     return(
       <div className="dashboard-poll-preview">
-        <a href={poll_url}>
+        <a href={pollURL}>
           <div className="poll-preview-icon">
             <div className="fas fa-user-circle"></div>
           </div>
@@ -181,13 +181,16 @@ class DashboardPollPreview extends React.Component {
   }
 }
 
-// Load and render the polls list
 
-const userEmail = $("#main").attr("email");
+// Load parameters and render page
 
-var pollsList = $("#main").attr("polls_list");
+const userEmail = $("body").attr("email");
+
+var pollsList = $("body").attr("polls_list");
 pollsList = JSON.parse(pollsList);
 console.log(pollsList);
+
+const basePollURL = $("body").attr("poll_url");
 
 ReactDOM.render(
   <DashboardContainer pollsList={pollsList}/>,

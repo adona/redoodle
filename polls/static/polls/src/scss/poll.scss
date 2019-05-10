@@ -1,4 +1,3 @@
-@import 'setup';
 @import 'vars';
 
 $poll-table-column-width: 72px;
@@ -6,21 +5,14 @@ $poll-table-row-height: 45px;
 
 #main {
   width: fit-content;
-  margin: 20px auto;
-  background: $dark-blue;
-}
-
-#poll-container {
   padding: 40px 0px;
 }
 
 #poll-header {
-  color: white;
   text-align: center;
 
   h1 {
     margin: 0;
-    font-style: italic;
   }
 
   p {
@@ -30,7 +22,6 @@ $poll-table-row-height: 45px;
 }
 
 #poll-main {
-  background: rgb(250,247,245);
   border-radius: 6px;
   margin: 20px;
   padding: 20px;

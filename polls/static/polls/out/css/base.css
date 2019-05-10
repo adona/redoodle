@@ -1,0 +1,15 @@
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  background: #3798d4;
+}
+
+#main {
+  background: white;
+  border-radius: 3px;
+  margin: 20px auto;
+}
+/*# sourceMappingURL=base.css.map */

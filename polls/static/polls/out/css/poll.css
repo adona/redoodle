@@ -1,28 +1,16 @@
-* {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-}
-
 #main {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
-  margin: 20px auto;
-  background: #3798d4;
-}
-
-#poll-container {
   padding: 40px 0px;
 }
 
 #poll-header {
-  color: white;
   text-align: center;
 }
 
 #poll-header h1 {
   margin: 0;
-  font-style: italic;
 }
 
 #poll-header p {
@@ -31,7 +19,6 @@
 }
 
 #poll-main {
-  background: #faf7f5;
   border-radius: 6px;
   margin: 20px;
   padding: 20px;

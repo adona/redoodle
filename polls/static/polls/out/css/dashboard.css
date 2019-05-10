@@ -1,17 +1,5 @@
-* {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-}
-
-body {
-  background: #3798d4;
-}
-
-#dashboard-container {
+#main {
   width: 850px;
-  margin: 20px auto;
-  background: white;
-  border-radius: 3px;
 }
 
 #dashboard-header {

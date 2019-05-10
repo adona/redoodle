@@ -1,26 +1,15 @@
-<!doctype html>
+{% extends "base.html" %}
 {% load static from staticfiles %}
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
-    <!-- JQuery -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <!-- React -->
-    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
-    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.0/css/all.css">
 
-    <link rel="stylesheet" href="{% static 'polls/out/css/dashboard.css' %}">
+{% block head %}
+  <title>ReDoodle - Dashboard</title>
+  <link rel="stylesheet" href="{% static 'polls/out/css/dashboard.css' %}">
+{% endblock %}
 
-    <title>Dashboard</title>
-  </head>
-  <body>
-    <div id="main" email="{{ email }}" polls_list="{{ polls_list }}" poll_url = "{% url 'participate-poll' 0%}"></div>
-    <script src="{% static 'polls/out/js/dashboard.js' %}"></script>
-  </body>
-</html>
+{% block mainparams %} 
+  email="{{ email }}" polls_list="{{ polls_list }}" poll_url = "{% url 'participate-poll' 0%}"
+{% endblock %}
+
+{% block footer %}
+  <script src="{% static 'polls/out/js/dashboard.js' %}"></script>
+{% endblock %}
