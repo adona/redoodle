@@ -1,0 +1,153 @@
+@import 'setup';
+@import 'vars';
+
+$dashboard-container-width: 850px;
+$dashboard-header-height: 75px;
+$header-nav-height: 35px;
+$dashboard-main-height: 80vh;
+$sidebar-width: 240px;
+
+body {
+  background: $dark-blue;
+}
+
+* {
+  // border: 1px solid lightgrey;
+}
+
+#dashboard-container {
+  width: $dashboard-container-width;
+  margin: 20px auto;
+  background: white;
+  border-radius: 3px;
+}
+
+#dashboard-header {
+  height: $dashboard-header-height;
+  padding: 15px;
+}
+
+#header-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+
+  #header-nav-left {
+    #logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: $dark-blue;
+    }  
+  }
+  
+  #header-nav-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+  
+    > div {
+      padding: 5px 15px;
+    }
+
+    #user-menu {
+      font-size: 16px;
+      font-weight: bold;
+      color: $dark-grey;
+
+      #down-arrow {
+        font-size: 22px;
+        line-height: 16px;
+      }
+    }
+  
+    #user-menu:hover {
+      background: #f8f9fa;
+    }
+
+    #create-poll-button {
+      background: #dd3809;
+      color: white;
+    }
+  }
+}
+
+#dashboard-main {
+  display: flex;
+  align-items: stretch;
+  min-height: $dashboard-main-height;
+
+  #dashboard-sidebar {
+    width: $sidebar-width;
+  
+    #sidebar-header {
+      font-size: 32px;
+      padding: 15px;
+      padding-left: 40px;  
+    }
+
+    #sidebar-filters {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        height: 36px;
+        padding: 10px 40px;
+        font-size: 16px;
+      }
+
+      li.selected {
+        background-color: $medium-blue;
+      }
+    }
+  }
+  
+  #dashboard-polls-list-container {
+    background: $lightest-grey;
+    width: calc(100% - #{$sidebar-width});
+    padding: 25px;
+  }  
+
+  .dashboard-poll-preview {
+    width: 100%;
+    margin-bottom: 5px;
+    border: 1px solid $light-grey;
+    padding: 16px;
+    background: white;
+    cursor: pointer;
+
+    >a {
+      display: flex;
+      align-items: center;
+      color: black;
+      text-decoration: none;
+
+      .poll-preview-icon {
+        width: 50px;
+        padding-right: 16px;
+        text-align: center;
+        font-size: 24px;
+      }
+  
+      .poll-preview-details {
+        >div {
+          margin-bottom: 3px;
+        }
+  
+        .poll-preview-name {
+          font-size: 16px;
+          font-weight: bold;
+        }
+    
+        .poll-preview-n-options, .poll-preview-n-participants {
+          font-size: 14px;
+  
+          .icon {
+            width: 25px; 
+            text-align: left;
+          }
+        }  
+      }  
+    }
+  }
+}

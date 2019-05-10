@@ -10,6 +10,14 @@ from polls.exceptions import BadRequestException
 
 # Create your views here.
 
+class Dashboard(APIView):
+  def get(self, request):
+    user = User.objects.all()[0] # For now just use the 1st user in the database
+    polls_list = Poll.objects.filter(author=user)
+    polls_list = PollSerializer(polls_list, many=True).data
+    polls_list = json.dumps(polls_list)
+    return render(request, "polls/dashboard.html", {"polls_list": polls_list})
+
 class ParticipatePoll(APIView):
 
   def get(self, request, poll_id):

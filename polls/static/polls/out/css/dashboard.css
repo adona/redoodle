@@ -1,0 +1,162 @@
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  background: #3798d4;
+}
+
+#dashboard-container {
+  width: 850px;
+  margin: 20px auto;
+  background: white;
+  border-radius: 3px;
+}
+
+#dashboard-header {
+  height: 75px;
+  padding: 15px;
+}
+
+#header-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+}
+
+#header-nav #header-nav-left #logo {
+  font-size: 22px;
+  font-weight: bold;
+  color: #3798d4;
+}
+
+#header-nav #header-nav-right {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+}
+
+#header-nav #header-nav-right > div {
+  padding: 5px 15px;
+}
+
+#header-nav #header-nav-right #user-menu {
+  font-size: 16px;
+  font-weight: bold;
+  color: #45505e;
+}
+
+#header-nav #header-nav-right #user-menu #down-arrow {
+  font-size: 22px;
+  line-height: 16px;
+}
+
+#header-nav #header-nav-right #user-menu:hover {
+  background: #f8f9fa;
+}
+
+#header-nav #header-nav-right #create-poll-button {
+  background: #dd3809;
+  color: white;
+}
+
+#dashboard-main {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+  min-height: 80vh;
+}
+
+#dashboard-main #dashboard-sidebar {
+  width: 240px;
+}
+
+#dashboard-main #dashboard-sidebar #sidebar-header {
+  font-size: 32px;
+  padding: 15px;
+  padding-left: 40px;
+}
+
+#dashboard-main #dashboard-sidebar #sidebar-filters {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#dashboard-main #dashboard-sidebar #sidebar-filters li {
+  height: 36px;
+  padding: 10px 40px;
+  font-size: 16px;
+}
+
+#dashboard-main #dashboard-sidebar #sidebar-filters li.selected {
+  background-color: #abd4ed;
+}
+
+#dashboard-main #dashboard-polls-list-container {
+  background: #f8f9fa;
+  width: calc(100% - 240px);
+  padding: 25px;
+}
+
+#dashboard-main .dashboard-poll-preview {
+  width: 100%;
+  margin-bottom: 5px;
+  border: 1px solid #c5cdd3;
+  padding: 16px;
+  background: white;
+  cursor: pointer;
+}
+
+#dashboard-main .dashboard-poll-preview > a {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: black;
+  text-decoration: none;
+}
+
+#dashboard-main .dashboard-poll-preview > a .poll-preview-icon {
+  width: 50px;
+  padding-right: 16px;
+  text-align: center;
+  font-size: 24px;
+}
+
+#dashboard-main .dashboard-poll-preview > a .poll-preview-details > div {
+  margin-bottom: 3px;
+}
+
+#dashboard-main .dashboard-poll-preview > a .poll-preview-details .poll-preview-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+#dashboard-main .dashboard-poll-preview > a .poll-preview-details .poll-preview-n-options, #dashboard-main .dashboard-poll-preview > a .poll-preview-details .poll-preview-n-participants {
+  font-size: 14px;
+}
+
+#dashboard-main .dashboard-poll-preview > a .poll-preview-details .poll-preview-n-options .icon, #dashboard-main .dashboard-poll-preview > a .poll-preview-details .poll-preview-n-participants .icon {
+  width: 25px;
+  text-align: left;
+}
+/*# sourceMappingURL=dashboard.css.map */
