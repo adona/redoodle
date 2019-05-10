@@ -135,9 +135,9 @@ var DashboardMain = function (_React$Component5) {
     _this5.pollsFilters = [{ "label": "All", "filter": function filter(poll) {
         return true;
       } }, { "label": "Sent", "filter": function filter(poll) {
-        return true;
+        return poll.author.email == userEmail;
       } }, { "label": "Received", "filter": function filter(poll) {
-        return false;
+        return poll.author.email != userEmail;
       } }];
 
     _this5.state = {
@@ -146,8 +146,6 @@ var DashboardMain = function (_React$Component5) {
     _this5.handlePollsFilterChange = _this5.handlePollsFilterChange.bind(_this5);
     return _this5;
   }
-  // TODO 
-
 
   _createClass(DashboardMain, [{
     key: "handlePollsFilterChange",
@@ -365,6 +363,8 @@ var DashboardPollPreview = function (_React$Component10) {
 }(React.Component);
 
 // Load and render the polls list
+
+var userEmail = $("#main").attr("email");
 
 var pollsList = $("#main").attr("polls_list");
 pollsList = JSON.parse(pollsList);
