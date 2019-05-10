@@ -13,7 +13,7 @@ class Poll(models.Model):
   name = models.CharField(max_length=100)
   author = models.ForeignKey(User, on_delete=models.CASCADE)
   location = models.CharField(max_length=50)
-  notes = models.CharField(max_length=1000)
+  notes = models.CharField(max_length=1000, blank=True)
   timezone = models.CharField(max_length=50)
   def __str__(self):
     times = list(map(str, self.polltimes.all()))
