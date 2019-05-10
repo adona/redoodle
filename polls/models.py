@@ -42,9 +42,16 @@ class PollTime(models.Model):
   def __str__(self):
     return f"{self.start} - {self.end}"
 
+class Invite(models.Model):
+  poll = models.ForeignKey(Poll, related_name="invites", on_delete=models.CASCADE)
+  email = models.EmailField()
+  class Meta:
+    unique_together = ["poll", "email"]
+
 class Participant(models.Model):
   poll = models.ForeignKey(Poll, related_name="participants", on_delete=models.CASCADE)
   name = models.CharField(max_length=50)
+  email = models.EmailField(blank=True)
   def __str__(self):
     availability = list(map(str,self.availability.all()))
     return f"{self.name}: {availability}"

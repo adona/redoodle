@@ -46,12 +46,13 @@ class ParticipantSerializer(serializers.ModelSerializer):
     return participant
 
   def update(self, instance, validated_data):
-    instance.name = validated_data["name"]
+    instance.name = validated_data.get("name", instance.name)
+    instance.email = validated_data.get('email', instance.email)
     instance.save()
     availability_instance = list(instance.availability.all())
     validated_availability_data = validated_data["availability"]
     for i in range(len(validated_availability_data)):
-      availability_instance[i].availability = validated_availability_data[i]["availability"]
+      availability_instance[i].availability = validated_availability_data[i].get("availability", availability_instance[i].availability)
       availability_instance[i].save()
     return instance
 
