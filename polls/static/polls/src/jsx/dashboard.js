@@ -158,7 +158,7 @@ class DashboardPollsList extends React.Component {
 class DashboardPollPreview extends React.Component {
   render() {
     const poll = this.props.poll;
-    const poll_url = "/poll/participate/"+poll.id;
+    const poll_url = $("#main").attr("poll_url").replace("0", poll.id);
     return(
       <div className="dashboard-poll-preview">
         <a href={poll_url}>

@@ -20,7 +20,7 @@
     <title>Dashboard</title>
   </head>
   <body>
-    <div id="main" polls_list="{{ polls_list }}"></div>
+    <div id="main" polls_list="{{ polls_list }}" poll_url = "{% url 'participate-poll' 0%}"></div>
     <script src="{% static 'polls/out/js/dashboard.js' %}"></script>
   </body>
 </html>

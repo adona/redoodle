@@ -321,7 +321,7 @@ var DashboardPollPreview = function (_React$Component10) {
     key: "render",
     value: function render() {
       var poll = this.props.poll;
-      var poll_url = "/poll/participate/" + poll.id;
+      var poll_url = $("#main").attr("poll_url").replace("0", poll.id);
       return React.createElement(
         "div",
         { className: "dashboard-poll-preview" },
