@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.db import IntegrityError
 from rest_framework import status
 from rest_framework.exceptions import ErrorDetail
 from datetime import datetime
@@ -42,6 +43,11 @@ def createTestPoll(self):
     for participant in self.test_participants]
       for polltime in self.test_polltimes]
 
+class UserModelTest(TestCase):
+  def test_unique_email(self):
+    with self.assertRaises(IntegrityError):
+      User(first_name="User1", last_name="User1", email="user@user.com").save()
+      User(first_name="User2", last_name="User2", email="user@user.com").save()
 
 class ParticipantSerializerTests(TestCase):
   def setUp(self):
