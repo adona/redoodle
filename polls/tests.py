@@ -170,10 +170,10 @@ class ParticipantSerializerTests(TestCase):
 
 
 class ParticipatePollViewTests(TestCase):
-  url = reverse('participate-poll')
 
   def setUp(self):
     createTestPoll(self)
+    self.url = reverse('participate-poll', args=[self.test_poll.id])
 
   def test_post_request_not_json(self):
     test_data = "Not a JSON"
