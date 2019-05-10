@@ -18,6 +18,7 @@ class Poll(models.Model):
   def __str__(self):
     times = list(map(str, self.polltimes.all()))
     participants = list(map(str, self.participants.all()))
+    # TODO: Include invites
     poll_string = [
       f"Name: {self.name}",
       f"Author: {self.author}",
@@ -47,6 +48,8 @@ class Invite(models.Model):
   email = models.EmailField()
   class Meta:
     unique_together = ["poll", "email"]
+  def __str__(self):
+    return f"{self.email}"
 
 class Participant(models.Model):
   poll = models.ForeignKey(Poll, related_name="participants", on_delete=models.CASCADE)
@@ -54,6 +57,7 @@ class Participant(models.Model):
   email = models.EmailField(blank=True)
   def __str__(self):
     availability = list(map(str,self.availability.all()))
+    # TODO: Include email
     return f"{self.name}: {availability}"
 
 class Availability(models.Model):
