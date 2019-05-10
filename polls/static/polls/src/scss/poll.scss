@@ -1,19 +1,8 @@
-* {
-  box-sizing: border-box;
-}
+@import 'setup';
+@import 'vars';
 
 $poll-table-column-width: 72px;
 $poll-table-row-height: 45px;
-$light-blue: #eaf4fb;
-$medium-blue: #abd4ed;
-$dark-blue: #3798d4;
-$light-green: #cde9a1;
-$dark-green: #75a527;
-$light-yellow: #fcf5c5;
-$dark-yellow: #dabe0b;
-$light-red: #fcede9;
-$light-grey: #c5cdd3;
-$dark-grey: #8696a2;
 
 #main {
   width: fit-content;
@@ -243,14 +232,14 @@ $dark-grey: #8696a2;
 #poll-submit-button[isDisabled="true"] {
   background: $light-grey;
   border-color: $light-grey;
-  color: $dark-grey;
+  color: $medium-grey;
   cursor: not-allowed;
 }
 
 #poll-submit-button[isDisabled="false"][cannotAttend="true"] {
   border-color: $light-grey;
   background: white;
-  color: $dark-grey;
+  color: $medium-grey;
 }
 
 #poll-submit-button[isDisabled="false"][cannotAttend="false"] {
