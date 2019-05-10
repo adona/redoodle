@@ -12,20 +12,20 @@ from polls.exceptions import BadRequestException
 
 class ParticipatePoll(APIView):
 
-  def get(self, request):
-    poll = Poll.objects.all()[0] # For now just use the 1st poll in the database
+  def get(self, request, poll_id):
+    poll = Poll.objects.get(pk=poll_id)
     poll = PollSerializer(poll).data
     poll = json.dumps(poll)
     return render(request, "polls/poll.html", {"poll": poll})
 
-  def post(self, request):
+  def post(self, request, poll_id):
     participant_data = self.parseJSONRequest(request)
     serializer = ParticipantSerializer(data=participant_data)
     if serializer.is_valid(raise_exception=True):
       serializer.save()
       return JsonResponse(serializer.data)
 
-  def put(self, request):
+  def put(self, request, poll_id):
     participant_data = self.parseJSONRequest(request)
     participant = self.retrieveParticipant(participant_data)
     serializer = ParticipantSerializer(participant, data=participant_data)
@@ -33,7 +33,7 @@ class ParticipatePoll(APIView):
       participant = serializer.save()
       return HttpResponse()
 
-  def delete(self, request):
+  def delete(self, request, poll_id):
     request_data = self.parseJSONRequest(request)
     participant = self.retrieveParticipant(request_data)
     participant.delete()
