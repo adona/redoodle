@@ -8,8 +8,11 @@ body {
 }
 
 #main {
-  background: white;
-  border-radius: 3px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
   margin: 20px auto;
+  border-radius: 3px;
+  background: white;
 }
 /*# sourceMappingURL=base.css.map */

@@ -1,18 +1,10 @@
 @import 'vars';
 
-$dashboard-container-width: 850px;
 $dashboard-header-height: 75px;
 $header-nav-height: 35px;
 $dashboard-main-height: 80vh;
 $sidebar-width: 240px;
-
-* {
-  // border: 1px solid lightgrey;
-}
-
-#main {
-  width: $dashboard-container-width;
-}
+$poll-preview-width: 550px;
 
 #dashboard-header {
   height: $dashboard-header-height;
@@ -101,7 +93,7 @@ $sidebar-width: 240px;
   }  
 
   .dashboard-poll-preview {
-    width: 100%;
+    width: $poll-preview-width;
     margin-bottom: 5px;
     border: 1px solid $light-grey;
     padding: 16px;

@@ -1,7 +1,3 @@
-#main {
-  width: 850px;
-}
-
 #dashboard-header {
   height: 75px;
   padding: 15px;
@@ -104,7 +100,7 @@
 }
 
 #dashboard-main .dashboard-poll-preview {
-  width: 100%;
+  width: 550px;
   margin-bottom: 5px;
   border: 1px solid #c5cdd3;
   padding: 16px;
