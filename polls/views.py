@@ -2,6 +2,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required 
+from django.utils.decorators import method_decorator 
 import json
 from polls.models import *
 from accounts.models import *
@@ -12,8 +14,9 @@ from polls.exceptions import BadRequestException
 # Create your views here.
 
 class Dashboard(APIView):
+  @method_decorator(login_required)
   def get(self, request):
-    user = User.objects.all()[0] # For now just use the 1st user in the database
+    user = request.user
     own_polls = set(Poll.objects.filter(author=user))
     invites = Invite.objects.filter(email=user.email)
     invited_polls = set(map(lambda invite: invite.poll, invites))
