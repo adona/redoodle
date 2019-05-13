@@ -1,0 +1,92 @@
+#login-header {
+  margin-top: 20px;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+#main {
+  width: 450px;
+  padding: 40px;
+}
+
+#login-tabs {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+#login-tabs > div {
+  padding: 10px 15px;
+  font-weight: bold;
+  color: #6a7685;
+}
+
+#login-tabs > div.selected {
+  color: #2372e8;
+}
+
+#login-form-existing .field-container input, #login-form-existing .login-submit {
+  width: 250px;
+  height: 45px;
+  border-radius: 3px;
+  padding: 8px;
+  margin-bottom: 4px;
+  font-size: 16px;
+}
+
+#login-form-existing .field-container {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: 0px auto 8px;
+}
+
+#login-form-existing .field-container label {
+  display: none;
+}
+
+#login-form-existing .field-container input {
+  border: 1px solid #d3dce3;
+}
+
+#login-form-existing .field-container[invalid] input {
+  border: 1px solid #d3171e;
+}
+
+#login-form-existing .errorlist {
+  width: 250px;
+  margin: 0px auto;
+  list-style-type: none;
+  padding: 0;
+  font-size: 16px;
+  line-height: 24px;
+  color: #b8141a;
+}
+
+#login-form-existing .login-submit {
+  display: block;
+  margin: 0px auto;
+  border: none;
+  text-align: center;
+  font-weight: bold;
+  background: #517d0f;
+  color: white;
+  cursor: pointer;
+}
+
+#login-form-existing .login-submit[invalid] {
+  background: #d3dce3;
+  color: #6a7685;
+  cursor: default;
+}
+
+#login-form-existing .login-submit:not([invalid]):hover {
+  background: #3b5b0b;
+}
+/*# sourceMappingURL=login.css.map */

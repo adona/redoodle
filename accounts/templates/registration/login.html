@@ -1,0 +1,41 @@
+{% extends "base/base.html" %}
+{% load static from staticfiles %}
+
+{% block head %}
+  <title>ReDoodle - Log In</title>
+  <link rel="stylesheet" href="{% static 'accounts/out/css/login.css' %}">
+{% endblock %}
+
+{% block header %}
+  <div id="login-header">ReDoodle</div>
+{% endblock %}
+
+{% block main %}
+  <form id="login-form-existing" method="post" novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="field-container"
+        {% if field.errors %}
+          invalid
+        {% endif %}
+      >
+        {{ field.label_tag }}
+        {{ field }}
+        {{ field.errors }}
+      </div>  
+    {% endfor %}
+    {% if form.non_field_errors %}
+    <ul class="errorlist">
+      <li>Invalid username or password, please try again.</li>
+    </ul>
+    {% endif %}
+    <input 
+      class="login-submit" 
+      type="submit" 
+      value="Log in" 
+      {% if form.errors %}
+        invalid
+      {% endif %}
+    />
+  </form>
+{% endblock %}

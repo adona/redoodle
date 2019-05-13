@@ -1,0 +1,99 @@
+@import '../../../../../base/static/base/src/scss/vars';
+
+$login-container-width: 450px;
+$login-field-width: 250px;
+$login-field-height: 45px;
+
+#login-header {
+  margin-top: 20px;
+  width: 100%;
+  text-align: center;
+  color: white; 
+  font-size: 22px;
+  font-weight: bold;
+}
+
+#main {
+  width: $login-container-width;
+  padding: 40px;
+}
+
+#login-tabs {
+  display: flex;
+  justify-content: center;
+
+  >div {
+    padding: 10px 15px;
+    font-weight: bold;
+    color: #6a7685;
+  }
+
+  >div.selected {
+    color: #2372e8;
+  }
+}
+
+#login-form-existing {
+
+  %login-input {
+    width: $login-field-width;
+    height: $login-field-height;
+    border-radius: 3px;
+    padding: 8px;
+    margin-bottom: 4px;
+    font-size: 16px;
+  }
+  
+  .field-container {
+    width: fit-content;
+    margin: 0px auto 8px;
+
+    label {
+      display: none;
+    }
+
+    input {
+      @extend %login-input;
+      border: 1px solid #d3dce3;;
+    }
+  }
+
+  .field-container[invalid] {
+    input {
+      border: 1px solid #d3171e;;
+    }
+  }
+
+  .errorlist {
+    width: $login-field-width;
+    margin: 0px auto;
+    list-style-type: none;
+    padding: 0;
+    font-size: 16px;
+    line-height: 24px;
+    color: #b8141a;
+  }
+
+  .login-submit {
+    @extend %login-input;
+    display: block;
+    margin: 0px auto;
+    border: none;
+    text-align: center;
+    font-weight: bold;
+    background: #517d0f;
+    color: white;
+    cursor: pointer;
+  }
+
+  .login-submit[invalid] {
+    background: #d3dce3;
+    color: #6a7685;
+    cursor: default;
+  }
+
+
+  .login-submit:not([invalid]):hover {
+    background: #3b5b0b;
+  }
+}
