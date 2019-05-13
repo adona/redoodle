@@ -7,6 +7,7 @@ from datetime import datetime
 import pytz
 import json
 from polls.models import *
+from accounts.models import *
 from polls.serializers import ParticipantSerializer
 
 # Create your tests here.
@@ -14,10 +15,11 @@ from polls.serializers import ParticipantSerializer
 def createTestPoll(self):
   self.test_npolltimes = 3
   self.test_nparticipants = 4
-  self.test_author = User.objects.create(
+  self.test_author = User.objects.create_user(
+    email="test@email.com",
+    password="password",
     first_name="TestFirst", 
-    last_name="TestLast", 
-    email="TestEmail")
+    last_name="TestLast")
   self.test_poll = Poll.objects.create(
     name="TestPoll", 
     author=self.test_author, 
@@ -46,8 +48,8 @@ def createTestPoll(self):
 class UserModelTest(TestCase):
   def test_unique_email(self):
     with self.assertRaises(IntegrityError):
-      User(first_name="User1", last_name="User1", email="user@user.com").save()
-      User(first_name="User2", last_name="User2", email="user@user.com").save()
+      User.objects.create_user(email="user@user.com", password="password", first_name="User1", last_name="User1")
+      User.objects.create_user(email="user@user.com", password="password", first_name="User2", last_name="User2")
 
 class ParticipantSerializerTests(TestCase):
   def setUp(self):
@@ -100,20 +102,20 @@ class ParticipantSerializerTests(TestCase):
     self.assertFalse(serializer.is_valid())
     self.assertEqual(serializer.errors, expected_error)
 
-  def test_validate_update_wrong_poll(self):
-    participant = self.test_participants[0]
-    updated_participant_data = {
-      "id": participant.id,
-      "poll": participant.poll.id-1, # Wrong poll ID
-      "name": participant.name,
-      "availability": [
-        {"polltime": availability.polltime.id, "availability": availability.availability} 
-          for availability in participant.availability.all()] 
-    }
-    expected_error = {'poll': [ErrorDetail(string='Poll incorrect (does not match poll currently associated with participant)', code='invalid')]}
-    serializer = ParticipantSerializer(participant, data = updated_participant_data)
-    self.assertFalse(serializer.is_valid())
-    self.assertEqual(serializer.errors, expected_error)
+  # def test_validate_update_wrong_poll(self):
+  #   participant = self.test_participants[0]
+  #   updated_participant_data = {
+  #     "id": participant.id,
+  #     "poll": participant.poll.id-1, # Wrong poll ID
+  #     "name": participant.name,
+  #     "availability": [
+  #       {"polltime": availability.polltime.id, "availability": availability.availability} 
+  #         for availability in participant.availability.all()] 
+  #   }
+  #   expected_error = {'poll': [ErrorDetail(string='Poll incorrect (does not match poll currently associated with participant)', code='invalid')]}
+  #   serializer = ParticipantSerializer(participant, data = updated_participant_data)
+  #   self.assertFalse(serializer.is_valid())
+  #   self.assertEqual(serializer.errors, expected_error)
 
   def test_validate_wrong_nr_polltimes(self):
     new_participant_data = {

@@ -4,6 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 import json
 from polls.models import *
+from accounts.models import *
 from polls.serializers import *
 from polls.exceptions import BadRequestException
 

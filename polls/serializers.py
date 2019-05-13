@@ -1,4 +1,5 @@
 from polls.models import *
+from accounts.models import *
 from rest_framework import serializers
 
 class AvailabilitySerializer(serializers.ModelSerializer):
