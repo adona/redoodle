@@ -17,7 +17,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.0/css/all.css">
 
-    <link rel="stylesheet" href="{% static 'polls/out/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'base/out/css/base.css' %}">
 
     {% block head %}
     {% endblock %}
@@ -26,6 +26,8 @@
     {% block header %}
     {% endblock %}
     <div id="main" >
+      {% block main %}
+      {% endblock %}
     </div>
     {% block footer %}
     {% endblock %}
