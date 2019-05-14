@@ -4,7 +4,7 @@ $dashboard-header-height: 75px;
 $header-nav-height: 35px;
 $dashboard-main-height: 80vh;
 $sidebar-width: 240px;
-$poll-preview-width: 550px;
+$polls-list-container-width: 600px;
 
 #dashboard-header {
   height: $dashboard-header-height;
@@ -88,12 +88,11 @@ $poll-preview-width: 550px;
   
   #dashboard-polls-list-container {
     background: $lightest-grey;
-    width: calc(100% - #{$sidebar-width});
+    width: $polls-list-container-width;
     padding: 25px;
   }  
 
   .dashboard-poll-preview {
-    width: $poll-preview-width;
     margin-bottom: 5px;
     border: 1px solid $light-grey;
     padding: 16px;

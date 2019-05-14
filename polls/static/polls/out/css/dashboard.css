@@ -95,12 +95,11 @@
 
 #dashboard-main #dashboard-polls-list-container {
   background: #f8f9fa;
-  width: calc(100% - 240px);
+  width: 600px;
   padding: 25px;
 }
 
 #dashboard-main .dashboard-poll-preview {
-  width: 550px;
   margin-bottom: 5px;
   border: 1px solid #c5cdd3;
   padding: 16px;
