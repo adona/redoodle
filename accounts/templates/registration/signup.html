@@ -2,7 +2,7 @@
 {% load static from staticfiles %}
 
 {% block head %}
-  <title>ReDoodle - Sign UP</title>
+  <title>ReDoodle - Sign up</title>
   <link rel="stylesheet" href="{% static 'accounts/out/css/login.css' %}">
 {% endblock %}
 
@@ -11,6 +11,10 @@
 {% endblock %}
 
 {% block main %}
+  <div id='login-tabs'>
+    <div><a href="{% url 'login' %}">Log in</a></div> 
+    <div class="selected">Sign up</div> 
+  </div>
   <form id="login-form-new" method="post" novalidate>
     {% csrf_token %}
     {% for field in form %}

@@ -11,6 +11,10 @@
 {% endblock %}
 
 {% block main %}
+  <div id='login-tabs'>
+    <div class="selected">Log in</div> 
+    <div><a href="{% url 'signup' %}">Sign up</a></div> 
+  </div>
   <form id="login-form-existing" method="post" novalidate>
     {% csrf_token %}
     {% for field in form %}

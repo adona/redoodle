@@ -19,16 +19,46 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  margin-bottom: 20px;
 }
 
 #login-tabs > div {
+  position: relative;
   padding: 10px 15px;
   font-weight: bold;
   color: #6a7685;
+  cursor: pointer;
+}
+
+#login-tabs > div a {
+  color: inherit;
+  text-decoration: none;
 }
 
 #login-tabs > div.selected {
   color: #2372e8;
+}
+
+#login-tabs > div:after {
+  content: "";
+  border-radius: 2px 2px 0 0;
+  display: block;
+  position: absolute;
+  height: 4px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+  background-color: transparent;
+}
+
+#login-tabs > div.selected:after {
+  background-color: #2372e8;
+}
+
+#login-tabs > div:not(.selected):hover:after {
+  background-color: #d3dce3;
 }
 
 #login-form-existing, #login-form-new {

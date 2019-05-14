@@ -21,15 +21,44 @@ $login-field-height: 45px;
 #login-tabs {
   display: flex;
   justify-content: center;
+  margin-bottom: 20px;
 
   >div {
+    position: relative;
     padding: 10px 15px;
     font-weight: bold;
     color: #6a7685;
+    cursor: pointer;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
   }
 
   >div.selected {
     color: #2372e8;
+  }
+
+  >div:after {
+    content: "";
+    border-radius: 2px 2px 0 0;
+    display: block;
+    position: absolute;
+    height: 4px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transition: all .3s;
+    background-color: transparent;
+  }
+
+  >div.selected:after{
+    background-color: #2372e8;
+  }
+
+  >div:not(.selected):hover:after {
+    background-color: #d3dce3
   }
 }
 
