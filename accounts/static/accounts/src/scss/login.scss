@@ -33,10 +33,12 @@ $login-field-height: 45px;
   }
 }
 
-#login-form-existing {
+#login-form-existing, #login-form-new {
+  width: $login-field-width;
+  margin: 0px auto;
 
   %login-input {
-    width: $login-field-width;
+    width: 100%;
     height: $login-field-height;
     border-radius: 3px;
     padding: 8px;
@@ -45,8 +47,8 @@ $login-field-height: 45px;
   }
   
   .field-container {
-    width: fit-content;
-    margin: 0px auto 8px;
+    width: 100%;
+    margin-bottom: 8px;
 
     label {
       display: none;
@@ -65,7 +67,7 @@ $login-field-height: 45px;
   }
 
   .errorlist {
-    width: $login-field-width;
+    width: 100%;
     margin: 0px auto;
     list-style-type: none;
     padding: 0;
@@ -92,8 +94,12 @@ $login-field-height: 45px;
     cursor: default;
   }
 
-
   .login-submit:not([invalid]):hover {
     background: #3b5b0b;
+  }
+
+  .disclaimer {
+    margin-top: 20px;
+    font-size: 14px;
   }
 }

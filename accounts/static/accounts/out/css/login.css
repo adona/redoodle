@@ -31,8 +31,13 @@
   color: #2372e8;
 }
 
-#login-form-existing .field-container input, #login-form-existing .login-submit {
+#login-form-existing, #login-form-new {
   width: 250px;
+  margin: 0px auto;
+}
+
+#login-form-existing .field-container input, #login-form-new .field-container #login-form-existing input, #login-form-existing .login-submit, #login-form-existing .field-container #login-form-new input, #login-form-new .field-container input, #login-form-new .login-submit {
+  width: 100%;
   height: 45px;
   border-radius: 3px;
   padding: 8px;
@@ -40,27 +45,25 @@
   font-size: 16px;
 }
 
-#login-form-existing .field-container {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  margin: 0px auto 8px;
+#login-form-existing .field-container, #login-form-new .field-container {
+  width: 100%;
+  margin-bottom: 8px;
 }
 
-#login-form-existing .field-container label {
+#login-form-existing .field-container label, #login-form-new .field-container label {
   display: none;
 }
 
-#login-form-existing .field-container input {
+#login-form-existing .field-container input, #login-form-new .field-container input {
   border: 1px solid #d3dce3;
 }
 
-#login-form-existing .field-container[invalid] input {
+#login-form-existing .field-container[invalid] input, #login-form-new .field-container[invalid] input {
   border: 1px solid #d3171e;
 }
 
-#login-form-existing .errorlist {
-  width: 250px;
+#login-form-existing .errorlist, #login-form-new .errorlist {
+  width: 100%;
   margin: 0px auto;
   list-style-type: none;
   padding: 0;
@@ -69,7 +72,7 @@
   color: #b8141a;
 }
 
-#login-form-existing .login-submit {
+#login-form-existing .login-submit, #login-form-new .login-submit {
   display: block;
   margin: 0px auto;
   border: none;
@@ -80,13 +83,18 @@
   cursor: pointer;
 }
 
-#login-form-existing .login-submit[invalid] {
+#login-form-existing .login-submit[invalid], #login-form-new .login-submit[invalid] {
   background: #d3dce3;
   color: #6a7685;
   cursor: default;
 }
 
-#login-form-existing .login-submit:not([invalid]):hover {
+#login-form-existing .login-submit:not([invalid]):hover, #login-form-new .login-submit:not([invalid]):hover {
   background: #3b5b0b;
+}
+
+#login-form-existing .disclaimer, #login-form-new .disclaimer {
+  margin-top: 20px;
+  font-size: 14px;
 }
 /*# sourceMappingURL=login.css.map */

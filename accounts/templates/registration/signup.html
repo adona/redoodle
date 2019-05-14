@@ -1,0 +1,40 @@
+{% extends "base/base.html" %}
+{% load static from staticfiles %}
+
+{% block head %}
+  <title>ReDoodle - Sign UP</title>
+  <link rel="stylesheet" href="{% static 'accounts/out/css/login.css' %}">
+{% endblock %}
+
+{% block header %}
+  <div id="login-header">ReDoodle</div>
+{% endblock %}
+
+{% block main %}
+  <form id="login-form-new" method="post" novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="field-container"
+        {% if field.errors %}
+          invalid
+        {% endif %}
+      >
+        {{ field.label_tag }}
+        {{ field }}
+        {{ field.errors }}
+      </div>  
+    {% endfor %}
+    <input 
+      class="login-submit" 
+      type="submit" 
+      value="Sign up" 
+      {% if form.errors %}
+        invalid
+      {% endif %}
+    />
+    <div class="disclaimer">
+        By signing up you accept ReDoodle's Terms of service and Privacy policy.
+      </div>  
+  </form>
+  
+{% endblock %}
