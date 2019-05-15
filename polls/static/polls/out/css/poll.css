@@ -24,7 +24,6 @@
 #poll-details .fas, #poll-details .far {
   margin-right: 10px;
   text-align: center;
-  color: #5d6e79;
   font-size: 0.875rem;
 }
 
@@ -77,23 +76,23 @@
 #poll-participants-table #poll-table-summary #poll-participants-summary #poll-n-participants {
   margin-left: 15px;
   width: calc(100% - 55px);
-  color: grey;
+  color: #8694a6;
   font-weight: bold;
 }
 
 #poll-participants-table #poll-table-summary #poll-participants-summary #poll-add-participant {
   width: 40px;
   padding: 0px 10px;
-  color: #3798d4;
+  color: #2372e8;
   cursor: pointer;
 }
 
 #poll-participants-table #poll-table-summary #poll-participants-summary #poll-add-participant:hover {
-  background: #eaf4fb;
+  background: #f5fbff;
 }
 
 #poll-participants-table #poll-table-summary #poll-availability-summary {
-  color: #3798d4;
+  color: #2372e8;
 }
 
 #poll-participants-table .poll-participant-availability {
@@ -123,25 +122,25 @@
 
 #poll-participants-table .poll-participant-row[editing="false"] .poll-participant-details:hover .poll-participant-edit {
   opacity: 1;
-  background: #eaf4fb;
+  background: #f5fbff;
 }
 
 #poll-participants-table .poll-participant-row[editing="false"] .poll-participant-availability[availability="Y"] {
-  background: #cde9a1;
-  color: #75a527;
+  background: #cdeaa1;
+  color: #6a9f19;
 }
 
 #poll-participants-table .poll-participant-row[editing="false"] .poll-participant-availability[availability="M"] {
-  background: #fcf5c5;
-  color: #dabe0b;
+  background: #fff0b3;
+  color: #f7be00;
 }
 
 #poll-participants-table .poll-participant-row[editing="false"] .poll-participant-availability[availability="N"] {
-  background: #fcede9;
+  background: #fef6f6;
 }
 
 #poll-participants-table .poll-participant-row[editing="true"] {
-  background: #abd4ed;
+  background: #98cdfb;
 }
 
 #poll-participants-table .poll-participant-row[editing="true"] .poll-participant-details .poll-participant-delete {
@@ -175,12 +174,12 @@
 
 #poll-participants-table .poll-participant-row[editing="true"] .poll-participant-availability .poll-participant-availability-checkbox[availability="Y"] {
   padding: 5px 4.5px;
-  color: #75a527;
+  color: #6a9f19;
 }
 
 #poll-participants-table .poll-participant-row[editing="true"] .poll-participant-availability .poll-participant-availability-checkbox[availability="M"] {
   padding: 5px 3.5px 5px 5.5px;
-  color: #dabe0b;
+  color: #f7be00;
 }
 
 #poll-submit-button {
@@ -204,21 +203,21 @@
 }
 
 #poll-submit-button[isDisabled="true"] {
-  background: #c5cdd3;
-  border-color: #c5cdd3;
-  color: #8696a2;
+  background: #b7c4d2;
+  border-color: #b7c4d2;
+  color: #8694a6;
   cursor: not-allowed;
 }
 
 #poll-submit-button[isDisabled="false"][cannotAttend="true"] {
-  border-color: #c5cdd3;
   background: white;
-  color: #8696a2;
+  border-color: #b7c4d2;
+  color: #8694a6;
 }
 
 #poll-submit-button[isDisabled="false"][cannotAttend="false"] {
-  border-color: #3798d4;
-  background: #3798d4;
+  background: #2372e8;
+  border-color: #2372e8;
   color: white;
   padding: 17.5px 40px;
 }

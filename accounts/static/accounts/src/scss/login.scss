@@ -27,7 +27,7 @@ $login-field-height: 45px;
     position: relative;
     padding: 10px 15px;
     font-weight: bold;
-    color: #6a7685;
+    color:$color-neutral-700;
     cursor: pointer;
 
     a {
@@ -37,7 +37,7 @@ $login-field-height: 45px;
   }
 
   >div.selected {
-    color: #2372e8;
+    color: $color-brand-500;
   }
 
   >div:after {
@@ -54,11 +54,11 @@ $login-field-height: 45px;
   }
 
   >div.selected:after{
-    background-color: #2372e8;
+    background-color: $color-brand-500;
   }
 
   >div:not(.selected):hover:after {
-    background-color: #d3dce3
+    background-color: $color-neutral-300;
   }
 }
 
@@ -102,7 +102,7 @@ $login-field-height: 45px;
     padding: 0;
     font-size: 16px;
     line-height: 24px;
-    color: #b8141a;
+    color: $color-red-600;
   }
 
   .login-submit {
@@ -112,19 +112,19 @@ $login-field-height: 45px;
     border: none;
     text-align: center;
     font-weight: bold;
-    background: #517d0f;
+    background: $color-green-700;
     color: white;
     cursor: pointer;
   }
 
   .login-submit[invalid] {
-    background: #d3dce3;
-    color: #6a7685;
+    background: $color-neutral-300;
+    color: $color-neutral-700;
     cursor: default;
   }
 
   .login-submit:not([invalid]):hover {
-    background: #3b5b0b;
+    background: $color-green-800;
   }
 
   .disclaimer {

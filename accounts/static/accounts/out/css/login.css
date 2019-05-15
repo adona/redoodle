@@ -120,7 +120,7 @@
 }
 
 #login-form-existing .login-submit:not([invalid]):hover, #login-form-new .login-submit:not([invalid]):hover {
-  background: #3b5b0b;
+  background: #426111;
 }
 
 #login-form-existing .disclaimer, #login-form-new .disclaimer {

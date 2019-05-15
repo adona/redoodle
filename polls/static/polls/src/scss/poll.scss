@@ -30,7 +30,6 @@ $poll-table-row-height: 45px;
   .fas, .far {
     margin-right: 10px;
     text-align: center;
-    color: #5d6e79;
     font-size: 0.875rem;
   }
 }
@@ -85,24 +84,24 @@ $poll-table-row-height: 45px;
       #poll-n-participants {
         margin-left: 15px;
         width: calc(100% - 55px);
-        color: grey;
+        color: $color-neutral-600;
         font-weight: bold;
       }
 
       #poll-add-participant {
         width: 40px;
         padding: 0px 10px;
-        color: $dark-blue;
+        color: $color-brand-500;
         cursor: pointer;
       }
 
       #poll-add-participant:hover {
-        background: $light-blue;
+        background: $color-brand-100;
       }
     }
 
     #poll-availability-summary {
-      color: $dark-blue;
+      color: $color-brand-500;
     }
   }
 
@@ -137,24 +136,24 @@ $poll-table-row-height: 45px;
 
     .poll-participant-details:hover .poll-participant-edit {
       opacity: 1;
-      background: $light-blue;
+      background: $color-brand-100;
     }
 
     .poll-participant-availability[availability="Y"] {
-      background: $light-green;
-      color: $dark-green;
+      background: $color-green-300;
+      color: $color-green-600;
     }
     .poll-participant-availability[availability="M"] {
-      background: $light-yellow;
-      color: $dark-yellow;
+      background: $color-yellow-200;
+      color: $color-yellow-500;
     }
     .poll-participant-availability[availability="N"] {
-      background: $light-red;
+      background: $color-red-100;
     }
   }
 
   .poll-participant-row[editing="true"] {
-    background: $medium-blue;
+    background: $color-brand-300;
 
     .poll-participant-details { 
       .poll-participant-delete {
@@ -190,12 +189,12 @@ $poll-table-row-height: 45px;
 
       .poll-participant-availability-checkbox[availability="Y"] {
         padding: 5px 4.5px;
-        color: $dark-green;
+        color: $color-green-600;
       }
 
       .poll-participant-availability-checkbox[availability="M"] {
         padding: 5px 3.5px 5px 5.5px;
-        color: $dark-yellow;
+        color: $color-yellow-500;
       }
     }
   }
@@ -220,21 +219,21 @@ $poll-table-row-height: 45px;
 }
 
 #poll-submit-button[isDisabled="true"] {
-  background: $light-grey;
-  border-color: $light-grey;
-  color: $medium-grey;
+  background: $color-neutral-400;
+  border-color: $color-neutral-400;
+  color: $color-neutral-600;
   cursor: not-allowed;
 }
 
 #poll-submit-button[isDisabled="false"][cannotAttend="true"] {
-  border-color: $light-grey;
   background: white;
-  color: $medium-grey;
+  border-color: $color-neutral-400;
+  color: $color-neutral-600;
 }
 
 #poll-submit-button[isDisabled="false"][cannotAttend="false"] {
-  border-color: $dark-blue;
-  background: $dark-blue;
+  background: $color-brand-500;
+  border-color: $color-brand-500;
   color: white;
   padding: 17.5px 40px;
 }

@@ -20,8 +20,8 @@ $polls-list-container-width: 600px;
     #logo {
       font-size: 22px;
       font-weight: bold;
-      color: $dark-blue;
-    }  
+      color: $color-brand-600;
+    }
   }
   
   #header-nav-right {
@@ -36,7 +36,7 @@ $polls-list-container-width: 600px;
     #user-menu {
       font-size: 16px;
       font-weight: bold;
-      color: $dark-grey;
+      color: $color-neutral-800;
 
       #down-arrow {
         font-size: 22px;
@@ -45,11 +45,11 @@ $polls-list-container-width: 600px;
     }
   
     #user-menu:hover {
-      background: #f8f9fa;
+      background: $color-neutral-100;
     }
 
     #create-poll-button {
-      background: #dd3809;
+      background: $color-accent-500;
       color: white;
     }
   }
@@ -81,20 +81,20 @@ $polls-list-container-width: 600px;
       }
 
       li.selected {
-        background-color: $medium-blue;
+        background-color: $color-brand-300;
       }
     }
   }
   
   #dashboard-polls-list-container {
-    background: $lightest-grey;
+    background: $color-neutral-100;
     width: $polls-list-container-width;
     padding: 25px;
   }  
 
   .dashboard-poll-preview {
     margin-bottom: 5px;
-    border: 1px solid $light-grey;
+    border: 1px solid $color-neutral-500;
     padding: 16px;
     background: white;
     cursor: pointer;

@@ -18,7 +18,7 @@
 #header-nav #header-nav-left #logo {
   font-size: 22px;
   font-weight: bold;
-  color: #3798d4;
+  color: #2567ca;
 }
 
 #header-nav #header-nav-right {
@@ -90,7 +90,7 @@
 }
 
 #dashboard-main #dashboard-sidebar #sidebar-filters li.selected {
-  background-color: #abd4ed;
+  background-color: #98cdfb;
 }
 
 #dashboard-main #dashboard-polls-list-container {
@@ -101,7 +101,7 @@
 
 #dashboard-main .dashboard-poll-preview {
   margin-bottom: 5px;
-  border: 1px solid #c5cdd3;
+  border: 1px solid #a0aebd;
   padding: 16px;
   background: white;
   cursor: pointer;
