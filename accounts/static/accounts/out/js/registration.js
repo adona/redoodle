@@ -325,8 +325,10 @@ var Input = function (_React$Component5) {
     key: "onBlur",
     value: function onBlur(e) {
       var value = e.currentTarget.value;
-      this.validate(value);
-      if (value != "") this.setState({ firstEdit: false });
+      if (this.state.firstEdit & value != "") {
+        this.setState({ firstEdit: false });
+        this.validate(value);
+      }
     }
   }, {
     key: "validate",
