@@ -112,6 +112,8 @@ class FormContainer extends React.Component {
             placeholder = "Confirm password"
             required
             requiredMessage = "Please, confirm password."
+            validators = {[validatePasswordMatch]}
+            listenTo = {["password"]}
           />
         </Form>
       }
@@ -170,6 +172,7 @@ class Form extends React.Component {
               React.cloneElement(child, {
                 key: idx,
                 ... fieldsState[child.props.name],
+                formState: fieldsState, // Some fields will have validators which depend on the state of other fields
                 onFieldStateChange: this.onFieldStateChange
               })
           })
@@ -186,6 +189,7 @@ class Input extends React.Component {
     this.state = {firstEdit: true};
     this.onValueChange = this.onValueChange.bind(this);
     this.onBlur = this.onBlur.bind(this);
+    this.componentDidUpdate = this.componentDidUpdate.bind(this);
     this.validate = this.validate.bind(this);
   }
 
@@ -209,9 +213,26 @@ class Input extends React.Component {
 
   onBlur(e) {
     const value = e.currentTarget.value;
-    if (this.state.firstEdit & (value != "")) {
+    if (this.state.firstEdit) {
       this.setState({firstEdit: false});
       // If this is the first edit, validate on blur, since it was not validated on each value update
+      const validationResult = this.validate(value);
+      const fieldState = {value: value, ...validationResult}
+      this.props.onFieldStateChange(this.props.name, fieldState);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if ((this.state.firstEdit) | (this.props.listenTo == undefined)) return;
+    var shouldValidate = false;
+    for (var fieldName of this.props.listenTo) {
+      if (this.props.formState[fieldName].value != prevProps.formState[fieldName].value) {
+        shouldValidate = true;
+        break;
+      }
+    }
+    if (shouldValidate) {
+      const value = this.props.value;
       const validationResult = this.validate(value);
       const fieldState = {value: value, ...validationResult}
       this.props.onFieldStateChange(this.props.name, fieldState);
@@ -221,7 +242,7 @@ class Input extends React.Component {
   validate(value) {
     var validationResult = {isValid: true, error: null}; 
     for (var validator of this.validators) {
-      validationResult = validator(value);
+      validationResult = validator(value, this.props.name, this.props.formState);
       if (!validationResult.isValid)
         break;
     }
@@ -274,6 +295,12 @@ function validatePassword(value) {
   return {isValid: isValid, error: error};
 }
 
+function validatePasswordMatch(value, fieldName, formState) {
+  const secondvalue = fieldName == "password" ? formState["confirm"].value : formState["password"].value;
+  const isValid = (secondvalue == "") | (value == secondvalue);
+  const error = isValid ? null : "Passwords do not match. Try again, please";
+  return {isValid: isValid, error: error};
+}
 
 // Load parameters and render page
 

@@ -164,7 +164,9 @@ var FormContainer = function (_React$Component3) {
             type: "password",
             placeholder: "Confirm password",
             required: true,
-            requiredMessage: "Please, confirm password."
+            requiredMessage: "Please, confirm password.",
+            validators: [validatePasswordMatch],
+            listenTo: ["password"]
           })
         )
       );
@@ -265,6 +267,7 @@ var Form = function (_React$Component4) {
           return !_this7.isField(child) ? child : React.cloneElement(child, Object.assign({
             key: idx
           }, fieldsState[child.props.name], {
+            formState: fieldsState, // Some fields will have validators which depend on the state of other fields
             onFieldStateChange: _this7.onFieldStateChange
           }));
         })
@@ -287,6 +290,7 @@ var Input = function (_React$Component5) {
     _this8.state = { firstEdit: true };
     _this8.onValueChange = _this8.onValueChange.bind(_this8);
     _this8.onBlur = _this8.onBlur.bind(_this8);
+    _this8.componentDidUpdate = _this8.componentDidUpdate.bind(_this8);
     _this8.validate = _this8.validate.bind(_this8);
     return _this8;
   }
@@ -315,7 +319,7 @@ var Input = function (_React$Component5) {
     key: "onBlur",
     value: function onBlur(e) {
       var value = e.currentTarget.value;
-      if (this.state.firstEdit & value != "") {
+      if (this.state.firstEdit) {
         this.setState({ firstEdit: false });
         // If this is the first edit, validate on blur, since it was not validated on each value update
         var validationResult = this.validate(value);
@@ -324,19 +328,22 @@ var Input = function (_React$Component5) {
       }
     }
   }, {
-    key: "validate",
-    value: function validate(value) {
-      var validationResult = { isValid: true, error: null };
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      if (this.state.firstEdit | this.props.listenTo == undefined) return;
+      var shouldValidate = false;
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
       var _iteratorError2 = undefined;
 
       try {
-        for (var _iterator2 = this.validators[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var validator = _step2.value;
+        for (var _iterator2 = this.props.listenTo[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var fieldName = _step2.value;
 
-          validationResult = validator(value);
-          if (!validationResult.isValid) break;
+          if (this.props.formState[fieldName].value != prevProps.formState[fieldName].value) {
+            shouldValidate = true;
+            break;
+          }
         }
       } catch (err) {
         _didIteratorError2 = true;
@@ -349,6 +356,43 @@ var Input = function (_React$Component5) {
         } finally {
           if (_didIteratorError2) {
             throw _iteratorError2;
+          }
+        }
+      }
+
+      if (shouldValidate) {
+        var value = this.props.value;
+        var validationResult = this.validate(value);
+        var fieldState = Object.assign({ value: value }, validationResult);
+        this.props.onFieldStateChange(this.props.name, fieldState);
+      }
+    }
+  }, {
+    key: "validate",
+    value: function validate(value) {
+      var validationResult = { isValid: true, error: null };
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        for (var _iterator3 = this.validators[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var validator = _step3.value;
+
+          validationResult = validator(value, this.props.name, this.props.formState);
+          if (!validationResult.isValid) break;
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
           }
         }
       }
@@ -409,6 +453,13 @@ function validatePassword(value) {
   var re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[,.\/<>?;':"[\]{}!@#$%^&*()-=_+])[A-Za-z\d,.\/<>?;':"[\]{}!@#$%^&*()-=_+]{8,}$/;
   var isValid = re.test(value);
   var error = isValid ? null : "Invalid password. Password must be at least 8 characters long, and must contain at least one lowercase letter, one uppercase letter, one number, and one special character. Try again, please.";
+  return { isValid: isValid, error: error };
+}
+
+function validatePasswordMatch(value, fieldName, formState) {
+  var secondvalue = fieldName == "password" ? formState["confirm"].value : formState["password"].value;
+  var isValid = secondvalue == "" | value == secondvalue;
+  var error = isValid ? null : "Passwords do not match. Try again, please";
   return { isValid: isValid, error: error };
 }
 
