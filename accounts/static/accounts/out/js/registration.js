@@ -184,8 +184,7 @@ var Form = function (_React$Component4) {
 
     _this5.initializeState();
     _this5.getChildren = _this5.getChildren.bind(_this5);
-    _this5.onValueUpdate = _this5.onValueUpdate.bind(_this5);
-    _this5.onValidationUpdate = _this5.onValidationUpdate.bind(_this5);
+    _this5.onFieldStateChange = _this5.onFieldStateChange.bind(_this5);
     return _this5;
   }
 
@@ -213,7 +212,7 @@ var Form = function (_React$Component4) {
       var fieldNames = fields.map(function (field) {
         return field.props.name;
       });
-      var fieldState = {};
+      var fieldsState = {};
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -222,7 +221,7 @@ var Form = function (_React$Component4) {
         for (var _iterator = fieldNames[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           fieldName = _step.value;
 
-          fieldState[fieldName] = {
+          fieldsState[fieldName] = {
             value: "",
             isValid: null,
             error: null
@@ -243,24 +242,14 @@ var Form = function (_React$Component4) {
         }
       }
 
-      this.state = { fields: fieldState };
+      this.state = { fields: fieldsState };
     }
   }, {
-    key: "onValueUpdate",
-    value: function onValueUpdate(fieldName, value) {
-      var fieldState = this.state.fields;
-      fieldState[fieldName].value = value;
-      fieldState[fieldName].isValid = null; // Reset errors while field is being edited.
-      fieldState[fieldName].error = null;
-      this.setState({ fields: fieldState });
-    }
-  }, {
-    key: "onValidationUpdate",
-    value: function onValidationUpdate(fieldName, validationResult) {
-      var fieldState = this.state.fields;
-      fieldState[fieldName].isValid = validationResult.isValid;
-      fieldState[fieldName].error = validationResult.error;
-      this.setState({ fields: fieldState });
+    key: "onFieldStateChange",
+    value: function onFieldStateChange(fieldName, newFieldState) {
+      var fieldsState = Object.assign({}, this.state.fields);
+      fieldsState[fieldName] = newFieldState;
+      this.setState({ fields: fieldsState });
     }
   }, {
     key: "render",
@@ -276,8 +265,7 @@ var Form = function (_React$Component4) {
           return !_this7.isField(child) ? child : React.cloneElement(child, Object.assign({
             key: idx
           }, fieldsState[child.props.name], {
-            onValueUpdate: _this7.onValueUpdate,
-            onValidationUpdate: _this7.onValidationUpdate
+            onFieldStateChange: _this7.onFieldStateChange
           }));
         })
       );
@@ -297,7 +285,7 @@ var Input = function (_React$Component5) {
 
     _this8.initializeValidators();
     _this8.state = { firstEdit: true };
-    _this8.onValueUpdate = _this8.onValueUpdate.bind(_this8);
+    _this8.onValueChange = _this8.onValueChange.bind(_this8);
     _this8.onBlur = _this8.onBlur.bind(_this8);
     _this8.validate = _this8.validate.bind(_this8);
     return _this8;
@@ -315,11 +303,13 @@ var Input = function (_React$Component5) {
       this.validators = validators;
     }
   }, {
-    key: "onValueUpdate",
-    value: function onValueUpdate(e) {
+    key: "onValueChange",
+    value: function onValueChange(e) {
       var value = e.currentTarget.value;
-      this.props.onValueUpdate(this.props.name, value);
-      if (!this.state.firstEdit) this.validate(value);
+      // If this is not the firstEdit, validate on each value update
+      var validationResult = this.state.firstEdit ? { isValid: null, error: null } : this.validate(value);
+      var fieldState = Object.assign({ value: value }, validationResult);
+      this.props.onFieldStateChange(this.props.name, fieldState);
     }
   }, {
     key: "onBlur",
@@ -327,7 +317,10 @@ var Input = function (_React$Component5) {
       var value = e.currentTarget.value;
       if (this.state.firstEdit & value != "") {
         this.setState({ firstEdit: false });
-        this.validate(value);
+        // If this is the first edit, validate on blur, since it was not validated on each value update
+        var validationResult = this.validate(value);
+        var fieldState = Object.assign({ value: value }, validationResult);
+        this.props.onFieldStateChange(this.props.name, fieldState);
       }
     }
   }, {
@@ -360,7 +353,7 @@ var Input = function (_React$Component5) {
         }
       }
 
-      this.props.onValidationUpdate(this.props.name, validationResult);
+      return validationResult;
     }
   }, {
     key: "render",
@@ -376,7 +369,7 @@ var Input = function (_React$Component5) {
           name: this.props.name,
           placeholder: this.props.placeholder,
           value: this.props.value,
-          onChange: this.onValueUpdate,
+          onChange: this.onValueChange,
           onBlur: this.onBlur
         }),
         React.createElement(

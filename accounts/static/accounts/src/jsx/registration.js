@@ -125,8 +125,7 @@ class Form extends React.Component {
     super(props);
     this.initializeState();
     this.getChildren = this.getChildren.bind(this);
-    this.onValueUpdate = this.onValueUpdate.bind(this);
-    this.onValidationUpdate = this.onValidationUpdate.bind(this);
+    this.onFieldStateChange = this.onFieldStateChange.bind(this);
   }
 
   getChildren() {
@@ -144,29 +143,20 @@ class Form extends React.Component {
     const children = this.getChildren();
     const fields = children.filter((child) => this.isField(child));
     const fieldNames = fields.map((field) => field.props.name);
-    var fieldState = {};
+    var fieldsState = {};
     for (fieldName of fieldNames)
-      fieldState[fieldName] = {
+      fieldsState[fieldName] = {
         value: "",
         isValid: null,
         error: null
       };
-    this.state = {fields: fieldState};
+    this.state = {fields: fieldsState};
   }
 
-  onValueUpdate(fieldName, value) {
-    var fieldState = this.state.fields;
-    fieldState[fieldName].value = value;
-    fieldState[fieldName].isValid = null; // Reset errors while field is being edited.
-    fieldState[fieldName].error = null; 
-    this.setState({fields: fieldState});
-  }
-
-  onValidationUpdate(fieldName, validationResult) {
-    var fieldState = this.state.fields;
-    fieldState[fieldName].isValid = validationResult.isValid;
-    fieldState[fieldName].error = validationResult.error;
-    this.setState({fields: fieldState});
+  onFieldStateChange(fieldName, newFieldState) {
+    var fieldsState = { ...this.state.fields};
+    fieldsState[fieldName] = newFieldState;
+    this.setState({fields: fieldsState});
   }
 
   render() {
@@ -180,8 +170,7 @@ class Form extends React.Component {
               React.cloneElement(child, {
                 key: idx,
                 ... fieldsState[child.props.name],
-                onValueUpdate: this.onValueUpdate,
-                onValidationUpdate: this.onValidationUpdate
+                onFieldStateChange: this.onFieldStateChange
               })
           })
         }
@@ -195,7 +184,7 @@ class Input extends React.Component {
     super(props);
     this.initializeValidators();
     this.state = {firstEdit: true};
-    this.onValueUpdate = this.onValueUpdate.bind(this);
+    this.onValueChange = this.onValueChange.bind(this);
     this.onBlur = this.onBlur.bind(this);
     this.validate = this.validate.bind(this);
   }
@@ -210,18 +199,22 @@ class Input extends React.Component {
     this.validators = validators;
   }
 
-  onValueUpdate(e) {
+  onValueChange(e) {
     const value = e.currentTarget.value;
-    this.props.onValueUpdate(this.props.name, value);
-    if (!this.state.firstEdit)
-      this.validate(value);
+    // If this is not the firstEdit, validate on each value update
+    const validationResult = this.state.firstEdit ? {isValid: null, error: null} : this.validate(value);
+    const fieldState = {value: value, ...validationResult};
+    this.props.onFieldStateChange(this.props.name, fieldState);
   }
 
   onBlur(e) {
     const value = e.currentTarget.value;
     if (this.state.firstEdit & (value != "")) {
       this.setState({firstEdit: false});
-      this.validate(value);
+      // If this is the first edit, validate on blur, since it was not validated on each value update
+      const validationResult = this.validate(value);
+      const fieldState = {value: value, ...validationResult}
+      this.props.onFieldStateChange(this.props.name, fieldState);
     }
   }
 
@@ -232,7 +225,7 @@ class Input extends React.Component {
       if (!validationResult.isValid)
         break;
     }
-    this.props.onValidationUpdate(this.props.name, validationResult);
+    return validationResult;
   }
 
   render() {
@@ -246,7 +239,7 @@ class Input extends React.Component {
           name={this.props.name}
           placeholder={this.props.placeholder}
           value={this.props.value} 
-          onChange={this.onValueUpdate}
+          onChange={this.onValueChange}
           onBlur={this.onBlur}
         />
         <div className="errorlist"> {this.props.error} </div>
