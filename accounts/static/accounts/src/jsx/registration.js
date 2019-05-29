@@ -213,7 +213,7 @@ class Input extends React.Component {
   onValueUpdate(e) {
     const value = e.currentTarget.value;
     this.props.onValueUpdate(this.props.name, value);
-    if (this.state.firstEdit == false)
+    if (!this.state.firstEdit)
       this.validate(value);
   }
 

@@ -319,7 +319,7 @@ var Input = function (_React$Component5) {
     value: function onValueUpdate(e) {
       var value = e.currentTarget.value;
       this.props.onValueUpdate(this.props.name, value);
-      if (this.state.firstEdit == false) this.validate(value);
+      if (!this.state.firstEdit) this.validate(value);
     }
   }, {
     key: "onBlur",
