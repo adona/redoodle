@@ -205,7 +205,7 @@ class Input extends React.Component {
 
   onValueChange(e) {
     const value = e.currentTarget.value;
-    // If this is not the firstEdit, validate on each value update
+    // If this is not the firstEdit, validate
     const validationResult = this.state.firstEdit ? {isValid: null, error: null} : this.validate(value);
     const fieldState = {value: value, ...validationResult};
     this.props.onFieldStateChange(this.props.name, fieldState);
@@ -215,7 +215,7 @@ class Input extends React.Component {
     const value = e.currentTarget.value;
     if (this.state.firstEdit) {
       this.setState({firstEdit: false});
-      // If this is the first edit, validate on blur, since it was not validated on each value update
+      // If this is the first edit, validate (since it was not validated during onValueChange)
       const validationResult = this.validate(value);
       const fieldState = {value: value, ...validationResult}
       this.props.onFieldStateChange(this.props.name, fieldState);
@@ -224,14 +224,15 @@ class Input extends React.Component {
 
   componentDidUpdate(prevProps) {
     if ((this.state.firstEdit) | (this.props.listenTo == undefined)) return;
-    var shouldValidate = false;
+    // If any of the fields I'm listening to have changed, validate
+    var listenToFieldChanged = false;
     for (var fieldName of this.props.listenTo) {
       if (this.props.formState[fieldName].value != prevProps.formState[fieldName].value) {
-        shouldValidate = true;
+        listenToFieldChanged = true;
         break;
       }
     }
-    if (shouldValidate) {
+    if (listenToFieldChanged) {
       const value = this.props.value;
       const validationResult = this.validate(value);
       const fieldState = {value: value, ...validationResult}

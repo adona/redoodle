@@ -310,7 +310,7 @@ var Input = function (_React$Component5) {
     key: "onValueChange",
     value: function onValueChange(e) {
       var value = e.currentTarget.value;
-      // If this is not the firstEdit, validate on each value update
+      // If this is not the firstEdit, validate
       var validationResult = this.state.firstEdit ? { isValid: null, error: null } : this.validate(value);
       var fieldState = Object.assign({ value: value }, validationResult);
       this.props.onFieldStateChange(this.props.name, fieldState);
@@ -321,7 +321,7 @@ var Input = function (_React$Component5) {
       var value = e.currentTarget.value;
       if (this.state.firstEdit) {
         this.setState({ firstEdit: false });
-        // If this is the first edit, validate on blur, since it was not validated on each value update
+        // If this is the first edit, validate (since it was not validated during onValueChange)
         var validationResult = this.validate(value);
         var fieldState = Object.assign({ value: value }, validationResult);
         this.props.onFieldStateChange(this.props.name, fieldState);
@@ -331,7 +331,8 @@ var Input = function (_React$Component5) {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps) {
       if (this.state.firstEdit | this.props.listenTo == undefined) return;
-      var shouldValidate = false;
+      // If any of the fields I'm listening to have changed, validate
+      var listenToFieldChanged = false;
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
       var _iteratorError2 = undefined;
@@ -341,7 +342,7 @@ var Input = function (_React$Component5) {
           var fieldName = _step2.value;
 
           if (this.props.formState[fieldName].value != prevProps.formState[fieldName].value) {
-            shouldValidate = true;
+            listenToFieldChanged = true;
             break;
           }
         }
@@ -360,7 +361,7 @@ var Input = function (_React$Component5) {
         }
       }
 
-      if (shouldValidate) {
+      if (listenToFieldChanged) {
         var value = this.props.value;
         var validationResult = this.validate(value);
         var fieldState = Object.assign({ value: value }, validationResult);
