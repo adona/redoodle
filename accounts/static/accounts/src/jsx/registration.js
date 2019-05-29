@@ -194,7 +194,9 @@ class Input extends React.Component {
   constructor(props) {
     super(props);
     this.initializeValidators();
+    this.state = {firstEdit: true};
     this.onValueUpdate = this.onValueUpdate.bind(this);
+    this.onBlur = this.onBlur.bind(this);
     this.validate = this.validate.bind(this);
   }
 
@@ -209,13 +211,22 @@ class Input extends React.Component {
   }
 
   onValueUpdate(e) {
-    this.props.onValueUpdate(this.props.name, e.currentTarget.value);
+    const value = e.currentTarget.value;
+    this.props.onValueUpdate(this.props.name, value);
+    if (this.state.firstEdit == false)
+      this.validate(value);
   }
 
-  validate() {
+  onBlur(e) {
+    const value = e.currentTarget.value;
+    this.validate(value);
+    this.setState({firstEdit: false});
+  }
+
+  validate(value) {
     var validationResult = {isValid: true, error: null}; 
     for (var validator of this.validators) {
-      validationResult = validator(this.props.value);
+      validationResult = validator(value);
       if (!validationResult.isValid)
         break;
     }
@@ -227,7 +238,6 @@ class Input extends React.Component {
       <div 
         className="field-container"
         invalid={this.props.isValid==false ? "" : null}
-        onBlur={this.validate}
       >
         <input 
           type={this.props.type}
@@ -235,6 +245,7 @@ class Input extends React.Component {
           placeholder={this.props.placeholder}
           value={this.props.value} 
           onChange={this.onValueUpdate}
+          onBlur={this.onBlur}
         />
         <div className="errorlist"> {this.props.error} </div>
       </div>

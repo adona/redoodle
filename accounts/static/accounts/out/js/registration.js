@@ -296,7 +296,9 @@ var Input = function (_React$Component5) {
     var _this8 = _possibleConstructorReturn(this, (Input.__proto__ || Object.getPrototypeOf(Input)).call(this, props));
 
     _this8.initializeValidators();
+    _this8.state = { firstEdit: true };
     _this8.onValueUpdate = _this8.onValueUpdate.bind(_this8);
+    _this8.onBlur = _this8.onBlur.bind(_this8);
     _this8.validate = _this8.validate.bind(_this8);
     return _this8;
   }
@@ -315,11 +317,20 @@ var Input = function (_React$Component5) {
   }, {
     key: "onValueUpdate",
     value: function onValueUpdate(e) {
-      this.props.onValueUpdate(this.props.name, e.currentTarget.value);
+      var value = e.currentTarget.value;
+      this.props.onValueUpdate(this.props.name, value);
+      if (this.state.firstEdit == false) this.validate(value);
+    }
+  }, {
+    key: "onBlur",
+    value: function onBlur(e) {
+      var value = e.currentTarget.value;
+      this.validate(value);
+      this.setState({ firstEdit: false });
     }
   }, {
     key: "validate",
-    value: function validate() {
+    value: function validate(value) {
       var validationResult = { isValid: true, error: null };
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
@@ -329,7 +340,7 @@ var Input = function (_React$Component5) {
         for (var _iterator2 = this.validators[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var validator = _step2.value;
 
-          validationResult = validator(this.props.value);
+          validationResult = validator(value);
           if (!validationResult.isValid) break;
         }
       } catch (err) {
@@ -356,15 +367,15 @@ var Input = function (_React$Component5) {
         "div",
         {
           className: "field-container",
-          invalid: this.props.isValid == false ? "" : null,
-          onBlur: this.validate
+          invalid: this.props.isValid == false ? "" : null
         },
         React.createElement("input", {
           type: this.props.type,
           name: this.props.name,
           placeholder: this.props.placeholder,
           value: this.props.value,
-          onChange: this.onValueUpdate
+          onChange: this.onValueUpdate,
+          onBlur: this.onBlur
         }),
         React.createElement(
           "div",
