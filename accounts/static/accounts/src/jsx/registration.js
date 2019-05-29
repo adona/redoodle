@@ -249,7 +249,7 @@ function getValidateRequired(errorMessage) {
   return function(value) {
     const isValid = value != "";
     const error = isValid ? null : errorMessage;
-    return {isValid: isValid, error: error}
+    return {isValid: isValid, error: error};
   }
 }
 
@@ -257,15 +257,15 @@ function validateEmail(value) {
   // Regex from: https://emailregex.com/
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const isValid = re.test(value);
-  const error = isValid ? null : "Invalid email. Try again, please."
-  return {isValid: isValid, error: error}
+  const error = isValid ? null : "Invalid email. Try again, please.";
+  return {isValid: isValid, error: error};
 }
 
 function validatePassword(value) {
   const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[,.\/<>?;':"[\]{}!@#$%^&*()-=_+])[A-Za-z\d,.\/<>?;':"[\]{}!@#$%^&*()-=_+]{8,}$/;
   const isValid = re.test(value);
-  const error = isValid ? null : "Invalid password. Password must be at least 8 characters long, and must contain at least one lowercase letter, one uppercase letter, one number, and one special character. Try again, please."
-  return {isValid: isValid, error: error}
+  const error = isValid ? null : "Invalid password. Password must be at least 8 characters long, and must contain at least one lowercase letter, one uppercase letter, one number, and one special character. Try again, please.";
+  return {isValid: isValid, error: error};
 }
 
 
