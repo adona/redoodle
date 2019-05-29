@@ -220,7 +220,8 @@ class Input extends React.Component {
   onBlur(e) {
     const value = e.currentTarget.value;
     this.validate(value);
-    this.setState({firstEdit: false});
+    if (value != "")
+      this.setState({firstEdit: false});
   }
 
   validate(value) {
