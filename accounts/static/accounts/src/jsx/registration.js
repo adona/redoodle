@@ -58,6 +58,7 @@ class FormContainer extends React.Component {
         <Form
           id = "login-form"
           key = "login-form"
+          submitLabel = "Log in"
         >
           <Input
             name = "email"
@@ -78,6 +79,7 @@ class FormContainer extends React.Component {
         <Form
           id = "signup-form"
           key = "signup-form"
+          submitLabel = "Sign up"
         >
           <Input
             name = "first_name"
@@ -136,6 +138,7 @@ class Form extends React.Component {
     var fieldsState = {};
     for (field of fields)
       fieldsState[field.props.name] = {
+        isRequired: field.props.required != undefined,
         validators: this.getValidators(field),
         listeners: [],
         isFirstEdit: true,
@@ -148,6 +151,7 @@ class Form extends React.Component {
         for (listenTo of field.props.listenTo)
           fieldsState[listenTo].listeners.push(field.props.name);
     this.state = {fields: fieldsState};
+    this.state.canSubmit = this.canSubmit();
   }
 
   getChildren() {
@@ -171,10 +175,20 @@ class Form extends React.Component {
     return validators;
   }
 
+  canSubmit() {
+    const fieldsState = this.state.fields;
+    for (field of Object.values(fieldsState))
+      if (((field.isRequired) && (field.value == "")) || (field.error != null))
+        return false;
+    return true;
+  }
+
   onValueChange(fieldName, value) {
-    var fieldsState = this.state.fields;
+    var state = this.state;
+    var fieldsState = state.fields;
     fieldsState[fieldName].value = value;
-    this.setState({fields: fieldsState});
+    state.fields = fieldsState;
+    this.setState(state);
 
     if(!fieldsState[fieldName].isFirstEdit)
       this.validate(fieldName);
@@ -185,16 +199,19 @@ class Form extends React.Component {
   }
 
   onBlur(fieldName) {
-    var fieldsState = this.state.fields;
+    var state = this.state;
+    var fieldsState = state.fields;
     if (fieldsState[fieldName].isFirstEdit) {
       fieldsState[fieldName].isFirstEdit = false;
-      this.setState({fields: fieldsState});  
+      state.fields = fieldsState;
+      this.setState(state);  
       this.validate(fieldName);
     }
   }
 
   validate(fieldName) {
-    var fieldsState = this.state.fields;
+    var state = this.state;
+    var fieldsState = state.fields;
     var validationResult = {isValid: true, error: null}; 
     for (var validator of fieldsState[fieldName].validators) {
       validationResult = validator(fieldsState[fieldName].value, fieldName, fieldsState);
@@ -203,7 +220,9 @@ class Form extends React.Component {
     }
     fieldsState[fieldName].isValid = validationResult.isValid;
     fieldsState[fieldName].error = validationResult.error;
-    this.setState({fields: fieldsState});
+    state.fields = fieldsState;
+    state.canSubmit = this.canSubmit();
+    this.setState(state);
   }
 
   render() {
@@ -224,6 +243,10 @@ class Form extends React.Component {
               })
           })
         }
+        <Submit
+          active = {this.state.canSubmit}
+          label = {this.props.submitLabel}
+        />
       </form>
     );
   }
@@ -259,6 +282,16 @@ class Input extends React.Component {
           onBlur={this.onBlur}
         />
         <div className="errorlist"> {this.props.error} </div>
+      </div>
+    );
+  }
+}
+
+class Submit extends React.Component {
+  render() {
+    return (
+      <div id="submit-button" active={this.props.active.toString()}>
+        {this.props.label}
       </div>
     );
   }

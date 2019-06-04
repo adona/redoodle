@@ -105,10 +105,11 @@ $login-field-height: 45px;
     color: $color-red-600;
   }
 
-  .login-submit {
+  #submit-button {
     @extend %login-input;
     display: block;
     margin: 0px auto;
+    padding-top: 12px;
     border: none;
     text-align: center;
     font-weight: bold;
@@ -117,13 +118,13 @@ $login-field-height: 45px;
     cursor: pointer;
   }
 
-  .login-submit[invalid] {
+  #submit-button[active=false] {
     background: $color-neutral-300;
     color: $color-neutral-700;
     cursor: default;
   }
 
-  .login-submit:not([invalid]):hover {
+  #submit-button[active=true]:hover {
     background: $color-green-800;
   }
 

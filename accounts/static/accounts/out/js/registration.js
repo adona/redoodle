@@ -108,7 +108,8 @@ var FormContainer = function (_React$Component3) {
           Form,
           {
             id: "login-form",
-            key: "login-form"
+            key: "login-form",
+            submitLabel: "Log in"
           },
           React.createElement(Input, {
             name: "email",
@@ -130,7 +131,8 @@ var FormContainer = function (_React$Component3) {
           Form,
           {
             id: "signup-form",
-            key: "signup-form"
+            key: "signup-form",
+            submitLabel: "Sign up"
           },
           React.createElement(Input, {
             name: "first_name",
@@ -209,6 +211,7 @@ var Form = function (_React$Component4) {
           field = _step.value;
 
           fieldsState[field.props.name] = {
+            isRequired: field.props.required != undefined,
             validators: this.getValidators(field),
             listeners: [],
             isFirstEdit: true,
@@ -283,6 +286,7 @@ var Form = function (_React$Component4) {
       }
 
       this.state = { fields: fieldsState };
+      this.state.canSubmit = this.canSubmit();
     }
   }, {
     key: "getChildren",
@@ -308,23 +312,18 @@ var Form = function (_React$Component4) {
       return validators;
     }
   }, {
-    key: "onValueChange",
-    value: function onValueChange(fieldName, value) {
+    key: "canSubmit",
+    value: function canSubmit() {
       var fieldsState = this.state.fields;
-      fieldsState[fieldName].value = value;
-      this.setState({ fields: fieldsState });
-
-      if (!fieldsState[fieldName].isFirstEdit) this.validate(fieldName);
-
       var _iteratorNormalCompletion4 = true;
       var _didIteratorError4 = false;
       var _iteratorError4 = undefined;
 
       try {
-        for (var _iterator4 = fieldsState[fieldName].listeners[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-          listener = _step4.value;
+        for (var _iterator4 = Object.values(fieldsState)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          field = _step4.value;
 
-          if (fieldsState[listener].value != "") this.validate(listener);
+          if (field.isRequired && field.value == "" || field.error != null) return false;
         }
       } catch (err) {
         _didIteratorError4 = true;
@@ -340,32 +339,29 @@ var Form = function (_React$Component4) {
           }
         }
       }
+
+      return true;
     }
   }, {
-    key: "onBlur",
-    value: function onBlur(fieldName) {
-      var fieldsState = this.state.fields;
-      if (fieldsState[fieldName].isFirstEdit) {
-        fieldsState[fieldName].isFirstEdit = false;
-        this.setState({ fields: fieldsState });
-        this.validate(fieldName);
-      }
-    }
-  }, {
-    key: "validate",
-    value: function validate(fieldName) {
-      var fieldsState = this.state.fields;
-      var validationResult = { isValid: true, error: null };
+    key: "onValueChange",
+    value: function onValueChange(fieldName, value) {
+      var state = this.state;
+      var fieldsState = state.fields;
+      fieldsState[fieldName].value = value;
+      state.fields = fieldsState;
+      this.setState(state);
+
+      if (!fieldsState[fieldName].isFirstEdit) this.validate(fieldName);
+
       var _iteratorNormalCompletion5 = true;
       var _didIteratorError5 = false;
       var _iteratorError5 = undefined;
 
       try {
-        for (var _iterator5 = fieldsState[fieldName].validators[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var validator = _step5.value;
+        for (var _iterator5 = fieldsState[fieldName].listeners[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          listener = _step5.value;
 
-          validationResult = validator(fieldsState[fieldName].value, fieldName, fieldsState);
-          if (!validationResult.isValid) break;
+          if (fieldsState[listener].value != "") this.validate(listener);
         }
       } catch (err) {
         _didIteratorError5 = true;
@@ -381,10 +377,56 @@ var Form = function (_React$Component4) {
           }
         }
       }
+    }
+  }, {
+    key: "onBlur",
+    value: function onBlur(fieldName) {
+      var state = this.state;
+      var fieldsState = state.fields;
+      if (fieldsState[fieldName].isFirstEdit) {
+        fieldsState[fieldName].isFirstEdit = false;
+        state.fields = fieldsState;
+        this.setState(state);
+        this.validate(fieldName);
+      }
+    }
+  }, {
+    key: "validate",
+    value: function validate(fieldName) {
+      var state = this.state;
+      var fieldsState = state.fields;
+      var validationResult = { isValid: true, error: null };
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
+
+      try {
+        for (var _iterator6 = fieldsState[fieldName].validators[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var validator = _step6.value;
+
+          validationResult = validator(fieldsState[fieldName].value, fieldName, fieldsState);
+          if (!validationResult.isValid) break;
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
+          }
+        }
+      }
 
       fieldsState[fieldName].isValid = validationResult.isValid;
       fieldsState[fieldName].error = validationResult.error;
-      this.setState({ fields: fieldsState });
+      state.fields = fieldsState;
+      state.canSubmit = this.canSubmit();
+      this.setState(state);
     }
   }, {
     key: "render",
@@ -405,6 +447,10 @@ var Form = function (_React$Component4) {
             onValueChange: _this7.onValueChange,
             onBlur: _this7.onBlur
           });
+        }),
+        React.createElement(Submit, {
+          active: this.state.canSubmit,
+          label: this.props.submitLabel
         })
       );
     }
@@ -465,6 +511,29 @@ var Input = function (_React$Component5) {
   }]);
 
   return Input;
+}(React.Component);
+
+var Submit = function (_React$Component6) {
+  _inherits(Submit, _React$Component6);
+
+  function Submit() {
+    _classCallCheck(this, Submit);
+
+    return _possibleConstructorReturn(this, (Submit.__proto__ || Object.getPrototypeOf(Submit)).apply(this, arguments));
+  }
+
+  _createClass(Submit, [{
+    key: "render",
+    value: function render() {
+      return React.createElement(
+        "div",
+        { id: "submit-button", active: this.props.active.toString() },
+        this.props.label
+      );
+    }
+  }]);
+
+  return Submit;
 }(React.Component);
 
 // Validators
