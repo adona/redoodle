@@ -126,8 +126,28 @@ class Form extends React.Component {
   constructor(props) {
     super(props);
     this.initializeState();
-    this.getChildren = this.getChildren.bind(this);
-    this.onFieldStateChange = this.onFieldStateChange.bind(this);
+    this.onValueChange = this.onValueChange.bind(this);
+    this.onBlur = this.onBlur.bind(this);
+  }
+
+  initializeState() {
+    const children = this.getChildren();
+    const fields = children.filter((child) => this.isField(child));
+    var fieldsState = {};
+    for (field of fields)
+      fieldsState[field.props.name] = {
+        validators: this.getValidators(field),
+        listeners: [],
+        isFirstEdit: true,
+        value: "",
+        isValid: null,
+        error: null
+      };
+    for (field of fields)
+      if (field.props.listenTo != undefined)
+        for (listenTo of field.props.listenTo)
+          fieldsState[listenTo].listeners.push(field.props.name);
+    this.state = {fields: fieldsState};
   }
 
   getChildren() {
@@ -137,27 +157,52 @@ class Form extends React.Component {
     return children;
   }
 
-  isField(element) {
-    return element.type == Input;
+  isField(child) {
+    return child.type == Input;
   }
 
-  initializeState() {
-    const children = this.getChildren();
-    const fields = children.filter((child) => this.isField(child));
-    const fieldNames = fields.map((field) => field.props.name);
-    var fieldsState = {};
-    for (fieldName of fieldNames)
-      fieldsState[fieldName] = {
-        value: "",
-        isValid: null,
-        error: null
-      };
-    this.state = {fields: fieldsState};
+  getValidators(field) {
+    var validators = field.props.validators;
+    if (validators == undefined) validators = [];
+    if (field.props.required) {
+      const validateRequired = getValidateRequired(field.props.requiredMessage);
+      validators.unshift(validateRequired);
+    }
+    return validators;
   }
 
-  onFieldStateChange(fieldName, newFieldState) {
-    var fieldsState = { ...this.state.fields};
-    fieldsState[fieldName] = newFieldState;
+  onValueChange(fieldName, value) {
+    var fieldsState = this.state.fields;
+    fieldsState[fieldName].value = value;
+    this.setState({fields: fieldsState});
+
+    if(!fieldsState[fieldName].isFirstEdit)
+      this.validate(fieldName);
+    
+    for(listener of fieldsState[fieldName].listeners)
+      if(fieldsState[listener].value != "")
+        this.validate(listener);
+  }
+
+  onBlur(fieldName) {
+    var fieldsState = this.state.fields;
+    if (fieldsState[fieldName].isFirstEdit) {
+      fieldsState[fieldName].isFirstEdit = false;
+      this.setState({fields: fieldsState});  
+      this.validate(fieldName);
+    }
+  }
+
+  validate(fieldName) {
+    var fieldsState = this.state.fields;
+    var validationResult = {isValid: true, error: null}; 
+    for (var validator of fieldsState[fieldName].validators) {
+      validationResult = validator(fieldsState[fieldName].value, fieldName, fieldsState);
+      if (!validationResult.isValid)
+        break;
+    }
+    fieldsState[fieldName].isValid = validationResult.isValid;
+    fieldsState[fieldName].error = validationResult.error;
     this.setState({fields: fieldsState});
   }
 
@@ -171,9 +216,11 @@ class Form extends React.Component {
             return !this.isField(child) ? child : 
               React.cloneElement(child, {
                 key: idx,
-                ... fieldsState[child.props.name],
-                formState: fieldsState, // Some fields will have validators which depend on the state of other fields
-                onFieldStateChange: this.onFieldStateChange
+                value: fieldsState[child.props.name].value,
+                isValid: fieldsState[child.props.name].isValid,
+                error: fieldsState[child.props.name].error,
+                onValueChange: this.onValueChange,
+                onBlur: this.onBlur
               })
           })
         }
@@ -185,69 +232,16 @@ class Form extends React.Component {
 class Input extends React.Component {
   constructor(props) {
     super(props);
-    this.initializeValidators();
-    this.state = {firstEdit: true};
     this.onValueChange = this.onValueChange.bind(this);
     this.onBlur = this.onBlur.bind(this);
-    this.componentDidUpdate = this.componentDidUpdate.bind(this);
-    this.validate = this.validate.bind(this);
-  }
-
-  initializeValidators() {
-    var validators = this.props.validators;
-    if (validators == undefined) validators = [];
-    if (this.props.required) {
-      const validateRequired = getValidateRequired(this.props.requiredMessage);
-      validators.unshift(validateRequired);
-    }
-    this.validators = validators;
   }
 
   onValueChange(e) {
-    const value = e.currentTarget.value;
-    // If this is not the firstEdit, validate
-    const validationResult = this.state.firstEdit ? {isValid: null, error: null} : this.validate(value);
-    const fieldState = {value: value, ...validationResult};
-    this.props.onFieldStateChange(this.props.name, fieldState);
+    this.props.onValueChange(this.props.name, e.currentTarget.value);
   }
 
   onBlur(e) {
-    const value = e.currentTarget.value;
-    if (this.state.firstEdit) {
-      this.setState({firstEdit: false});
-      // If this is the first edit, validate (since it was not validated during onValueChange)
-      const validationResult = this.validate(value);
-      const fieldState = {value: value, ...validationResult}
-      this.props.onFieldStateChange(this.props.name, fieldState);
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if ((this.state.firstEdit) | (this.props.listenTo == undefined)) return;
-    // If any of the fields I'm listening to have changed, validate
-    var listenToFieldChanged = false;
-    for (var fieldName of this.props.listenTo) {
-      if (this.props.formState[fieldName].value != prevProps.formState[fieldName].value) {
-        listenToFieldChanged = true;
-        break;
-      }
-    }
-    if (listenToFieldChanged) {
-      const value = this.props.value;
-      const validationResult = this.validate(value);
-      const fieldState = {value: value, ...validationResult}
-      this.props.onFieldStateChange(this.props.name, fieldState);
-    }
-  }
-
-  validate(value) {
-    var validationResult = {isValid: true, error: null}; 
-    for (var validator of this.validators) {
-      validationResult = validator(value, this.props.name, this.props.formState);
-      if (!validationResult.isValid)
-        break;
-    }
-    return validationResult;
+    this.props.onBlur(this.props.name);
   }
 
   render() {

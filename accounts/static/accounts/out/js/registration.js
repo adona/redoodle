@@ -185,24 +185,12 @@ var Form = function (_React$Component4) {
     var _this5 = _possibleConstructorReturn(this, (Form.__proto__ || Object.getPrototypeOf(Form)).call(this, props));
 
     _this5.initializeState();
-    _this5.getChildren = _this5.getChildren.bind(_this5);
-    _this5.onFieldStateChange = _this5.onFieldStateChange.bind(_this5);
+    _this5.onValueChange = _this5.onValueChange.bind(_this5);
+    _this5.onBlur = _this5.onBlur.bind(_this5);
     return _this5;
   }
 
   _createClass(Form, [{
-    key: "getChildren",
-    value: function getChildren() {
-      var children = this.props.children;
-      if (children == undefined) children = [];else if (!Array.isArray(children)) children = [children];
-      return children;
-    }
-  }, {
-    key: "isField",
-    value: function isField(element) {
-      return element.type == Input;
-    }
-  }, {
     key: "initializeState",
     value: function initializeState() {
       var _this6 = this;
@@ -211,19 +199,19 @@ var Form = function (_React$Component4) {
       var fields = children.filter(function (child) {
         return _this6.isField(child);
       });
-      var fieldNames = fields.map(function (field) {
-        return field.props.name;
-      });
       var fieldsState = {};
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = fieldNames[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          fieldName = _step.value;
+        for (var _iterator = fields[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          field = _step.value;
 
-          fieldsState[fieldName] = {
+          fieldsState[field.props.name] = {
+            validators: this.getValidators(field),
+            listeners: [],
+            isFirstEdit: true,
             value: "",
             isValid: null,
             error: null
@@ -244,106 +232,39 @@ var Form = function (_React$Component4) {
         }
       }
 
-      this.state = { fields: fieldsState };
-    }
-  }, {
-    key: "onFieldStateChange",
-    value: function onFieldStateChange(fieldName, newFieldState) {
-      var fieldsState = Object.assign({}, this.state.fields);
-      fieldsState[fieldName] = newFieldState;
-      this.setState({ fields: fieldsState });
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this7 = this;
-
-      var children = this.getChildren();
-      var fieldsState = this.state.fields;
-      return React.createElement(
-        "form",
-        { id: this.props.id, noValidate: true },
-        children.map(function (child, idx) {
-          return !_this7.isField(child) ? child : React.cloneElement(child, Object.assign({
-            key: idx
-          }, fieldsState[child.props.name], {
-            formState: fieldsState, // Some fields will have validators which depend on the state of other fields
-            onFieldStateChange: _this7.onFieldStateChange
-          }));
-        })
-      );
-    }
-  }]);
-
-  return Form;
-}(React.Component);
-
-var Input = function (_React$Component5) {
-  _inherits(Input, _React$Component5);
-
-  function Input(props) {
-    _classCallCheck(this, Input);
-
-    var _this8 = _possibleConstructorReturn(this, (Input.__proto__ || Object.getPrototypeOf(Input)).call(this, props));
-
-    _this8.initializeValidators();
-    _this8.state = { firstEdit: true };
-    _this8.onValueChange = _this8.onValueChange.bind(_this8);
-    _this8.onBlur = _this8.onBlur.bind(_this8);
-    _this8.componentDidUpdate = _this8.componentDidUpdate.bind(_this8);
-    _this8.validate = _this8.validate.bind(_this8);
-    return _this8;
-  }
-
-  _createClass(Input, [{
-    key: "initializeValidators",
-    value: function initializeValidators() {
-      var validators = this.props.validators;
-      if (validators == undefined) validators = [];
-      if (this.props.required) {
-        var validateRequired = getValidateRequired(this.props.requiredMessage);
-        validators.unshift(validateRequired);
-      }
-      this.validators = validators;
-    }
-  }, {
-    key: "onValueChange",
-    value: function onValueChange(e) {
-      var value = e.currentTarget.value;
-      // If this is not the firstEdit, validate
-      var validationResult = this.state.firstEdit ? { isValid: null, error: null } : this.validate(value);
-      var fieldState = Object.assign({ value: value }, validationResult);
-      this.props.onFieldStateChange(this.props.name, fieldState);
-    }
-  }, {
-    key: "onBlur",
-    value: function onBlur(e) {
-      var value = e.currentTarget.value;
-      if (this.state.firstEdit) {
-        this.setState({ firstEdit: false });
-        // If this is the first edit, validate (since it was not validated during onValueChange)
-        var validationResult = this.validate(value);
-        var fieldState = Object.assign({ value: value }, validationResult);
-        this.props.onFieldStateChange(this.props.name, fieldState);
-      }
-    }
-  }, {
-    key: "componentDidUpdate",
-    value: function componentDidUpdate(prevProps) {
-      if (this.state.firstEdit | this.props.listenTo == undefined) return;
-      // If any of the fields I'm listening to have changed, validate
-      var listenToFieldChanged = false;
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
       var _iteratorError2 = undefined;
 
       try {
-        for (var _iterator2 = this.props.listenTo[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var fieldName = _step2.value;
+        for (var _iterator2 = fields[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          field = _step2.value;
 
-          if (this.props.formState[fieldName].value != prevProps.formState[fieldName].value) {
-            listenToFieldChanged = true;
-            break;
+          if (field.props.listenTo != undefined) {
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
+
+            try {
+              for (var _iterator3 = field.props.listenTo[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                listenTo = _step3.value;
+
+                fieldsState[listenTo].listeners.push(field.props.name);
+              }
+            } catch (err) {
+              _didIteratorError3 = true;
+              _iteratorError3 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                  _iterator3.return();
+                }
+              } finally {
+                if (_didIteratorError3) {
+                  throw _iteratorError3;
+                }
+              }
+            }
           }
         }
       } catch (err) {
@@ -361,44 +282,159 @@ var Input = function (_React$Component5) {
         }
       }
 
-      if (listenToFieldChanged) {
-        var value = this.props.value;
-        var validationResult = this.validate(value);
-        var fieldState = Object.assign({ value: value }, validationResult);
-        this.props.onFieldStateChange(this.props.name, fieldState);
+      this.state = { fields: fieldsState };
+    }
+  }, {
+    key: "getChildren",
+    value: function getChildren() {
+      var children = this.props.children;
+      if (children == undefined) children = [];else if (!Array.isArray(children)) children = [children];
+      return children;
+    }
+  }, {
+    key: "isField",
+    value: function isField(child) {
+      return child.type == Input;
+    }
+  }, {
+    key: "getValidators",
+    value: function getValidators(field) {
+      var validators = field.props.validators;
+      if (validators == undefined) validators = [];
+      if (field.props.required) {
+        var validateRequired = getValidateRequired(field.props.requiredMessage);
+        validators.unshift(validateRequired);
+      }
+      return validators;
+    }
+  }, {
+    key: "onValueChange",
+    value: function onValueChange(fieldName, value) {
+      var fieldsState = this.state.fields;
+      fieldsState[fieldName].value = value;
+      this.setState({ fields: fieldsState });
+
+      if (!fieldsState[fieldName].isFirstEdit) this.validate(fieldName);
+
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
+
+      try {
+        for (var _iterator4 = fieldsState[fieldName].listeners[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          listener = _step4.value;
+
+          if (fieldsState[listener].value != "") this.validate(listener);
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
+          }
+        } finally {
+          if (_didIteratorError4) {
+            throw _iteratorError4;
+          }
+        }
+      }
+    }
+  }, {
+    key: "onBlur",
+    value: function onBlur(fieldName) {
+      var fieldsState = this.state.fields;
+      if (fieldsState[fieldName].isFirstEdit) {
+        fieldsState[fieldName].isFirstEdit = false;
+        this.setState({ fields: fieldsState });
+        this.validate(fieldName);
       }
     }
   }, {
     key: "validate",
-    value: function validate(value) {
+    value: function validate(fieldName) {
+      var fieldsState = this.state.fields;
       var validationResult = { isValid: true, error: null };
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
 
       try {
-        for (var _iterator3 = this.validators[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-          var validator = _step3.value;
+        for (var _iterator5 = fieldsState[fieldName].validators[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var validator = _step5.value;
 
-          validationResult = validator(value, this.props.name, this.props.formState);
+          validationResult = validator(fieldsState[fieldName].value, fieldName, fieldsState);
           if (!validationResult.isValid) break;
         }
       } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion3 && _iterator3.return) {
-            _iterator3.return();
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
           }
         } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
+          if (_didIteratorError5) {
+            throw _iteratorError5;
           }
         }
       }
 
-      return validationResult;
+      fieldsState[fieldName].isValid = validationResult.isValid;
+      fieldsState[fieldName].error = validationResult.error;
+      this.setState({ fields: fieldsState });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this7 = this;
+
+      var children = this.getChildren();
+      var fieldsState = this.state.fields;
+      return React.createElement(
+        "form",
+        { id: this.props.id, noValidate: true },
+        children.map(function (child, idx) {
+          return !_this7.isField(child) ? child : React.cloneElement(child, {
+            key: idx,
+            value: fieldsState[child.props.name].value,
+            isValid: fieldsState[child.props.name].isValid,
+            error: fieldsState[child.props.name].error,
+            onValueChange: _this7.onValueChange,
+            onBlur: _this7.onBlur
+          });
+        })
+      );
+    }
+  }]);
+
+  return Form;
+}(React.Component);
+
+var Input = function (_React$Component5) {
+  _inherits(Input, _React$Component5);
+
+  function Input(props) {
+    _classCallCheck(this, Input);
+
+    var _this8 = _possibleConstructorReturn(this, (Input.__proto__ || Object.getPrototypeOf(Input)).call(this, props));
+
+    _this8.onValueChange = _this8.onValueChange.bind(_this8);
+    _this8.onBlur = _this8.onBlur.bind(_this8);
+    return _this8;
+  }
+
+  _createClass(Input, [{
+    key: "onValueChange",
+    value: function onValueChange(e) {
+      this.props.onValueChange(this.props.name, e.currentTarget.value);
+    }
+  }, {
+    key: "onBlur",
+    value: function onBlur(e) {
+      this.props.onBlur(this.props.name);
     }
   }, {
     key: "render",
