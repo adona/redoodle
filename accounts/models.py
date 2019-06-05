@@ -20,8 +20,8 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
   email = models.EmailField(unique=True)
-  first_name = models.CharField(max_length=20)
-  last_name = models.CharField(max_length=20)
+  first_name = models.CharField(max_length=30)
+  last_name = models.CharField(max_length=30)
   USERNAME_FIELD="email"
   objects = UserManager()
   def __str__(self):
