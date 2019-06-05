@@ -192,6 +192,7 @@ var Form = function (_React$Component4) {
     _this5.onValueChange = _this5.onValueChange.bind(_this5);
     _this5.onBlur = _this5.onBlur.bind(_this5);
     _this5.onSubmit = _this5.onSubmit.bind(_this5);
+    _this5.onServerSideErrors = _this5.onServerSideErrors.bind(_this5);
     return _this5;
   }
 
@@ -495,10 +496,47 @@ var Form = function (_React$Component4) {
 
       $.post(this.props.submitURL, formValues).done(function (response) {
         window.location.replace(response.redirect);
-      }).fail(function (response) {
-        // TODO
-        console.log(response.responseText);
-      });
+      }).fail(this.onServerSideErrors);
+    }
+  }, {
+    key: "onServerSideErrors",
+    value: function onServerSideErrors(response) {
+      console.log(response.responseText);
+      var clientErrorCodes = [400, 401];
+      if (clientErrorCodes.includes(response.status)) {
+        var errors = response.responseJSON;
+        var state = this.state;
+        var fieldsState = state.fields;
+        var _iteratorNormalCompletion9 = true;
+        var _didIteratorError9 = false;
+        var _iteratorError9 = undefined;
+
+        try {
+          for (var _iterator9 = Object.keys(errors)[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+            fieldName = _step9.value;
+
+            fieldsState[fieldName].isValid = false;
+            fieldsState[fieldName].error = errors[fieldName][0];
+          }
+        } catch (err) {
+          _didIteratorError9 = true;
+          _iteratorError9 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion9 && _iterator9.return) {
+              _iterator9.return();
+            }
+          } finally {
+            if (_didIteratorError9) {
+              throw _iteratorError9;
+            }
+          }
+        }
+
+        state.fields = fieldsState;
+        state.canSubmit = false;
+        this.setState(state);
+      }
     }
   }, {
     key: "render",

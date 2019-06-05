@@ -133,6 +133,7 @@ class Form extends React.Component {
     this.onValueChange = this.onValueChange.bind(this);
     this.onBlur = this.onBlur.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onServerSideErrors = this.onServerSideErrors.bind(this);
   }
 
   initializeState() {
@@ -246,10 +247,24 @@ class Form extends React.Component {
       .done(function(response) {
         window.location.replace(response.redirect);
       })
-      .fail(function(response) {
-        // TODO
-        console.log(response.responseText);
-    });
+      .fail(this.onServerSideErrors);
+  }
+
+  onServerSideErrors(response) {
+    console.log(response.responseText);
+    const clientErrorCodes = [400, 401];
+    if (clientErrorCodes.includes(response.status)) {
+      const errors = response.responseJSON;
+      var state = this.state;
+      var fieldsState = state.fields;
+      for(fieldName of Object.keys(errors)) {
+        fieldsState[fieldName].isValid = false;
+        fieldsState[fieldName].error = errors[fieldName][0];
+      }
+      state.fields = fieldsState;
+      state.canSubmit = false;
+      this.setState(state);
+    }
   }
 
   render() {
