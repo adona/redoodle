@@ -154,7 +154,10 @@ class Form extends React.Component {
       if (field.props.listenTo != undefined)
         for (listenTo of field.props.listenTo)
           fieldsState[listenTo].listeners.push(field.props.name);
-    this.state = {fields: fieldsState};
+    this.state = {
+      fields: fieldsState,
+      nonFieldErrors: null,
+    };
     this.state.canSubmit = this.canSubmit();
   }
 
@@ -184,6 +187,7 @@ class Form extends React.Component {
     var fieldsState = state.fields;
     fieldsState[fieldName].value = value;
     state.fields = fieldsState;
+    state.nonFieldErrors = null;
     this.setState(state);
 
     if(!fieldsState[fieldName].isFirstEdit)
@@ -227,10 +231,14 @@ class Form extends React.Component {
   }
 
   canSubmit() {
-    const fieldsState = this.state.fields;
+    const state = this.state;
+    if (state.nonFieldErrors != null) return false;
+
+    const fieldsState = state.fields;
     for (field of Object.values(fieldsState))
       if (((field.isRequired) && (field.value == "")) || (field.error != null))
         return false;
+
     return true;
   }
 
@@ -251,19 +259,23 @@ class Form extends React.Component {
   }
 
   onServerSideErrors(response) {
-    console.log(response.responseText);
     const clientErrorCodes = [400, 401];
     if (clientErrorCodes.includes(response.status)) {
       const errors = response.responseJSON;
       var state = this.state;
       var fieldsState = state.fields;
-      for(fieldName of Object.keys(errors)) {
-        fieldsState[fieldName].isValid = false;
-        fieldsState[fieldName].error = errors[fieldName][0];
-      }
+      for(fieldName of Object.keys(errors)) 
+        if(fieldName == "__all__") {
+          state.nonFieldErrors = errors[fieldName]
+        } else {
+          fieldsState[fieldName].isValid = false;
+          fieldsState[fieldName].error = errors[fieldName][0];
+        }
       state.fields = fieldsState;
       state.canSubmit = false;
       this.setState(state);
+    } else {
+      // TODO: Handle server error codes (e.g. server is down)
     }
   }
 
@@ -288,6 +300,16 @@ class Form extends React.Component {
                 onBlur: this.onBlur
               })
           })
+        }
+        {
+          this.state.nonFieldErrors == null ? "" : 
+            <div className="field-container">
+              {
+                this.state.nonFieldErrors.map((error, idx) => {
+                  return <div className="errorlist" key={idx}> {error} </div>
+                })
+              }
+            </div>
         }
         <Submit
           active = {this.state.canSubmit}
