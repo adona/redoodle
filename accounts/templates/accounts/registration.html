@@ -8,6 +8,8 @@
 
 {% block mainparams %} 
   page="{{ page }}"
+  loginurl="{% url 'login' %}"
+  signupurl="{% url 'signup' %}"
 {% endblock %}
 
 {% block header %}

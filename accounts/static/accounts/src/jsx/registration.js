@@ -58,10 +58,11 @@ class FormContainer extends React.Component {
         <Form
           id = "login-form"
           key = "login-form"
+          submitURL = {loginURL}
           submitLabel = "Log in"
         >
           <Input
-            name = "email"
+            name = "username"
             placeholder = "Email"
             required
             requiredMessage = "Please, enter email."
@@ -79,6 +80,7 @@ class FormContainer extends React.Component {
         <Form
           id = "signup-form"
           key = "signup-form"
+          submitURL = {signupURL}
           submitLabel = "Sign up"
         >
           <Input
@@ -101,7 +103,7 @@ class FormContainer extends React.Component {
             validators = {[validateEmail]}
           />
           <Input
-            name = "password"
+            name = "password1"
             type = "password"
             placeholder = "Password"
             required
@@ -109,13 +111,13 @@ class FormContainer extends React.Component {
             validators = {[validatePassword]}
           />
           <Input
-            name = "confirm"
+            name = "password2"
             type = "password"
             placeholder = "Confirm password"
             required
             requiredMessage = "Please, confirm password."
             validators = {[validatePasswordMatch]}
-            listenTo = {["password"]}
+            listenTo = {["password1"]}
           />
         </Form>
       }
@@ -130,6 +132,7 @@ class Form extends React.Component {
     this.initializeState();
     this.onValueChange = this.onValueChange.bind(this);
     this.onBlur = this.onBlur.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   initializeState() {
@@ -175,14 +178,6 @@ class Form extends React.Component {
     return validators;
   }
 
-  canSubmit() {
-    const fieldsState = this.state.fields;
-    for (field of Object.values(fieldsState))
-      if (((field.isRequired) && (field.value == "")) || (field.error != null))
-        return false;
-    return true;
-  }
-
   onValueChange(fieldName, value) {
     var state = this.state;
     var fieldsState = state.fields;
@@ -225,11 +220,47 @@ class Form extends React.Component {
     this.setState(state);
   }
 
+  validateAll() {
+    for (fieldName of Object.keys(this.state.fields))
+      this.validate(fieldName);
+  }
+
+  canSubmit() {
+    const fieldsState = this.state.fields;
+    for (field of Object.values(fieldsState))
+      if (((field.isRequired) && (field.value == "")) || (field.error != null))
+        return false;
+    return true;
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+
+    this.validateAll();
+    if (!this.state.canSubmit) return;
+
+    var formValues = {};
+    for(fieldName of Object.keys(this.state.fields))
+      formValues[fieldName] = this.state.fields[fieldName].value;
+    $.post(this.props.submitURL, formValues)
+      .done(function(response) {
+        window.location.replace(response.redirect);
+      })
+      .fail(function(response) {
+        // TODO
+        console.log(response.responseText);
+    });
+  }
+
   render() {
     const children = this.getChildren();
     const fieldsState = this.state.fields;
     return (
-      <form id={this.props.id} noValidate>
+      <form 
+        id={this.props.id}
+        noValidate
+        onSubmit={this.onSubmit}
+      >
         {
           children.map((child, idx) => {
             return !this.isField(child) ? child : 
@@ -290,9 +321,12 @@ class Input extends React.Component {
 class Submit extends React.Component {
   render() {
     return (
-      <div id="submit-button" active={this.props.active.toString()}>
-        {this.props.label}
-      </div>
+      <input
+        id="submit-button"
+        type="submit"
+        active={this.props.active.toString()}
+        value={this.props.label}
+      />
     );
   }
 }
@@ -324,7 +358,7 @@ function validatePassword(value) {
 }
 
 function validatePasswordMatch(value, fieldName, formState) {
-  const secondvalue = fieldName == "password" ? formState["confirm"].value : formState["password"].value;
+  const secondvalue = fieldName == "password1" ? formState["confirm2"].value : formState["password1"].value;
   const isValid = (secondvalue == "") | (value == secondvalue);
   const error = isValid ? null : "Passwords do not match. Try again, please";
   return {isValid: isValid, error: error};
@@ -333,6 +367,9 @@ function validatePasswordMatch(value, fieldName, formState) {
 // Load parameters and render page
 
 var page = $("body").attr("page");
+var loginURL = $("body").attr("loginurl");
+var signupURL = $("body").attr("signupurl");
+
 ReactDOM.render(
   <RegistrationContainer page={page} />,
   $('#main')[0]
