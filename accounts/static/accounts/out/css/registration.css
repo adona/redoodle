@@ -124,6 +124,10 @@
   background: #426111;
 }
 
+#login-form #submit-button:focus, #signup-form #submit-button:focus {
+  outline: none;
+}
+
 #login-form .disclaimer, #signup-form .disclaimer {
   margin-top: 20px;
   font-size: 14px;
