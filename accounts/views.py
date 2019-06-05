@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework import status
 from django.urls import reverse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
 from accounts.forms import CustomAuthenticationForm, CustomUserCreationForm
@@ -10,7 +10,10 @@ from accounts.forms import CustomAuthenticationForm, CustomUserCreationForm
 
 class LoginView(APIView):
   def get(self, request):
-    return render(request, "accounts/registration.html", {"page": "login"})
+    if request.user.is_authenticated:
+      return redirect(reverse("dashboard"))
+    else:
+      return render(request, "accounts/registration.html", {"page": "login"})
 
   def post(self, request):
     form = CustomAuthenticationForm(data=request.POST)
