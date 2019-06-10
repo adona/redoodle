@@ -29,7 +29,10 @@ class LoginView(APIView):
 
 class SignupView(APIView):
   def get(self, request):
-    return render(request, "accounts/registration.html", {"page": "signup"})
+    if request.user.is_authenticated:
+      return redirect(reverse("dashboard"))
+    else:
+      return render(request, "accounts/registration.html", {"page": "signup"})
 
   def post(self, request):
     form = CustomUserCreationForm(data=request.POST)
