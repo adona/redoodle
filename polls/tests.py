@@ -12,38 +12,40 @@ from polls.serializers import ParticipantSerializer
 
 # Create your tests here.
 
-def createTestPoll(self):
-  self.test_npolltimes = 3
-  self.test_nparticipants = 4
-  self.test_author = User.objects.create_user(
-    email="test@email.com",
+def createTestPoll():
+  npolltimes = 3
+  nparticipants = 4
+  n = len(User.objects.all()) + 1
+  author = User.objects.create_user(
+    email=f"test{n}@email.com",
     password="password",
-    first_name="TestFirst", 
-    last_name="TestLast")
-  self.test_poll = Poll.objects.create(
-    name="TestPoll", 
-    author=self.test_author, 
-    location="TestLocation", 
-    notes="TestNotes", 
-    timezone="TestTimezone")
+    first_name=f"TestFirst{n}", 
+    last_name=f"TestLast{n}")
+  poll = Poll.objects.create(
+    name=f"TestPoll{n}", 
+    author=author, 
+    location=f"TestLocation{n}", 
+    notes=f"TestNotes{n}", 
+    timezone=f"TestTimezone{n}")
   timezone = pytz.timezone("America/New_York")
-  self.test_polltimes = [
+  polltimes = [
     PollTime.objects.create(
-      poll=self.test_poll, 
+      poll=poll, 
       start=datetime(2018, 5, i+1, 20, 00, tzinfo=timezone), 
       end=datetime(2018, 5, i+1, 21, 00, tzinfo=timezone)) 
-    for i in range(self.test_npolltimes)]
-  self.test_participants = [
+    for i in range(npolltimes)]
+  participants = [
     Participant.objects.create(
-      poll=self.test_poll, 
+      poll=poll, 
       name=f"Participant{i}")
-    for i in range(self.test_nparticipants)]
+    for i in range(nparticipants)]
   [[Availability.objects.create(
       participant=participant, 
       polltime=polltime, 
       availability="N") 
-    for participant in self.test_participants]
-      for polltime in self.test_polltimes]
+    for participant in participants]
+      for polltime in polltimes]
+  return poll
 
 class UserModelTest(TestCase):
   def test_unique_email(self):
@@ -53,10 +55,10 @@ class UserModelTest(TestCase):
 
 class ParticipantSerializerTests(TestCase):
   def setUp(self):
-    createTestPoll(self)
+    self.test_poll = createTestPoll()
 
   def test_serialize_participant(self):
-    participant = self.test_participants[0]
+    participant = self.test_poll.participants.first()
     expected_participant_data = {
       "id": participant.id,
       "poll": participant.poll.id,
@@ -69,11 +71,12 @@ class ParticipantSerializerTests(TestCase):
     self.assertEqual(serializer.data, expected_participant_data)
 
   def test_deserialize_missing_poll(self):
+    polltimes = self.test_poll.polltimes.all()
     new_participant_data = {
       "name": "New Participant",
       "availability": [
         {"polltime": polltime.id, "availability": "Y"} 
-          for polltime in self.test_polltimes] 
+          for polltime in polltimes] 
     }
     expected_error = {'poll': [ErrorDetail(string='This field is required.', code='required')]}
     serializer = ParticipantSerializer(data = new_participant_data)
@@ -81,11 +84,12 @@ class ParticipantSerializerTests(TestCase):
     self.assertEqual(serializer.errors, expected_error)
     
   def test_deserialize_missing_name(self):
+    polltimes = self.test_poll.polltimes.all()
     new_participant_data = {
       "poll": self.test_poll.id,
       "availability": [
         {"polltime": polltime.id, "availability": "Y"} 
-          for polltime in self.test_polltimes] 
+          for polltime in polltimes] 
     }
     expected_error = {'name': [ErrorDetail(string='This field is required.', code='required')]}
     serializer = ParticipantSerializer(data = new_participant_data)
@@ -102,63 +106,71 @@ class ParticipantSerializerTests(TestCase):
     self.assertFalse(serializer.is_valid())
     self.assertEqual(serializer.errors, expected_error)
 
-  # def test_validate_update_wrong_poll(self):
-  #   participant = self.test_participants[0]
-  #   updated_participant_data = {
-  #     "id": participant.id,
-  #     "poll": participant.poll.id-1, # Wrong poll ID
-  #     "name": participant.name,
-  #     "availability": [
-  #       {"polltime": availability.polltime.id, "availability": availability.availability} 
-  #         for availability in participant.availability.all()] 
-  #   }
-  #   expected_error = {'poll': [ErrorDetail(string='Poll incorrect (does not match poll currently associated with participant)', code='invalid')]}
-  #   serializer = ParticipantSerializer(participant, data = updated_participant_data)
-  #   self.assertFalse(serializer.is_valid())
-  #   self.assertEqual(serializer.errors, expected_error)
+  def test_validate_update_wrong_poll(self):
+    self.test_poll2 = createTestPoll()
+    participant = self.test_poll.participants.first()
+    updated_participant_data = {
+      "id": participant.id,
+      "poll": self.test_poll2.id, # Wrong poll ID
+      "name": participant.name,
+      "availability": [
+        {"polltime": availability.polltime.id, "availability": availability.availability} 
+          for availability in participant.availability.all()] 
+    }
+    expected_error = {'poll': [ErrorDetail(string='Provided poll does not match poll currently associated with participant', code='invalid')]}
+    serializer = ParticipantSerializer(participant, data = updated_participant_data)
+    self.assertFalse(serializer.is_valid())
+    self.assertEqual(serializer.errors, expected_error)
 
   def test_validate_wrong_nr_polltimes(self):
+    polltime = self.test_poll.polltimes.first()
     new_participant_data = {
       "poll": self.test_poll.id,
       "name": "New Participant",
-      "availability": [{ "polltime": self.test_polltimes[0].id, "availability": "Y"}] # Only one polltime
+      "availability": [{ "polltime": polltime.id, "availability": "Y"}] # Only one polltime
     }
-    expected_error = {'non_field_errors': [ErrorDetail(string='Participant availability contains incorrect number of poll times', code='invalid')]}
+    expected_error = {'availability': [ErrorDetail(string='Participant availability contains incorrect number of poll times', code='invalid')]}
     serializer = ParticipantSerializer(data = new_participant_data)
     self.assertFalse(serializer.is_valid())
     self.assertEqual(serializer.errors, expected_error)
 
   def test_validate_polltimes_wrong_order(self):
+    polltimes = self.test_poll.polltimes.all()
+    npolltimes = len(polltimes)
     new_participant_data = {
       "poll": self.test_poll.id,
       "name": "New Participant",
       "availability": [
-        {"polltime": self.test_polltimes[i].id, "availability": "Y"}
-          for i in list(range(1, self.test_npolltimes)) + [0]] # Move the 1st polltime at the end
+        {"polltime": polltimes[i].id, "availability": "Y"}
+          for i in list(range(1, npolltimes)) + [0]] # Move the 1st polltime at the end
     }
-    expected_error = {'non_field_errors': [ErrorDetail(string='Participant availability contains the wrong poll times, or in the wrong order', code='invalid')]}
+    expected_error = {'availability': [ErrorDetail(string='Participant availability contains the wrong poll times, or in the wrong order', code='invalid')]}
     serializer = ParticipantSerializer(data = new_participant_data)
     self.assertFalse(serializer.is_valid())
     self.assertEqual(serializer.errors, expected_error)
 
   def test_create_participant(self):
+    nparticipants = len(self.test_poll.participants.all())
+    polltimes = self.test_poll.polltimes.all()
     new_participant_data = {
       "poll": self.test_poll.id,
       "name": "New Participant",
       "availability": [
         {"polltime": polltime.id, "availability": "Y"} 
-          for polltime in self.test_polltimes] 
+          for polltime in polltimes] 
     }
     serializer = ParticipantSerializer(data = new_participant_data)
     self.assertTrue(serializer.is_valid())
     serializer.save()
     updated_participants = list(self.test_poll.participants.all())
-    assert(len(updated_participants) == self.test_nparticipants+1)
+    assert(len(updated_participants) == nparticipants+1)
     new_participant = updated_participants[-1]
     assert(new_participant.name == new_participant_data["name"])
 
   def test_update_participant(self):
-    participant = self.test_participants[0]
+    participants = self.test_poll.participants.all() 
+    nparticipants = len(participants)
+    participant = participants[0]
     updated_participant_data = {
       "id": participant.id,
       "poll": participant.poll.id,
@@ -171,16 +183,15 @@ class ParticipantSerializerTests(TestCase):
     self.assertTrue(serializer.is_valid())
     serializer.save()
     updated_participants = list(self.test_poll.participants.all())
-    assert(len(updated_participants) == self.test_nparticipants)
+    assert(len(updated_participants) == nparticipants)
     updated_participant = updated_participants[0]
     assert(updated_participant.name == updated_participant_data["name"])
-    assert(updated_participant.availability.all()[0].availability == updated_participant_data["availability"][0]["availability"])
-
+    assert(updated_participant.availability.first().availability == updated_participant_data["availability"][0]["availability"])
 
 class ParticipatePollViewTests(TestCase):
 
   def setUp(self):
-    createTestPoll(self)
+    self.test_poll = createTestPoll()
     self.url = reverse('participate-poll', args=[self.test_poll.id])
 
   def test_post_request_not_json(self):
@@ -191,47 +202,45 @@ class ParticipatePollViewTests(TestCase):
     self.assertEqual(json.loads(response.content), expected_response)
 
   def test_post_wrong_nr_polltimes(self):
+    polltime = self.test_poll.polltimes.first()
     new_participant_data = {
       "poll": self.test_poll.id,
       "name": "New Participant",
-      "availability": [{ "polltime": self.test_polltimes[0].id, "availability": "Y"}] # Only one polltime
+      "availability": [{ "polltime": polltime.id, "availability": "Y"}] # Only one polltime
     }
-    expected_response = {"non_field_errors": ["Participant availability contains incorrect number of poll times"]}
+    expected_response = {'availability': [ErrorDetail(string='Participant availability contains incorrect number of poll times', code='invalid')]}
     response = self.client.post(self.url, data=new_participant_data, content_type="application/json")
     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     self.assertEqual(json.loads(response.content), expected_response)
 
   def test_post_polltimes_wrong_order(self):
+    polltimes = self.test_poll.polltimes.all()
+    npolltimes = len(polltimes)
     new_participant_data = {
       "poll": self.test_poll.id,
       "name": "New Participant",
       "availability": [
-        {"polltime": self.test_polltimes[i].id, "availability": "Y"}
-          for i in list(range(1, self.test_npolltimes)) + [0]] # Move the 1st polltime at the end
+        {"polltime": polltimes[i].id, "availability": "Y"}
+          for i in list(range(1, npolltimes)) + [0]] # Move the 1st polltime at the end
     }
-    expected_response = {"non_field_errors": ["Participant availability contains the wrong poll times, or in the wrong order"]}
+    expected_response = {'availability': [ErrorDetail(string='Participant availability contains the wrong poll times, or in the wrong order', code='invalid')]}
     response = self.client.post(self.url, data=new_participant_data, content_type="application/json")
     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     self.assertEqual(json.loads(response.content), expected_response)
 
   def test_post_success(self):
+    nparticipants = len(self.test_poll.participants.all())
+    polltimes = self.test_poll.polltimes.all()
     new_participant_data = {
       "poll": self.test_poll.id,
       "name": "New Participant",
       "availability": [
         {"polltime": polltime.id, "availability": "Y"} 
-          for polltime in self.test_poll.polltimes.all()] 
+          for polltime in polltimes] 
     }
     response = self.client.post(self.url, data=new_participant_data, content_type="application/json")
     assert(response.status_code == status.HTTP_200_OK)
     updated_participants = list(self.test_poll.participants.all())
-    assert(len(updated_participants) == self.test_nparticipants+1)
+    assert(len(updated_participants) == nparticipants+1)
     new_participant = updated_participants[-1]
     assert(new_participant.name == new_participant_data["name"])
-
-  def test_put_request_not_json(self):
-    test_data = "Not a JSON"
-    expected_response = {"detail": "Request not valid JSON"}
-    response = self.client.put(self.url, data=test_data, content_type="application/json")
-    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-    self.assertEqual(json.loads(response.content), expected_response)

@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from rest_framework.exceptions import APIException, ParseError, ValidationError
 from rest_framework import status
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -8,7 +9,6 @@ import json
 from polls.models import *
 from accounts.models import *
 from polls.serializers import *
-from polls.exceptions import BadRequestException
 
 
 # Create your views here.
@@ -58,15 +58,15 @@ class ParticipatePoll(APIView):
     try:
       data = json.loads(request.body)
     except: 
-      raise BadRequestException("Request not valid JSON")
+      raise ParseError("Request not valid JSON")
     return data
 
   def retrieveParticipant(self, request_data):
     if "id" not in request_data:
-      raise BadRequestException("Request must include participant ID")
+      raise ValidationError({"id": ["This field is required."]})
     id = request_data["id"]
     try:
       participant = Participant.objects.get(pk=id)
     except: 
-      raise BadRequestException("No participant found with given ID")
+      raise ValidationError({"id": ["No participant found for given ID"]})
     return participant

@@ -21,7 +21,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
     """
     if self.instance != None:
       if (self.instance.poll != value):
-        raise serializers.ValidationError("Poll incorrect (does not match poll currently associated with participant)")
+        raise serializers.ValidationError("Provided poll does not match poll currently associated with participant")
     return value
 
   def validate(self, data):
@@ -33,10 +33,10 @@ class ParticipantSerializer(serializers.ModelSerializer):
     availability = data["availability"]
     polltimes = data["poll"].polltimes.all()
     if len(availability) != len(polltimes):
-      raise serializers.ValidationError("Participant availability contains incorrect number of poll times")
+      raise serializers.ValidationError({"availability": ["Participant availability contains incorrect number of poll times"]})
     for i in range(len(availability)):
       if availability[i]["polltime"] != polltimes[i]:
-        raise serializers.ValidationError("Participant availability contains the wrong poll times, or in the wrong order")
+        raise serializers.ValidationError({"availability": ["Participant availability contains the wrong poll times, or in the wrong order"]})
     return data
 
   def create(self, validated_data):
