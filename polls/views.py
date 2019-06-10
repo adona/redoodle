@@ -56,7 +56,7 @@ class ParticipatePoll(APIView):
 
   def parseJSONRequest(self, request):
     try:
-      data = json.loads(request.body)
+      data = request.data
     except: 
       raise ParseError("Request not valid JSON")
     return data

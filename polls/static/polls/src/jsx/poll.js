@@ -125,6 +125,7 @@ class PollParticipantsContainer extends React.Component {
     $.ajax({
       url: "", 
       type: method,
+      contentType: "application/json",
       data: JSON.stringify(updatedParticipant)
     })
     .done((updatedParticipant) => {
@@ -137,7 +138,7 @@ class PollParticipantsContainer extends React.Component {
       });
       console.log("Participant updated.");
     })
-    .fail(() => {
+    .fail((response) => {
       // TODO: Handle failure case (at the very least alert the user, perhaps different responses depending on the error message)
       console.log("Failed to update participant.");
     });
@@ -161,6 +162,7 @@ class PollParticipantsContainer extends React.Component {
       $.ajax({
         url: "", 
         type: "DELETE", 
+        contentType: "application/json",
         data: JSON.stringify({id: deletedParticipant["id"]})
       })
       .done(deleteParticipant)

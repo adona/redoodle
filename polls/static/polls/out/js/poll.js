@@ -238,6 +238,7 @@ var PollParticipantsContainer = function (_React$Component5) {
       $.ajax({
         url: "",
         type: method,
+        contentType: "application/json",
         data: JSON.stringify(updatedParticipant)
       }).done(function (updatedParticipant) {
         if (_this6.state.isNewParticipant) participants[_this6.state.idxEditing] = updatedParticipant;
@@ -247,7 +248,7 @@ var PollParticipantsContainer = function (_React$Component5) {
           isNewParticipant: null
         });
         console.log("Participant updated.");
-      }).fail(function () {
+      }).fail(function (response) {
         // TODO: Handle failure case (at the very least alert the user, perhaps different responses depending on the error message)
         console.log("Failed to update participant.");
       });
@@ -274,6 +275,7 @@ var PollParticipantsContainer = function (_React$Component5) {
         $.ajax({
           url: "",
           type: "DELETE",
+          contentType: "application/json",
           data: JSON.stringify({ id: deletedParticipant["id"] })
         }).done(deleteParticipant).fail(function () {
           // TODO: Handle failure case (at the very least alert the user, perhaps different responses depending on the error message)
