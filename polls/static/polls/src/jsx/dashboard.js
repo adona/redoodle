@@ -50,14 +50,13 @@ class CreatePollButton extends React.Component {
 }
 
 class DashboardMain extends React.Component {
-  pollsFilters = [
-    {"label": "All", "filter": (poll) => true},
-    {"label": "Sent", "filter": (poll) => poll.author.email == userEmail},
-    {"label": "Received", "filter": (poll) => poll.author.email != userEmail}
-  ]
-
   constructor(props) {
     super(props);
+    this.pollsFilters = [
+      {"label": "All", "filter": (poll) => true},
+      {"label": "Sent", "filter": (poll) => poll.author.email == userEmail},
+      {"label": "Received", "filter": (poll) => poll.author.email != userEmail}
+    ];
     this.state = {
       selectedPollsFilter: 0
     };
