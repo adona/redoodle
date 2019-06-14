@@ -1,3 +1,7 @@
+import $ from "jquery";
+import React from "react";
+import ReactDOM from "react-dom";
+
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
@@ -141,6 +145,7 @@ class PollParticipantsContainer extends React.Component {
     .fail((response) => {
       // TODO: Handle failure case (at the very least alert the user, perhaps different responses depending on the error message)
       console.log("Failed to update participant.");
+      console.log(response.responseText);
     });
   }
 

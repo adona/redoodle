@@ -1,3 +1,7 @@
+import $ from "jquery";
+import React from "react";
+import ReactDOM from "react-dom";
+
 class DashboardContainer extends React.Component {
   render() {
     return(
@@ -92,7 +96,7 @@ class DashboardSidebar extends React.Component {
   render() {
     const labels = this.props.pollsFilterLabels;
     var lis = [];
-    for(let idx=0; idx<labels.length; idx++)
+    for (var idx=0; idx<labels.length; idx++)
       lis.push(
         <li 
           key={idx}

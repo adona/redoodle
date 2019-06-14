@@ -1,3 +1,7 @@
+import $ from "jquery";
+import React from "react";
+import ReactDOM from "react-dom";
+
 class RegistrationContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -140,7 +144,7 @@ class Form extends React.Component {
     const children = this.getChildren();
     const fields = children.filter((child) => this.isField(child));
     var fieldsState = {};
-    for (field of fields)
+    for (var field of fields)
       fieldsState[field.props.name] = {
         isRequired: field.props.required != undefined,
         validators: this.getValidators(field),
@@ -150,9 +154,9 @@ class Form extends React.Component {
         isValid: null,
         error: null
       };
-    for (field of fields)
+    for (var field of fields)
       if (field.props.listenTo != undefined)
-        for (listenTo of field.props.listenTo)
+        for (var listenTo of field.props.listenTo)
           fieldsState[listenTo].listeners.push(field.props.name);
     this.state = {
       fields: fieldsState,
@@ -193,7 +197,7 @@ class Form extends React.Component {
     if(!fieldsState[fieldName].isFirstEdit)
       this.validate(fieldName);
     
-    for(listener of fieldsState[fieldName].listeners)
+    for (var listener of fieldsState[fieldName].listeners)
       if(fieldsState[listener].value != "")
         this.validate(listener);
   }
@@ -226,7 +230,7 @@ class Form extends React.Component {
   }
 
   validateAll() {
-    for (fieldName of Object.keys(this.state.fields))
+    for (var fieldName of Object.keys(this.state.fields))
       this.validate(fieldName);
   }
 
@@ -235,7 +239,7 @@ class Form extends React.Component {
     if (state.nonFieldErrors != null) return false;
 
     const fieldsState = state.fields;
-    for (field of Object.values(fieldsState))
+    for (var field of Object.values(fieldsState))
       if (((field.isRequired) && (field.value == "")) || (field.error != null))
         return false;
 
@@ -249,7 +253,7 @@ class Form extends React.Component {
     if (!this.state.canSubmit) return;
 
     var formValues = {};
-    for(fieldName of Object.keys(this.state.fields))
+    for (var fieldName of Object.keys(this.state.fields))
       formValues[fieldName] = this.state.fields[fieldName].value;
     $.post(this.props.submitURL, formValues)
       .done(function(response) {
@@ -264,7 +268,7 @@ class Form extends React.Component {
       const errors = response.responseJSON;
       var state = this.state;
       var fieldsState = state.fields;
-      for(fieldName of Object.keys(errors)) 
+      for (var fieldName of Object.keys(errors)) 
         if(fieldName == "__all__") {
           state.nonFieldErrors = errors[fieldName]
         } else {
