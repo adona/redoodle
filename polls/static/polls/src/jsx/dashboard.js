@@ -1,6 +1,8 @@
 import $ from "jquery";
 import React from "react";
 import ReactDOM from "react-dom";
+import css from "../scss/dashboard.scss";
+
 
 class DashboardContainer extends React.Component {
   render() {

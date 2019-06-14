@@ -7,20 +7,20 @@ const apps = ["accounts", "base", "polls"];
 // TODO: Auto-generate the apps list from the list of directories
 
 module.exports = apps.map((appName) => {
-  const dirIn = `./${appName}/static/${appName}/src/jsx`;
-  const pathsIn = dirIn + "/*.js";
-  const filenameRegex = /.+\/(.+)\.js$/;
+  const dirInJS = `./${appName}/static/${appName}/src/jsx`;
+  const pathsInJS = dirInJS + "/*.js";
+  const filenameRegexJS = /.+\/(.+)\.js$/;
   
-  const entries = glob.sync(pathsIn).reduce((entries, pathIn) => {
-    const filename = pathIn.match(filenameRegex)[1];
+  const entries = glob.sync(pathsInJS).reduce((entries, pathIn) => {
+    const filename = pathIn.match(filenameRegexJS)[1];
     entries[filename] = pathIn;
     return entries;
   }, {});
 
-  const dirOut = `${appName}/static/${appName}/out/js`;
+  const dirOutJS = `${appName}/static/${appName}/out/js`;
 
   const jsRule = {
-    include: path.resolve(dirIn),
+    include: path.resolve(dirInJS),
     test: /\.js$/,
     loader: 'babel-loader',
     options: {
@@ -28,15 +28,27 @@ module.exports = apps.map((appName) => {
     }
   };
 
+  const dirInCSS = `./${appName}/static/${appName}/src/scss`;
+
+  const cssRule = {
+    include: path.resolve(dirInCSS),
+    test: /\.scss$/,
+    use: [
+      {loader: 'style-loader', options: {sourceMap: true}}, 
+      {loader: 'css-loader', options: {sourceMap: true}}, 
+      {loader: 'sass-loader', options: {sourceMap: true}}
+    ]
+  }
+
   return {
       mode: mode,
       entry: entries,
       output: {
-        path: path.resolve(__dirname, dirOut),
+        path: path.resolve(__dirname, dirOutJS),
         filename: '[name].js'
       },
       module: {
-        rules: [jsRule]
+        rules: [jsRule, cssRule]
       },
       watch: true,
       devtool: 'inline-source-map'

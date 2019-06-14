@@ -2,6 +2,8 @@ import $ from "jquery";
 import React from "react";
 import ReactDOM from "react-dom";
 import '../../../../../base/static/base/src/jsx/csrf.js';
+import css from "../scss/poll.scss";
+
 
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"

@@ -1,6 +1,7 @@
 import $ from "jquery";
 import React from "react";
 import ReactDOM from "react-dom";
+import css from "../scss/registration.scss";
 
 class RegistrationContainer extends React.Component {
   constructor(props) {
