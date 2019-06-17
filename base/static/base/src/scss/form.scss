@@ -24,13 +24,17 @@ $field-height: 45px;
 
     .field-input {
       @extend %input;
-      border: 1px solid #d3dce3;;
+      border: 1px solid $color-neutral-300;      
+    }
+
+    ::placeholder {
+      color: $color-neutral-600;
     }
   }
 
   .field-container[invalid] {
     input {
-      border: 1px solid #d3171e;;
+      border: 1px solid $color-red-500;;
     }
   }
 
