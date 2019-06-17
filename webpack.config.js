@@ -20,8 +20,8 @@ module.exports = apps.map((appName) => {
   const dirOutJS = `${appName}/static/${appName}/out/js`;
 
   const jsRule = {
-    include: path.resolve(dirInJS),
     test: /\.js$/,
+    exclude: /node_modules/,
     loader: 'babel-loader',
     options: {
       presets: ['@babel/env', '@babel/react']
