@@ -1,8 +1,7 @@
 @import '../../../../../base/static/base/src/scss/vars';
 
 $login-container-width: 450px;
-$login-field-width: 250px;
-$login-field-height: 45px;
+$login-form-width: 250px;
 
 #login-header {
   margin-top: 20px;
@@ -63,77 +62,5 @@ $login-field-height: 45px;
 }
 
 #login-form, #signup-form {
-  width: $login-field-width;
-  margin: 0px auto;
-
-  %login-input {
-    width: 100%;
-    height: $login-field-height;
-    border-radius: 3px;
-    padding: 8px;
-    margin-bottom: 4px;
-    font-size: 16px;
-  }
-  
-  .field-container {
-    width: 100%;
-    margin-bottom: 8px;
-
-    label {
-      display: none;
-    }
-
-    input {
-      @extend %login-input;
-      border: 1px solid #d3dce3;;
-    }
-  }
-
-  .field-container[invalid] {
-    input {
-      border: 1px solid #d3171e;;
-    }
-  }
-
-  .errorlist {
-    width: 100%;
-    margin: 0px auto;
-    list-style-type: none;
-    padding: 0;
-    font-size: 16px;
-    line-height: 24px;
-    color: $color-red-600;
-  }
-
-  #submit-button {
-    @extend %login-input;
-    display: block;
-    margin: 0px auto;
-    padding-top: 12px;
-    border: none;
-    text-align: center;
-    font-weight: bold;
-    background: $color-green-700;
-    color: white;
-    cursor: pointer;
-  }
-
-  #submit-button[active=false] {
-    background: $color-neutral-300;
-    color: $color-neutral-700;
-    cursor: default;
-  }
-
-  #submit-button[active=true]:hover {
-    background: $color-green-800;
-  }
-
-  #submit-button:focus {
-    outline: none;
-  }
-
-  .disclaimer {
-    margin-top: 20px;
-    font-size: 14px;
-  }
+  width: $login-form-width;
 }

@@ -1,0 +1,78 @@
+@import './vars';
+
+$field-height: 45px;
+
+.custom-form {
+  margin: 0px auto;
+
+  %input {
+    width: 100%;
+    height: $field-height;
+    border-radius: 3px;
+    padding: 8px;
+    margin-bottom: 4px;
+    font-size: 16px;
+  }
+  
+  .field-container {
+    width: 100%;
+    margin-bottom: 8px;
+
+    label {
+      display: none;
+    }
+
+    .field-input {
+      @extend %input;
+      border: 1px solid #d3dce3;;
+    }
+  }
+
+  .field-container[invalid] {
+    input {
+      border: 1px solid #d3171e;;
+    }
+  }
+
+  .error-list {
+    width: 100%;
+    margin: 0px auto;
+    list-style-type: none;
+    padding: 0;
+    font-size: 16px;
+    line-height: 24px;
+    color: $color-red-600;
+  }
+
+  #submit-button {
+    @extend %input;
+    display: block;
+    margin: 0px auto;
+    padding-top: 12px;
+    border: none;
+    text-align: center;
+    font-weight: bold;
+    background: $color-green-700;
+    color: white;
+    cursor: pointer;
+  }
+
+  #submit-button[active=false] {
+    background: $color-neutral-300;
+    color: $color-neutral-700;
+    cursor: default;
+  }
+
+  #submit-button[active=true]:hover {
+    background: $color-green-800;
+  }
+
+  #submit-button:focus {
+    outline: none;
+  }
+
+  .disclaimer {
+    margin-top: 20px;
+    font-size: 14px;
+  }
+}

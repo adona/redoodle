@@ -1,6 +1,7 @@
 import $ from "jquery";
 import React from "react";
 import './csrf.js';
+import css from "../scss/form.scss";
 
 export class Form extends React.Component {
   constructor(props) {
@@ -159,7 +160,8 @@ export class Form extends React.Component {
     const children = this.getChildren();
     const fieldsState = this.state.fields;
     return (
-      <form 
+      <form
+        className='custom-form'
         id={this.props.id}
         noValidate
         onSubmit={this.onSubmit}
@@ -182,7 +184,7 @@ export class Form extends React.Component {
             <div className="field-container">
               {
                 this.state.nonFieldErrors.map((error, idx) => {
-                  return <div className="errorlist" key={idx}> {error} </div>
+                  return <div className="error-list" key={idx}> {error} </div>
                 })
               }
             </div>
@@ -217,7 +219,8 @@ export class Input extends React.Component {
         className="field-container"
         invalid={this.props.isValid==false ? "" : null}
       >
-        <input 
+        <input
+          className="field-input"
           type={this.props.type}
           name={this.props.name}
           placeholder={this.props.placeholder}
@@ -225,7 +228,7 @@ export class Input extends React.Component {
           onChange={this.onValueChange}
           onBlur={this.onBlur}
         />
-        <div className="errorlist"> {this.props.error} </div>
+        <div className="error-list"> {this.props.error} </div>
       </div>
     );
   }
