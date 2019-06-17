@@ -22,9 +22,9 @@ export class Form extends React.Component {
         isRequired: field.props.required != undefined,
         validators: this.getValidators(field),
         listeners: [],
-        isFirstEdit: true,
-        value: "",
-        isValid: null,
+        isFirstEdit: this.props.formValues != undefined ? false: true,
+        value: this.props.formValues != undefined ? this.props.formValues[field.props.name] : "",
+        isValid: this.props.formValues != undefined ? true : null,
         error: null
       };
     for (var field of fields)
@@ -128,11 +128,16 @@ export class Form extends React.Component {
     var formValues = {};
     for (var fieldName of Object.keys(this.state.fields))
       formValues[fieldName] = this.state.fields[fieldName].value;
-    $.post(this.props.submitURL, formValues)
-      .done(function(response) {
-        window.location.replace(response.redirect);
-      })
-      .fail(this.onServerSideErrors);
+    
+    if (this.props.onSubmit != undefined) { // Call onSubmit function
+      this.props.onSubmit(formValues)
+    } else {  // Post to submitURL
+      $.post(this.props.submitURL, formValues)
+        .done(function(response) {
+          window.location.replace(response.redirect);
+        })
+        .fail(this.onServerSideErrors);
+    }
   }
 
   onServerSideErrors(response) {
@@ -217,6 +222,7 @@ export class Input extends React.Component {
     return (
       <div 
         className="field-container"
+        required={this.props.required}
         invalid={this.props.isValid==false ? "" : null}
       >
         <input
