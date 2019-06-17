@@ -25,6 +25,10 @@ class Dashboard(APIView):
     polls_list = json.dumps(polls_list)
     return render(request, "polls/dashboard.html", {"polls_list": polls_list, "email": user.email})
 
+class CreatePoll(APIView):
+  def get(self, request):
+    return render(request, "polls/create_poll.html", {})
+
 class ParticipatePoll(APIView):
 
   def get(self, request, poll_id):

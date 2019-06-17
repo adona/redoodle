@@ -1,0 +1,80 @@
+@import '../../../../../base/static/base/src/scss/vars';
+
+$create-poll-form-width: 640px;
+
+#main {
+  padding: 40px 80px;
+}
+
+.header {
+  text-align: center;
+
+  .step-nr {
+    font-size: 14px;
+    line-height: 1.5;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.75;
+  }
+
+  .prompt {
+    font-size: 32px;
+    margin-bottom: 32px;
+  }
+}
+
+.custom-form {
+  width: $create-poll-form-width;
+
+  .field-container {
+    position: relative;
+    margin-bottom: 50px;
+
+    .field-input {
+      border: none;
+      border-bottom: 1px solid $color-neutral-300;
+      padding: 0px;
+    }
+
+    .field-input:focus {
+      outline: none;
+      border-bottom: 1px solid $color-brand-500;
+    }
+  }
+
+  .field-container[required] {
+    .field-input {
+      height: 28px;
+      font-size: 20px;
+    }
+  }
+
+  .field-container:not([required]) {
+    .field-input {
+      height: 23px;
+      font-size: 15px;
+    }
+  }
+
+
+  .field-container:not([required])::after {
+    content: "Optional";
+    position: absolute;
+    right: 0;
+    bottom: 7px;
+    color: $color-neutral-600;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  .field-container[invalid] {
+    input {
+      border: none;
+    }
+  }
+
+  .error-list {
+    display: none;
+  }
+}
