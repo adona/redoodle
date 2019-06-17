@@ -31,8 +31,8 @@ module.exports = apps.map((appName) => {
   const dirInCSS = `./${appName}/static/${appName}/src/scss`;
 
   const cssRule = {
-    include: path.resolve(dirInCSS),
     test: /\.scss$/,
+    exclude: /node_modules/,
     use: [
       {loader: 'style-loader', options: {sourceMap: true}}, 
       {loader: 'css-loader', options: {sourceMap: true}}, 
