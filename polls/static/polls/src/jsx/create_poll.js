@@ -66,7 +66,7 @@ class TitlePage extends React.Component {
         </div>
         <Form
           id = "title-form"
-          key = "title-orm"
+          key = "title-form"
           formValues = {this.props.poll}
           submitLabel = "Continue"
           onSubmit = {this.onSubmit}
@@ -115,3 +115,6 @@ ReactDOM.render(
   <CreatePollRouter />,
   $('#main')[0]
 );
+
+window.onbeforeunload = function() { return ""; };
+

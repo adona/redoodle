@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.exceptions import APIException, ParseError, ValidationError
 from rest_framework import status
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required 
 from django.utils.decorators import method_decorator 
 import json
@@ -26,7 +26,9 @@ class Dashboard(APIView):
     return render(request, "polls/dashboard.html", {"polls_list": polls_list, "email": user.email})
 
 class CreatePoll(APIView):
-  def get(self, request):
+  def get(self, request, page):
+    if (page != None):
+      return redirect('create-poll')
     return render(request, "polls/create_poll.html", {})
 
 class ParticipatePoll(APIView):
