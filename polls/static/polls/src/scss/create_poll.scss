@@ -3,7 +3,8 @@
 $create-poll-form-width: 640px;
 
 #main {
-  padding: 40px 80px;
+  position: relative;
+  padding: 40px 80px 60px;
 }
 
 .header {
@@ -23,7 +24,7 @@ $create-poll-form-width: 640px;
   }
 }
 
-.custom-form {
+#title-form {
   width: $create-poll-form-width;
 
   .field-container {
@@ -76,5 +77,12 @@ $create-poll-form-width: 640px;
 
   .error-list {
     display: none;
+  }
+
+  #submit-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 140px;
   }
 }
