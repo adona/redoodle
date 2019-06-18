@@ -224,6 +224,7 @@ export class Input extends React.Component {
         className="field-container"
         required={this.props.required}
         invalid={this.props.isValid==false ? "" : null}
+        name={this.props.name}
       >
         <input
           className="field-input"

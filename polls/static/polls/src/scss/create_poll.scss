@@ -57,6 +57,17 @@ $create-poll-form-width: 640px;
     }
   }
 
+  .field-container::before {
+    font-family: "Font Awesome 5 Free";
+    position: absolute;
+    left: -30px;
+    color: $color-neutral-600;
+    font-weight: 600;
+  }
+
+  .field-container[name=name]::before { content: "\f7a4"; top: 5px; }
+  .field-container[name=location]::before { content: "\f3c5"; }
+  .field-container[name=notes]::before { content: "\f036"; }
 
   .field-container:not([required])::after {
     content: "Optional";
