@@ -12,11 +12,6 @@ import css from "../scss/week_calendar.scss";
 
 export default class WeekCalendar extends React.Component {
   calendarRef = React.createRef()
-  state = {
-    calendarEvents: [],
-  }
-  nextID = 0;
-
   getCalendar = () => this.calendarRef.current.getApi();
 
   handleEventRender = (info) => {
@@ -33,27 +28,16 @@ export default class WeekCalendar extends React.Component {
   }
 
   handleSelect = (selection) => {
-    console.log("handleSelect");
-    this.setState({
-      calendarEvents: this.state.calendarEvents.concat({
-        id: this.nextID,
-        title: this.props.pollName,
-        start: selection.start,
-        end: selection.end
-      })
-    })
-    this.nextID+=1;
+    this.props.onAddEvent(selection.start, selection.end);
   }
 
   handleDateClick = () => {
-    console.log("handleDateClick");
-
     // For events created by clicking on the calendar, adjust their duration to be equal to that 
     // of the last event created (default to 1h if this is the first event)
-
     const calendar = this.getCalendar();
-    var calendarEvents = this.state.calendarEvents.slice();
+    const calendarEvents = this.props.calendarEvents;
     const nEvents = calendarEvents.length;
+    const currentEvent = calendarEvents[nEvents-1];
 
     var duration;
     if (nEvents == 1) {
@@ -63,29 +47,19 @@ export default class WeekCalendar extends React.Component {
       duration = moment.duration(moment(prevEvent.end).diff(moment(prevEvent.start)));
     }
 
-    var currentEvent = {... calendarEvents[calendarEvents.length-1]};
-    currentEvent.end = toMoment(currentEvent.start, calendar).add(duration).toDate();
-    calendarEvents[calendarEvents.length-1] = currentEvent;
-
-    this.setState({calendarEvents: calendarEvents});
+    const start = currentEvent.start;
+    const end = toMoment(start, calendar).add(duration).toDate();
+    this.props.onUpdateEvent(currentEvent.id, start, end);
   }
 
-  handleEventUpdate = (info) => { // Move or resize
-    console.log("handleEventUpdate");
+  handleUpdateEvent = (info) => { // Move or resize
     const updatedEvent = info.event;
-    var calendarEvents = this.state.calendarEvents.slice();
-    var eventIdx = calendarEvents.findIndex((e) => e.id == updatedEvent.id);
-    calendarEvents[eventIdx] = { ...calendarEvents[eventIdx], start: updatedEvent.start, end: updatedEvent.end };
-    this.setState({calendarEvents: calendarEvents});
+    this.props.onUpdateEvent(updatedEvent.id, updatedEvent.start, updatedEvent.end);
   }
 
   handleRemoveEvent = (evt) => {
-    console.log('handleRemoveEvent');
     const id = $(evt.target).attr('eventid')
-    var calendarEvents = this.state.calendarEvents.slice();
-    var eventIdx = calendarEvents.findIndex((e) => e.id == id);
-    calendarEvents.splice(eventIdx, 1);
-    this.setState({calendarEvents: calendarEvents});
+    this.props.onRemoveEvent(id);
   }
 
   handlePrev = () => {
@@ -136,15 +110,15 @@ export default class WeekCalendar extends React.Component {
           slotLabelFormat={{hour: 'numeric', minute: '2-digit'}}
           eventTimeFormat={{hour: 'numeric', minute: '2-digit'}}
           scrollTime={"08:00:00"}
-          events={this.state.calendarEvents}
+          events={this.props.calendarEvents}
           eventRender={this.handleEventRender}
           selectable={true}
           snapDuration={'00:15:00'}
           select={this.handleSelect}
           dateClick={this.handleDateClick}
           editable={true}
-          eventResize={this.handleEventUpdate}
-          eventDrop={this.handleEventUpdate}
+          eventResize={this.handleUpdateEvent}
+          eventDrop={this.handleUpdateEvent}
         />
       </div>
     )

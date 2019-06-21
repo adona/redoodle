@@ -90,10 +90,32 @@ $create-poll-form-width: 640px;
     display: none;
   }
 
-  #submit-button {
+  .submit-button {
     position: absolute;
     bottom: 10px;
     right: 10px;
+    width: 140px;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+
+  .container-previous .submit-button {
+    width: 50px;
+    margin-right: 8px;
+    border: 1px solid $color-neutral-300;
+    background: white;
+    color: $color-neutral-800;
+    padding-top: 8px;
+  }
+
+  .container-next .submit-button {
     width: 140px;
   }
 }

@@ -245,7 +245,7 @@ export class Submit extends React.Component {
   render() {
     return (
       <input
-        id="submit-button"
+        className="submit-button"
         type="submit"
         active={this.props.active.toString()}
         value={this.props.label}
