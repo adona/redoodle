@@ -3,6 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import {Form, Input} from '../../../../../base/static/base/src/jsx/form.js';
+import WeekCalendar from './week_calendar.js';
 import css from "../scss/create_poll.scss";
 
 
@@ -95,7 +96,11 @@ class OptionsPage extends React.Component {
   render() {
     return (
       <div>
-        Options page
+        <div className="header">
+          <div className="step-nr">Step 2 of 4</div>
+          <div className="prompt">What are the options?</div>
+        </div>
+        <WeekCalendar />
       </div>
     );
   }

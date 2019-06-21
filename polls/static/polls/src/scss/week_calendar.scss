@@ -1,0 +1,186 @@
+@import '../../../../../base/static/base/src/scss/vars';
+@import '~@fullcalendar/core/main.css';
+@import '~@fullcalendar/daygrid/main.css';
+@import '~@fullcalendar/timegrid/main.css';
+
+$calendar-row-height: 32.5px;
+$calendar-border: 1px solid $color-neutral-300;
+
+#main {
+  padding: 40px 80px;
+}
+
+.week-calendar-header {
+  width: 100%;
+  height: 70px;
+  border: $calendar-border;
+  border-bottom: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .date-range {
+    font-size: 20px;
+  }
+
+  .prev-button, .next-button {
+    background: white;
+    position: relative;
+    width: 45px;
+    height: 45px;
+    border: 1px solid white;
+    border-radius: 10rem;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.24);
+    color: $color-brand-500;
+    font-size: 25px;
+    padding-top: 5px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .prev-button {
+    left: -22px;
+  }
+
+  .next-button {
+    right: -22px;
+  }
+}
+
+.week-calendar {
+
+  .fc-head-container {
+    border-bottom: none;
+  
+    .fc-day-header {
+      position: relative;
+      padding: 12px 0px;
+  
+      .header-month {
+        font-size: 13px;
+      }
+      .header-day {
+        font-size: 24px;
+      }
+      .header-weekday {
+        font-size: 13px;
+        text-transform: uppercase;
+      }
+    }
+
+    .fc-day-header.fc-today::after {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 2px;
+      left: 0px;
+      right: 0px;
+      margin: 0px auto;
+      width: 80px;
+      height: 80px;
+      border-radius: 40px;
+      background: $color-brand-200;
+      z-index: -1;
+    }
+  }
+
+  .fc-body {
+
+    > tr > td {
+      border-top: none;
+    }
+  
+    .fc-day-grid {
+      .fc-bg {
+        .fc-axis span {
+          text-transform: capitalize;
+          top: 0px;
+        }
+      }
+    }
+
+    .fc-divider {
+      padding: 0px;
+      border-bottom: none;
+    }
+  
+    .fc-scroller {
+      overflow-y: scroll !important;
+  
+      .fc-slats {
+        td {
+          height: $calendar-row-height;
+        }
+
+        .fc-axis {
+          border-top: none;
+          border-bottom: none;
+        }      
+
+        .fc-minor td:not(.fc-axis) {
+          border-top-style: dashed;
+        }      
+      }
+
+      .fc-content-skeleton {
+        .fc-event {
+          background: $color-brand-600;
+          
+          .fc-content span, .fc-title {
+            display: block;
+            width: 100%;
+            white-space: normal;
+            text-align: center;
+          }
+
+          .event-overlay {
+            position: absolute;
+            z-index: 3;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            background: $color-brand-200;
+            opacity: 0;
+            transition: 0.25s opacity;
+          
+            .remove-event-button {
+              position: absolute;
+              top: 0px;
+              right: 0px;
+              width: 16px;
+              height: 16px;
+              font-size: 16px;
+              font-weight: bold;
+            }
+          }
+
+          .event-overlay:hover {
+            opacity: 0.75;
+          }
+
+        }
+      }
+    }
+  }
+
+  .fc-axis {
+    width: 49px !important;
+    color: $color-neutral-800;
+    font-size: 13px;
+
+    span {
+      position: relative;
+      top: -17px;
+    }
+  }
+
+  .fc-head-container > .fc-row, .fc-day-grid > .fc-row { // Make space for the calendar scrollbar below
+    border-right: $calendar-border;
+    margin-right: 18px;
+  }
+
+  td.fc-today {
+    background: white;
+  }
+}
