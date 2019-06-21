@@ -97,7 +97,7 @@ export default class WeekCalendar extends React.Component {
           plugins={[ timeGridPlugin, interactionPlugin, momentPlugin ]}
           defaultView="timeGridWeek"
           header={false}
-          height={750}
+          height={550}
           columnHeaderHtml={(date) => {
             var date = moment(date);
             const columnHTML = `
