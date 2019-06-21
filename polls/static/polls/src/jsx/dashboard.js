@@ -48,9 +48,9 @@ class UserMenu extends React.Component {
 class CreatePollButton extends React.Component {
   render() {
     return(
-      <div id="create-poll-button">
+      <a id="create-poll-button" href={createPollURL}>
         + Create
-      </div>
+      </a>
     )
   }
 }
@@ -196,6 +196,7 @@ pollsList = JSON.parse(pollsList);
 console.log(pollsList);
 
 const basePollURL = $("body").attr("poll_url");
+const createPollURL = $("body").attr("create_poll_url");
 
 ReactDOM.render(
   <DashboardContainer pollsList={pollsList}/>,

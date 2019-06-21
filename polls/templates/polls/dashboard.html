@@ -6,7 +6,10 @@
 {% endblock %}
 
 {% block mainparams %} 
-  email="{{ email }}" polls_list="{{ polls_list }}" poll_url = "{% url 'participate-poll' 0%}"
+  email="{{ email }}" 
+  polls_list="{{ polls_list }}" 
+  poll_url = "{% url 'participate-poll' 0%}"
+  create_poll_url = "{% url 'create-poll' '' %}"
 {% endblock %}
 
 {% block footer %}

@@ -33,9 +33,15 @@ $polls-list-container-width: 600px;
       padding: 5px 15px;
     }
 
-    #user-menu {
+    #user-menu, #create-poll-button {
+      height: 36px;
+      padding: 10px 20px;
       font-size: 16px;
       font-weight: bold;
+      cursor: pointer;
+    }
+
+    #user-menu {
       color: $color-neutral-800;
 
       #down-arrow {
@@ -51,6 +57,8 @@ $polls-list-container-width: 600px;
     #create-poll-button {
       background: $color-accent-500;
       color: white;
+      text-align: center;
+      text-decoration: none;
     }
   }
 }
