@@ -84,7 +84,6 @@ export default class WeekCalendar extends React.Component {
   }
 
   render() {
-    console.log("render");
     return (
       <div className="week-calendar">
         <div className="week-calendar-header">

@@ -8,21 +8,20 @@ import css from "../scss/create_poll.scss";
 
 
 class CreatePollRouter extends React.Component {
-  constructor(props) {
-    super(props);
-    var poll = {
+  state = {
+    poll: {
       name: "",
       location: "",
       notes: "",
       polltimes: []
-    };
-    this.state = {poll: poll};
-  }
+    }
+  };
 
-  handleSubmitPage = (formValues) => {
-    var poll = this.state.poll;
+  saveIntermediaryState = (formValues) => {
+    var poll = { ... this.state.poll };
     Object.assign(poll, formValues);
-    this.setState(poll);
+    this.setState({poll: poll});
+    return poll;
   }
 
   render() {
@@ -31,15 +30,19 @@ class CreatePollRouter extends React.Component {
         <Switch>
           <Route 
             path="/create/" exact 
-            render={props => <TitlePage {...props} poll={this.state.poll} onSubmit={this.handleSubmitPage} />}
+            render={props => 
+              <TitlePage {...props} 
+                poll={this.state.poll} 
+                saveIntermediaryState={this.saveIntermediaryState} 
+              />}
           />
           <Route 
             path="/create/options/"
-            render={props => <OptionsPage {...props} poll={this.state.poll} onSubmit={this.handleSubmitPage} />}
-          />
-          <Route 
-            path="/create/settings/"
-            render={props => <SettingsPage {...props} poll={this.state.poll} onSubmit={this.handleSubmitPage} />}
+            render={props => 
+              <OptionsPage {...props} 
+                poll={this.state.poll} 
+                saveIntermediaryState={this.saveIntermediaryState} 
+              />}
           />
           </Switch>
       </Router>
@@ -49,7 +52,7 @@ class CreatePollRouter extends React.Component {
 
 class TitlePage extends React.Component {
   handleSubmit = (formValues) => {
-    this.props.onSubmit(formValues);
+    this.props.saveIntermediaryState(formValues);
     this.props.history.push('/create/options/');
   }
 
@@ -94,14 +97,14 @@ class OptionsPage extends React.Component {
   nextID = Math.max(this.props.poll.polltimes)+1;
 
   handleAddEvent = (start, end) => {
-    this.setState({
-      calendarEvents: this.state.calendarEvents.concat({
-        id: this.nextID,
-        title: this.props.poll.name,
-        start: start,
-        end: end
-      })
-    })
+    var calendarEvents = this.state.calendarEvents.slice();
+    calendarEvents.push({
+      id: this.nextID,
+      title: this.props.poll.name,
+      start: start,
+      end: end
+    });
+    this.setState({calendarEvents: calendarEvents});
     this.nextID+=1;
   }
 
@@ -117,6 +120,12 @@ class OptionsPage extends React.Component {
     var eventIdx = calendarEvents.findIndex((e) => e.id == id);
     calendarEvents.splice(eventIdx, 1);
     this.setState({calendarEvents: calendarEvents});
+  }
+
+  handleSubmit = (direction) => {
+    this.props.saveIntermediaryState({polltimes: this.state.calendarEvents});
+    const nextURL = direction == "continue" ? '/create/settings/' : '/create/';
+    this.props.history.push(nextURL);
   }
 
   render() {
@@ -137,28 +146,19 @@ class OptionsPage extends React.Component {
             <Submit
               active={true}
               label="<"
-            />
+              onClick = {() => this.handleSubmit('return')}
+              />
           </div>
           <div className="container-next">
             <Submit 
               active={true}
               label="Continue"
-            />
+              onClick = {() => this.handleSubmit('continue')}
+              />
           </div>
         </div>
       </div>
     );
-  }
-
-  componentDidMount = () => {
-    $(".container-previous .submit-button").on("click", () => {this.handleSubmit('previous');});
-    $(".container-next .submit-button").on("click", () => {this.handleSubmit('next');});
-  }
-
-  handleSubmit = (toPage) => {
-    this.props.onSubmit({polltimes: this.state.calendarEvents});
-    const toURL = toPage == "previous" ? '/create/' : '/create/settings/'
-    this.props.history.push(toURL);
   }
 }
 

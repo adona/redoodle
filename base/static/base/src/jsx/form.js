@@ -249,6 +249,7 @@ export class Submit extends React.Component {
         type="submit"
         active={this.props.active.toString()}
         value={this.props.label}
+        onClick={this.props.onClick}  // May be undefined
       />
     );
   }
