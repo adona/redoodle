@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import {Form, Input, Submit} from '../../../../../base/static/base/src/jsx/form.js';
 import WeekCalendar from './week_calendar.js';
+import '../../../../../base/static/base/src/jsx/csrf.js';
 import css from "../scss/create_poll.scss";
 
 
@@ -24,6 +25,37 @@ class CreatePollRouter extends React.Component {
     return poll;
   }
 
+  createNewPoll = (poll) => {
+    // Pre-process poll object before sending to server:
+    // - discarding internal use only fields (e.g. polltime internal IDs, which would clash with the database IDs)
+    // - add timezone
+    // - add empty participants list
+    poll = { ... poll};
+    for (var i=0; i<poll.polltimes.length; i++)
+      poll.polltimes[i] = {
+        start: poll.polltimes[i].start,
+        end: poll.polltimes[i].end
+      }
+    poll.timezone = "America/New York"; // TODO
+    poll.participants = [];
+    
+    $.ajax({
+      url: "", 
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(poll)
+    })
+    .done((response) => {
+      window.onbeforeunload = null;
+      window.location.href = response.redirect;
+    })
+    .fail((response) => {
+      // TODO: Handle failure case (at the very least alert the user, perhaps different responses depending on the error message)
+      console.log("Failed to create new poll.");
+      console.log(response.responseText);
+    });
+  }
+
   render() {
     return (
       <Router>
@@ -33,7 +65,7 @@ class CreatePollRouter extends React.Component {
             render={props => 
               <TitlePage {...props} 
                 poll={this.state.poll} 
-                saveIntermediaryState={this.saveIntermediaryState} 
+                saveIntermediaryState={this.saveIntermediaryState}
               />}
           />
           <Route 
@@ -41,7 +73,8 @@ class CreatePollRouter extends React.Component {
             render={props => 
               <OptionsPage {...props} 
                 poll={this.state.poll} 
-                saveIntermediaryState={this.saveIntermediaryState} 
+                saveIntermediaryState={this.saveIntermediaryState}
+                createNewPoll={this.createNewPoll}
               />}
           />
           </Switch>
@@ -123,9 +156,11 @@ class OptionsPage extends React.Component {
   }
 
   handleSubmit = (direction) => {
-    this.props.saveIntermediaryState({polltimes: this.state.calendarEvents});
-    const nextURL = direction == "continue" ? '/create/settings/' : '/create/';
-    this.props.history.push(nextURL);
+    const updatedPoll = this.props.saveIntermediaryState({polltimes: this.state.calendarEvents});
+    if (direction == "continue")
+      this.props.createNewPoll(updatedPoll);
+    else 
+    this.props.history.push('/create/');    
   }
 
   render() {

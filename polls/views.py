@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
-from rest_framework.exceptions import APIException, ParseError, ValidationError
+from rest_framework.exceptions import APIException, ParseError, ValidationError, AuthenticationFailed
 from rest_framework import status
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required 
 from django.utils.decorators import method_decorator 
 import json
@@ -26,10 +26,20 @@ class Dashboard(APIView):
     return render(request, "polls/dashboard.html", {"polls_list": polls_list, "email": user.email})
 
 class CreatePoll(APIView):
+  @method_decorator(login_required)
   def get(self, request, page):
     if (page != None):
       return redirect('create-poll')
     return render(request, "polls/create_poll.html", {})
+
+  def post(self, request, page):
+    if request.user.is_anonymous: 
+      raise AuthenticationFailed(detail="Must be logged in to create new poll.")
+    poll_data = parseJSONRequest(request)
+    serializer = PollSerializer(data=poll_data, context={"request": request})
+    if serializer.is_valid(raise_exception=True):
+      poll = serializer.save()
+      return JsonResponse({"redirect": reverse('participate-poll', kwargs={"poll_id": poll.id})})
 
 class ParticipatePoll(APIView):
 
@@ -40,14 +50,14 @@ class ParticipatePoll(APIView):
     return render(request, "polls/poll.html", {"poll": poll})
 
   def post(self, request, poll_id):
-    participant_data = self.parseJSONRequest(request)
+    participant_data = parseJSONRequest(request)
     serializer = ParticipantSerializer(data=participant_data)
     if serializer.is_valid(raise_exception=True):
       serializer.save()
       return JsonResponse(serializer.data)
 
   def put(self, request, poll_id):
-    participant_data = self.parseJSONRequest(request)
+    participant_data = parseJSONRequest(request)
     participant = self.retrieveParticipant(participant_data)
     serializer = ParticipantSerializer(participant, data=participant_data)
     if serializer.is_valid(raise_exception=True):
@@ -55,17 +65,10 @@ class ParticipatePoll(APIView):
       return HttpResponse()
 
   def delete(self, request, poll_id):
-    request_data = self.parseJSONRequest(request)
+    request_data = parseJSONRequest(request)
     participant = self.retrieveParticipant(request_data)
     participant.delete()
     return HttpResponse()
-
-  def parseJSONRequest(self, request):
-    try:
-      data = request.data
-    except: 
-      raise ParseError("Request not valid JSON")
-    return data
 
   def retrieveParticipant(self, request_data):
     if "id" not in request_data:
@@ -76,3 +79,13 @@ class ParticipatePoll(APIView):
     except: 
       raise ValidationError({"id": ["No participant found for given ID"]})
     return participant
+
+
+# Helper functions
+
+def parseJSONRequest(request):
+  try:
+    data = request.data
+  except: 
+    raise ParseError("Request not valid JSON")
+  return data
