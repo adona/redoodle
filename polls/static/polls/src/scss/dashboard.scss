@@ -1,67 +1,8 @@
 @import '../../../../../base/static/base/src/scss/vars';
 
-$dashboard-header-height: 75px;
-$header-nav-height: 35px;
 $dashboard-main-height: 80vh;
 $sidebar-width: 240px;
 $polls-list-container-width: 600px;
-
-#dashboard-header {
-  height: $dashboard-header-height;
-  padding: 15px;
-}
-
-#header-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-
-  #header-nav-left {
-    #logo {
-      font-size: 22px;
-      font-weight: bold;
-      color: $color-brand-600;
-    }
-  }
-  
-  #header-nav-right {
-    display: flex;
-    justify-content: flex-end;
-    align-items: baseline;
-  
-    > div {
-      padding: 5px 15px;
-    }
-
-    #user-menu, #create-poll-button {
-      height: 36px;
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    #user-menu {
-      color: $color-neutral-800;
-
-      #down-arrow {
-        font-size: 22px;
-        line-height: 16px;
-      }
-    }
-  
-    #user-menu:hover {
-      background: $color-neutral-100;
-    }
-
-    #create-poll-button {
-      background: $color-accent-500;
-      color: white;
-      text-align: center;
-      text-decoration: none;
-    }
-  }
-}
 
 #dashboard-main {
   display: flex;

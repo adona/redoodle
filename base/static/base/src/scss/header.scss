@@ -1,0 +1,61 @@
+@import './vars';
+
+$main-header-height: 75px;
+
+#main-header {
+  height: $main-header-height;
+  padding: 15px;
+
+  #header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  
+    #header-nav-left {
+      #logo {
+        font-size: 22px;
+        font-weight: bold;
+        color: $color-brand-600;
+      }
+    }
+    
+    #header-nav-right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: baseline;
+    
+      > div {
+        padding: 5px 15px;
+      }
+  
+      #user-menu, #create-poll-button {
+        height: 36px;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+  
+      #user-menu {
+        color: $color-neutral-800;
+  
+        #down-arrow {
+          font-size: 22px;
+          line-height: 16px;
+        }
+      }
+    
+      #user-menu:hover {
+        background: $color-neutral-100;
+      }
+  
+      #create-poll-button {
+        background: $color-accent-500;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+      }
+    }
+  }  
+}
+

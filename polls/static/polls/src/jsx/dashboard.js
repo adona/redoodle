@@ -1,56 +1,21 @@
 import $ from "jquery";
 import React from "react";
 import ReactDOM from "react-dom";
+import { MainHeader } from '../../../../../base/static/base/src/jsx/header.js';
 import css from "../scss/dashboard.scss";
-
 
 class DashboardContainer extends React.Component {
   render() {
     return(
       <div id="dashboard-container">
-        <DashboardHeader />
+        <MainHeader 
+          userName="Adona Iosif"
+          createPollURL={createPollURL}
+        />
         <DashboardMain
           pollsList={this.props.pollsList}
         />
       </div>
-    )
-  }
-}
-
-class DashboardHeader extends React.Component {
-  render() {
-    return(
-      <div id="dashboard-header">
-        <div id="header-nav">
-          <div id="header-nav-left">
-            <div id="logo">ReDoodle</div>
-          </div> 
-          <div id="header-nav-right">
-            <UserMenu />
-            <CreatePollButton />
-          </div>
-        </div>
-      </div>
-    )
-  }
-}
-
-class UserMenu extends React.Component {
-  render() {
-    return(
-      <div id="user-menu">
-        Adona Iosif <span id="down-arrow">&#8964;</span>
-      </div>
-    )
-  }
-}
-
-class CreatePollButton extends React.Component {
-  render() {
-    return(
-      <a id="create-poll-button" href={createPollURL}>
-        + Create
-      </a>
     )
   }
 }
