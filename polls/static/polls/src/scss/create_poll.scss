@@ -1,11 +1,10 @@
 @import '../../../../../base/static/base/src/scss/vars';
 
-$create-poll-form-width: 640px;
-
 #main {
   position: relative;
   padding: 40px 80px 60px;
-  max-width: 90%;
+  min-width: 600px;
+  width: 90%;
 }
 
 .header {
@@ -26,8 +25,6 @@ $create-poll-form-width: 640px;
 }
 
 #title-form {
-  width: $create-poll-form-width;
-
   .field-container {
     position: relative;
     margin-bottom: 50px;
