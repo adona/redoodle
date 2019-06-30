@@ -17,13 +17,13 @@ class Dashboard(APIView):
   @method_decorator(login_required)
   def get(self, request):
     user = request.user
+    user_data = json.dumps(UserSerializer(user).data)
     own_polls = set(Poll.objects.filter(author=user))
     invites = Invite.objects.filter(email=user.email)
     invited_polls = set(map(lambda invite: invite.poll, invites))
     polls_list = list(own_polls | invited_polls)  # TODO: Sort
-    polls_list = PollSerializer(polls_list, many=True).data
-    polls_list = json.dumps(polls_list)
-    return render(request, "polls/dashboard.html", {"polls_list": polls_list, "email": user.email})
+    polls_list = json.dumps(PollSerializer(polls_list, many=True).data)
+    return render(request, "polls/dashboard.html", {"user": user_data, "polls_list": polls_list})
 
 class CreatePoll(APIView):
   @method_decorator(login_required)

@@ -9,7 +9,7 @@ class DashboardContainer extends React.Component {
     return(
       <div id="dashboard-container">
         <MainHeader 
-          userName="Adona Iosif"
+          userName={`${user.first_name} ${user.last_name}`}
           createPollURL={createPollURL}
         />
         <DashboardMain
@@ -25,8 +25,8 @@ class DashboardMain extends React.Component {
     super(props);
     this.pollsFilters = [
       {"label": "All", "filter": (poll) => true},
-      {"label": "Sent", "filter": (poll) => poll.author.email == userEmail},
-      {"label": "Received", "filter": (poll) => poll.author.email != userEmail}
+      {"label": "Sent", "filter": (poll) => poll.author.email == user.email},
+      {"label": "Received", "filter": (poll) => poll.author.email != user.email}
     ];
     this.state = {
       selectedPollsFilter: 0
@@ -154,12 +154,8 @@ class DashboardPollPreview extends React.Component {
 
 // Load parameters and render page
 
-const userEmail = $("body").attr("email");
-
-var pollsList = $("body").attr("polls_list");
-pollsList = JSON.parse(pollsList);
-console.log(pollsList);
-
+const user = JSON.parse($("body").attr("user"));
+var pollsList = JSON.parse($("body").attr("polls_list"));
 const basePollURL = $("body").attr("poll_url");
 const createPollURL = $("body").attr("create_poll_url");
 
