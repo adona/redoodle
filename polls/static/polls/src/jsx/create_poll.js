@@ -37,7 +37,6 @@ class CreatePollRouter extends React.Component {
         end: poll.polltimes[i].end
       }
     poll.timezone = "America/New York"; // TODO
-    poll.participants = [];
     
     $.ajax({
       url: "", 

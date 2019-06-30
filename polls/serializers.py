@@ -70,14 +70,13 @@ class UserSerializer(serializers.ModelSerializer):
 class PollSerializer(serializers.ModelSerializer):
   author = UserSerializer(read_only=True, default=serializers.CurrentUserDefault())
   polltimes = PollTimeSerializer(many=True)
-  participants = ParticipantSerializer(many=True)
+  participants = ParticipantSerializer(read_only=True, many=True)
   class Meta:
     model = Poll
-    fields = "__all__"
+    fields = ("id", "name", "author", "location", "notes", "timezone", "polltimes", "participants", )
 
   def create(self, validated_data):
     validated_polltimes = validated_data.pop("polltimes")
-    validated_data.pop("participants")
     author = User.objects.get(pk=self.data["author"]["id"])
     poll = Poll.objects.create(**validated_data, author=author)
     for validated_polltime in validated_polltimes:
