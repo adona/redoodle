@@ -5,8 +5,10 @@
   <title>ReDoodle</title>
 {% endblock %}
 
-{% block mainparams %} 
+{% block mainparams %}
+  user="{{ user }}" 
   poll="{{ poll }}"
+  create_poll_url = "{% url 'create-poll' '' %}"
 {% endblock %}
 
 {% block footer %}

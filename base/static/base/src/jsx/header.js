@@ -10,8 +10,9 @@ export class MainHeader extends React.Component {
             <div id="logo">ReDoodle</div>
           </div> 
           <div id="header-nav-right">
+            {/* TODO Handle case of user not logged in */}
             <UserMenu 
-              userName={this.props.userName}
+              userName={`${this.props.user.first_name} ${this.props.user.last_name}`}
             />
             <CreatePollButton 
               createPollURL={this.props.createPollURL}

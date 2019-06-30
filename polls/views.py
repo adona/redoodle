@@ -44,10 +44,14 @@ class CreatePoll(APIView):
 class ParticipatePoll(APIView):
 
   def get(self, request, poll_id):
+    user = request.user
+    if not user.is_anonymous:
+      user_data = json.dumps(UserSerializer(user).data)
+    else:
+      user_data = None
     poll = Poll.objects.get(pk=poll_id)
-    poll = PollSerializer(poll).data
-    poll = json.dumps(poll)
-    return render(request, "polls/poll.html", {"poll": poll})
+    poll_data = json.dumps(PollSerializer(poll).data)
+    return render(request, "polls/poll.html", {"user": user_data, "poll": poll_data})
 
   def post(self, request, poll_id):
     participant_data = parseJSONRequest(request)

@@ -9,7 +9,7 @@ class DashboardContainer extends React.Component {
     return(
       <div id="dashboard-container">
         <MainHeader 
-          userName={`${user.first_name} ${user.last_name}`}
+          user={user}
           createPollURL={createPollURL}
         />
         <DashboardMain

@@ -1,6 +1,7 @@
 import $ from "jquery";
 import React from "react";
 import ReactDOM from "react-dom";
+import { MainHeader } from "../../../../../base/static/base/src/jsx/header.js";
 import '../../../../../base/static/base/src/jsx/csrf.js';
 import css from "../scss/poll.scss";
 
@@ -15,6 +16,10 @@ class PollContainer extends React.Component {
     const poll = this.props.poll;
     return (
       <div id="poll-container">
+        <MainHeader 
+          user={user}
+          createPollURL={createPollURL}
+        />
         <PollHeader
           name = {poll.name}
           author = {poll.author}/>
@@ -482,8 +487,10 @@ function sum(arr) {
 
 // Load parameters and render page
 
-var poll = $("body").attr("poll");
-poll = JSON.parse(poll);
+const user = JSON.parse($("body").attr("user"));
+const poll = JSON.parse($("body").attr("poll"));
+const createPollURL = $("body").attr("create_poll_url");
+
 console.log(poll);
 
 ReactDOM.render(
