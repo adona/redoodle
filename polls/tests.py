@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from django.db import IntegrityError
 from rest_framework import status
@@ -8,19 +8,25 @@ import pytz
 import json
 from polls.models import *
 from accounts.models import *
-from polls.serializers import ParticipantSerializer
+from django.contrib.auth.models import AnonymousUser
+from polls.serializers import * 
 
 # Create your tests here.
 
-def createTestPoll():
-  npolltimes = 3
-  nparticipants = 4
+def createTestAuthor():
   n = len(User.objects.all()) + 1
   author = User.objects.create_user(
     email=f"test{n}@email.com",
     password="password",
     first_name=f"TestFirst{n}", 
     last_name=f"TestLast{n}")
+  return author
+
+def createTestPoll():
+  npolltimes = 3
+  nparticipants = 4
+  n = len(User.objects.all()) + 1
+  author = createTestAuthor()
   poll = Poll.objects.create(
     name=f"TestPoll{n}", 
     author=author, 
@@ -187,6 +193,26 @@ class ParticipantSerializerTests(TestCase):
     updated_participant = updated_participants[0]
     assert(updated_participant.name == updated_participant_data["name"])
     assert(updated_participant.availability.first().availability == updated_participant_data["availability"][0]["availability"])
+
+class PollSerializerTests(TestCase):
+  def test_create_poll(self):
+    new_poll_data = {
+      'name': 'TestPoll1',
+      'location': 'TestLocation1',
+      'notes': 'TestNotes1',
+      'timezone': 'TestTimezone1',
+      'polltimes': [
+        {'start': '2018-05-02T00:56:00Z', 'end': '2018-05-02T01:56:00Z'},
+        {'start': '2018-05-03T00:56:00Z', 'end': '2018-05-03T01:56:00Z'},
+        {'start': '2018-05-04T00:56:00Z', 'end': '2018-05-04T01:56:00Z'}],
+    }
+    author = createTestAuthor()
+    request = RequestFactory().get("/")
+    request.user = author
+    serializer = PollSerializer(data = new_poll_data, context={"request": request})
+    self.assertTrue(serializer.is_valid())
+    poll = serializer.save()
+    self.assertEqual(poll.name, new_poll_data["name"])
 
 class ParticipatePollViewTests(TestCase):
 
