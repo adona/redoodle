@@ -1,6 +1,7 @@
 import $ from "jquery";
 import React from "react";
 import ReactDOM from "react-dom";
+import { MainHeader } from '../../../../../base/static/base/src/jsx/header.js';
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import {Form, Input, Submit} from '../../../../../base/static/base/src/jsx/form.js';
 import WeekCalendar from './week_calendar.js';
@@ -8,7 +9,7 @@ import '../../../../../base/static/base/src/jsx/csrf.js';
 import css from "../scss/create_poll.scss";
 
 
-class CreatePollRouter extends React.Component {
+class CreatePollContainer extends React.Component {
   state = {
     poll: {
       name: "",
@@ -57,27 +58,29 @@ class CreatePollRouter extends React.Component {
 
   render() {
     return (
-      <Router>
-        <Switch>
-          <Route 
-            path="/create/" exact 
-            render={props => 
-              <TitlePage {...props} 
-                poll={this.state.poll} 
-                saveIntermediaryState={this.saveIntermediaryState}
-              />}
-          />
-          <Route 
-            path="/create/options/"
-            render={props => 
-              <OptionsPage {...props} 
-                poll={this.state.poll} 
-                saveIntermediaryState={this.saveIntermediaryState}
-                createNewPoll={this.createNewPoll}
-              />}
-          />
-          </Switch>
-      </Router>
+      <div id="create-poll-container">
+        <Router>
+          <Switch>
+            <Route 
+              path="/create/" exact 
+              render={props => 
+                <TitlePage {...props} 
+                  poll={this.state.poll} 
+                  saveIntermediaryState={this.saveIntermediaryState}
+                />}
+            />
+            <Route 
+              path="/create/options/"
+              render={props => 
+                <OptionsPage {...props} 
+                  poll={this.state.poll} 
+                  saveIntermediaryState={this.saveIntermediaryState}
+                  createNewPoll={this.createNewPoll}
+                />}
+            />
+            </Switch>
+        </Router>
+      </div>
     );
   }
 }
@@ -207,7 +210,10 @@ class SettingsPage extends React.Component {
 }
 
 ReactDOM.render(
-  <CreatePollRouter />,
+  <div>
+    <MainHeader />,
+    <CreatePollContainer/>
+  </div>,
   $('#main')[0]
 );
 

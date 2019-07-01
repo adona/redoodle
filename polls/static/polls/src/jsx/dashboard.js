@@ -4,23 +4,10 @@ import ReactDOM from "react-dom";
 import { MainHeader } from '../../../../../base/static/base/src/jsx/header.js';
 import css from "../scss/dashboard.scss";
 
-class DashboardContainer extends React.Component {
-  render() {
-    return(
-      <div id="dashboard-container">
-        <MainHeader 
-          user={user}
-          createPollURL={createPollURL}
-        />
-        <DashboardMain
-          pollsList={this.props.pollsList}
-        />
-      </div>
-    )
-  }
-}
+var pollsList = JSON.parse($("body").attr("polls_list"));
+const URL_PARTICIPATE_POLL = $("body").attr("url_participate_poll");
 
-class DashboardMain extends React.Component {
+class DashboardContainer extends React.Component {
   constructor(props) {
     super(props);
     this.pollsFilters = [
@@ -45,7 +32,7 @@ class DashboardMain extends React.Component {
     const activeFilter = this.pollsFilters[this.state.selectedPollsFilter]["filter"];
     const filteredPollsList = this.props.pollsList.filter(activeFilter);
     return(
-      <div id="dashboard-main">
+      <div id="dashboard-container">
         <DashboardSidebar
           pollsFilterLabels={pollsFilterLabels}
           selectedPollsFilter={this.state.selectedPollsFilter}
@@ -127,7 +114,7 @@ class DashboardPollsList extends React.Component {
 class DashboardPollPreview extends React.Component {
   render() {
     const poll = this.props.poll;
-    const pollURL = basePollURL.replace("0", poll.id);
+    const pollURL = URL_PARTICIPATE_POLL.replace("0", poll.id);
     return(
       <div className="dashboard-poll-preview">
         <a href={pollURL}>
@@ -151,15 +138,10 @@ class DashboardPollPreview extends React.Component {
   }
 }
 
-
-// Load parameters and render page
-
-const user = JSON.parse($("body").attr("user"));
-var pollsList = JSON.parse($("body").attr("polls_list"));
-const basePollURL = $("body").attr("poll_url");
-const createPollURL = $("body").attr("create_poll_url");
-
 ReactDOM.render(
-  <DashboardContainer pollsList={pollsList}/>,
+  <div>
+    <MainHeader />,
+    <DashboardContainer pollsList={pollsList}/>
+  </div>,
   $('#main')[0]
 );

@@ -4,7 +4,7 @@ $dashboard-main-height: 80vh;
 $sidebar-width: 240px;
 $polls-list-container-width: 600px;
 
-#dashboard-main {
+#dashboard-container {
   display: flex;
   align-items: stretch;
   min-height: $dashboard-main-height;

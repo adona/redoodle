@@ -1,0 +1,11 @@
+{% extends "base/base.html" %}
+
+{% block mainparams %}
+  user="{{ user }}" 
+  url_dashboard = "{% url 'dashboard' %}"
+  url_logout = "{% url 'logout' %}"
+  url_create_poll = "{% url 'create-poll' %}"
+  
+  {% block mainparams2 %}
+  {% endblock %}  
+{% endblock %}

@@ -1,14 +1,12 @@
-{% extends "base/base.html" %}
+{% extends "base/base_with_header.html" %}
 {% load static from staticfiles %}
 
 {% block head %}
   <title>ReDoodle</title>
 {% endblock %}
 
-{% block mainparams %}
-  user="{{ user }}" 
+{% block mainparams2 %}
   poll="{{ poll }}"
-  create_poll_url = "{% url 'create-poll' '' %}"
 {% endblock %}
 
 {% block footer %}

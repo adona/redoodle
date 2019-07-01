@@ -11,15 +11,14 @@ const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
 ];
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+var poll = JSON.parse($("body").attr("poll"));
+console.log(poll);
+
 class PollContainer extends React.Component {
   render() {
     const poll = this.props.poll;
     return (
       <div id="poll-container">
-        <MainHeader 
-          user={user}
-          createPollURL={createPollURL}
-        />
         <PollHeader
           name = {poll.name}
           author = {poll.author}/>
@@ -485,16 +484,13 @@ function sum(arr) {
   return arr.reduce((a, b) => a+b, 0);
 }
 
-// Load parameters and render page
-
-const user = JSON.parse($("body").attr("user"));
-const poll = JSON.parse($("body").attr("poll"));
-const createPollURL = $("body").attr("create_poll_url");
-
-console.log(poll);
+// 
 
 ReactDOM.render(
-  <PollContainer poll={poll} />,
+  <div>
+    <MainHeader />,
+    <PollContainer poll={poll} />
+  </div>,
   $('#main')[0]
 );
 
