@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
 from accounts.forms import CustomAuthenticationForm, CustomUserCreationForm
+import re
 
 # Create your views here.
 
@@ -22,10 +23,19 @@ class LoginView(APIView):
       password = form.cleaned_data.get("password")
       user = authenticate(email=email, password=password)
       login(request, user)
-      return JsonResponse({"redirect": reverse("dashboard")})
+      return JsonResponse({"redirect": self.getRedirectURL(request)})
     else:
       reponse_status = status.HTTP_401_UNAUTHORIZED if "__all__" in form.errors else status.HTTP_400_BAD_REQUEST
       return JsonResponse(data=form.errors, status = reponse_status)
+
+  def getRedirectURL(self, request):
+    referer = request.META["HTTP_REFERER"]
+    pattern = r"\?next=(.+)$"
+    match = re.search(pattern, referer)
+    if match:
+      return match.group(1)
+    else:
+      return reverse("dashboard")
 
 class SignupView(APIView):
   def get(self, request):
