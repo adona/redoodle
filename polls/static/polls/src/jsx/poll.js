@@ -488,7 +488,7 @@ function sum(arr) {
 
 ReactDOM.render(
   <div>
-    <MainHeader />,
+    <MainHeader entries={["dashboard", "logout"]} showCreatePollButton/>,
     <PollContainer poll={poll} />
   </div>,
   $('#main')[0]

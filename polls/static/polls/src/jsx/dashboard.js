@@ -140,7 +140,7 @@ class DashboardPollPreview extends React.Component {
 
 ReactDOM.render(
   <div>
-    <MainHeader />,
+    <MainHeader entries={["logout"]} showCreatePollButton/>,
     <DashboardContainer pollsList={pollsList}/>
   </div>,
   $('#main')[0]

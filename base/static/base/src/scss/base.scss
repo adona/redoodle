@@ -5,6 +5,33 @@
   font-family: 'Fira Sans', sans-serif;
 }
 
+ol, ul {  // Remove default list formatting
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+a:link, a:visited { // Remove default link formatting
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button {
+  display: block;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  padding: 0;
+  border: none;
+}
+
+button:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
 body {
   background: $color-brand-800;
 }

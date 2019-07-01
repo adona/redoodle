@@ -25,10 +25,10 @@ $main-header-height: 75px;
       align-items: baseline;
     
       > div {
-        padding: 5px 15px;
+        padding: 5px 10px;
       }
   
-      #user-menu, #create-poll-button {
+      #user-menu-button, #create-poll-button {
         height: 36px;
         padding: 10px 20px;
         font-size: 16px;
@@ -39,14 +39,52 @@ $main-header-height: 75px;
       #user-menu {
         color: $color-neutral-800;
   
-        #down-arrow {
-          font-size: 22px;
-          line-height: 16px;
+        #user-menu-button {
+          border-radius: 3px;
+          
+          #down-arrow {
+            font-size: 22px;
+            line-height: 16px;
+          }  
         }
-      }
-    
-      #user-menu:hover {
-        background: $color-neutral-100;
+
+        #user-menu-button:hover {
+          background: $color-neutral-100;
+        }
+  
+        #user-menu-button:focus {
+          box-shadow: $color-brand-700 0 0 0 2px;
+        }  
+  
+        #user-menu-entries {
+          position: relative;
+          top: 2px;
+          z-index: 1;
+          background: white;
+          border: 1px solid $color-neutral-300;
+          border-radius: 3px;
+          box-shadow: rgba(0, 0, 0, 0.23) 0px 3px 12px 0px, rgba(0, 0, 0, 0.16) 0px 3px 12px 0px;
+          display: none;
+          
+          .user-menu-entry {
+            width: 100%;
+            height: 56px;
+            padding: 16px 24px;
+            text-align: center;
+  
+            a {
+              color: $color-neutral-800;
+            }
+          }
+
+          .user-menu-entry:hover {
+            background-color: $color-brand-200;
+          }
+        }
+
+        #user-menu-entries.expanded {
+          display: block;
+        }
       }
   
       #create-poll-button {

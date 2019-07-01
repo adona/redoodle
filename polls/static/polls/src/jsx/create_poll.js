@@ -211,7 +211,7 @@ class SettingsPage extends React.Component {
 
 ReactDOM.render(
   <div>
-    <MainHeader />,
+    <MainHeader entries={["dashboard", "logout"]}/>,
     <CreatePollContainer/>
   </div>,
   $('#main')[0]
