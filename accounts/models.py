@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-
+import json
 
 # Create your models here.
 
@@ -26,3 +26,5 @@ class User(AbstractBaseUser):
   objects = UserManager()
   def __str__(self):
     return f"{self.first_name} {self.last_name} ({self.email})"
+  def toJSON(self):
+    return json.dumps({"first_name": self.first_name, "last_name": self.last_name, "email": self.email})

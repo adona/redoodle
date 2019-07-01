@@ -2,7 +2,8 @@ import $ from "jquery";
 import React from "react";
 import css from "../scss/header.scss";
 
-const USER = JSON.parse($("body").attr("user"));
+var user = $("body").attr("user");
+if (user != "Anonymous") user = JSON.parse(user);
 
 export var PAGES = {
   dashboard: {description: "Dashboard"},
@@ -46,7 +47,7 @@ export class UserMenu extends React.Component {
     return(
       <div id="user-menu">
         <button id="user-menu-button" onClick={this.toggleExpand}>
-          {`${USER.first_name} ${USER.last_name}`}
+          {`${user.first_name} ${user.last_name}`}
           <span id="down-arrow">&#8964;</span>
         </button>
         <ul id="user-menu-entries">

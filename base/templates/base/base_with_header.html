@@ -1,7 +1,12 @@
 {% extends "base/base.html" %}
 
 {% block mainparams %}
-  user="{{ user }}" 
+  {% if request.user.is_authenticated %}
+    user="{{ request.user.toJSON }}" 
+  {% else %}
+    user="Anonymous"
+  {% endif %}
+
   url_dashboard = "{% url 'dashboard' %}"
   url_logout = "{% url 'logout' %}"
   url_create_poll = "{% url 'create-poll' %}"

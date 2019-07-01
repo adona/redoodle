@@ -17,21 +17,19 @@ class Dashboard(APIView):
   @method_decorator(login_required)
   def get(self, request):
     user = request.user
-    user_data = getUserData(user)
     own_polls = set(Poll.objects.filter(author=user))
     invites = Invite.objects.filter(email=user.email)
     invited_polls = set(map(lambda invite: invite.poll, invites))
     polls_list = list(own_polls | invited_polls)  # TODO: Sort
     polls_list_data = json.dumps(PollSerializer(polls_list, many=True).data)
-    return render(request, "polls/dashboard.html", {"user": user_data, "polls_list": polls_list_data})
+    return render(request, "polls/dashboard.html", {"polls_list": polls_list_data})
 
 class CreatePoll(APIView):
   @method_decorator(login_required)
   def get(self, request, page):
     if (page != None):
       return redirect('create-poll')
-    user_data = getUserData(request.user)
-    return render(request, "polls/create_poll.html", {"user": user_data})
+    return render(request, "polls/create_poll.html", {})
 
   def post(self, request, page):
     if request.user.is_anonymous: 
@@ -45,10 +43,9 @@ class CreatePoll(APIView):
 class ParticipatePoll(APIView):
 
   def get(self, request, poll_id):
-    user_data = getUserData(request.user)
     poll = Poll.objects.get(pk=poll_id)
     poll_data = json.dumps(PollSerializer(poll).data)
-    return render(request, "polls/poll.html", {"user": user_data, "poll": poll_data})
+    return render(request, "polls/poll.html", {"poll": poll_data})
 
   def post(self, request, poll_id):
     participant_data = parseJSONRequest(request)
@@ -90,10 +87,3 @@ def parseJSONRequest(request):
   except: 
     raise ParseError("Request not valid JSON")
   return data
-
-def getUserData(user):
-  if not user.is_anonymous:
-    user_data = json.dumps(UserSerializer(user).data)
-  else:
-    user_data = None
-  return user_data
