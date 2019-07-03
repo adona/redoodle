@@ -8,14 +8,14 @@ const apps = ["accounts", "base", "polls"];
 
 module.exports = apps.map((appName) => {
   const dirInJS = `./${appName}/static/${appName}/src/jsx`;
-  const pathsInJS = dirInJS + "/*.js";
+  const pathsInJS = glob.sync(dirInJS + "/*.js"); // glob = pathname pattern expansion
   const filenameRegexJS = /.+\/(.+)\.js$/;
   
-  const entries = glob.sync(pathsInJS).reduce((entries, pathIn) => {
+  var entries = {};
+  for (var pathIn of pathsInJS) {
     const filename = pathIn.match(filenameRegexJS)[1];
     entries[filename] = pathIn;
-    return entries;
-  }, {});
+  }
 
   const dirOutJS = `${appName}/static/${appName}/out/js`;
 
@@ -27,8 +27,6 @@ module.exports = apps.map((appName) => {
       presets: ['@babel/env', '@babel/react']
     }
   };
-
-  const dirInCSS = `./${appName}/static/${appName}/src/scss`;
 
   const cssRule = {
     test: /\.scss$/,
