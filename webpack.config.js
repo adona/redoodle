@@ -1,5 +1,5 @@
-var path = require('path');
-var glob = require("glob");
+const path = require('path');
+const glob = require("glob");
 
 const apps = ["accounts", "base", "polls"];
 // TODO: Auto-generate the apps list from the list of directories
