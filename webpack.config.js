@@ -26,7 +26,7 @@ const cssRule = {
   test: /\.scss$/,
   exclude: /node_modules/,
   use: [
-    {loader: MiniCssExtractPlugin.loader}, 
+    {loader: MiniCssExtractPlugin.loader, options: {sourceMap: true}},
     {loader: 'css-loader', options: {sourceMap: true}}, 
     {loader: 'sass-loader', options: {sourceMap: true}}
   ]
@@ -46,4 +46,5 @@ module.exports = {
   module: {
     rules: [jsRule, cssRule]
   },
+  devtool: 'source-map'
 };
