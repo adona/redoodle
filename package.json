@@ -13,7 +13,8 @@
   },
   "homepage": "https://github.com/adona/redoodle#readme",
   "scripts": {
-    "build": "webpack"
+    "develop": "webpack --mode development --watch",
+    "build": "webpack --mode production"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
