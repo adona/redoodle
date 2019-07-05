@@ -1,5 +1,7 @@
 const path = require('path');
 const glob = require("glob");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 
 const apps = ["accounts", "base", "polls"];
 // TODO: Auto-generate the apps list from the list of directories
@@ -24,7 +26,7 @@ const cssRule = {
   test: /\.scss$/,
   exclude: /node_modules/,
   use: [
-    {loader: 'style-loader', options: {sourceMap: true}}, 
+    {loader: MiniCssExtractPlugin.loader}, 
     {loader: 'css-loader', options: {sourceMap: true}}, 
     {loader: 'sass-loader', options: {sourceMap: true}}
   ]
@@ -36,6 +38,11 @@ module.exports = {
     path: path.resolve(__dirname),
     filename: '[name]'
   },
+  plugins: [
+    new MiniCssExtractPlugin({
+      moduleFilename: ({ name }) => name.replace('/js/', '/css/').replace(/\.js$/, '.css'),
+    })
+  ],
   module: {
     rules: [jsRule, cssRule]
   },
