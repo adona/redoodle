@@ -4,17 +4,11 @@ const glob = require("glob");
 const apps = ["accounts", "base", "polls"];
 // TODO: Auto-generate the apps list from the list of directories
 
-const REGEX_FILENAME_JS = /.+\/(.+)\.js$/;
 var entries = {};
-for (let appName of apps) {
-  const dirIn = `./${appName}/static/${appName}/src/jsx`;
-  const dirOut = `${appName}/static/${appName}/out/js`;
-  const pathsIn = glob.sync(dirIn + "/*.js");
-  for (let pathIn of pathsIn) {
-    const filename = pathIn.match(REGEX_FILENAME_JS)[1];
-    const pathOut = `${dirOut}/${filename}`;
-    entries[pathOut] = pathIn;
-  }
+const pathsIn = glob.sync(`./*/static/*/src/jsx/*.js`);
+for (let pathIn of pathsIn) {
+  const pathOut = pathIn.replace('/src/jsx/', '/out/js/');
+  entries[pathOut] = pathIn;
 }
 
 const jsRule = {
@@ -40,7 +34,7 @@ module.exports = {
   entry: entries,
   output: {
     path: path.resolve(__dirname),
-    filename: '[name].js'
+    filename: '[name]'
   },
   module: {
     rules: [jsRule, cssRule]
