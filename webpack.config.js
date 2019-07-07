@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const glob = require('glob');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 
@@ -35,10 +36,15 @@ const cssRule = {
   ]
 }
 
-const minicssPlugin = new MiniCssExtractPlugin({
-  moduleFilename: (module) => module.name.replace('/js/', '/css/').replace(/\.js$/, '.css'),
-  chunkFilename: ({ chunk }) => chunk.name.replace('/js/', '/css/').replace(/\.js$/, '.css')
-});
+const plugins = [
+  new CleanWebpackPlugin({
+    cleanOnceBeforeBuildPatterns: apps.map(appName => `./${appName}/static/${appName}/out`)
+  }),
+  new MiniCssExtractPlugin({
+    moduleFilename: (module) => module.name.replace('/js/', '/css/').replace(/\.js$/, '.css'),
+    chunkFilename: ({ chunk }) => chunk.name.replace('/js/', '/css/').replace(/\.js$/, '.css')
+  })
+];
 
 module.exports = {
   entry: entries,
@@ -47,7 +53,7 @@ module.exports = {
     filename: '[name]'
   },
   module: { rules: [jsRule, cssRule] },
-  plugins: [ minicssPlugin ],
+  plugins: plugins,
   devtool: 'source-map',
   optimization: {
     splitChunks: {
