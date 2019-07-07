@@ -1,10 +1,13 @@
 const path = require('path');
-const glob = require("glob");
+const fs = require('fs');
+const glob = require('glob');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 
-const apps = ["accounts", "base", "polls"];
-// TODO: Auto-generate the apps list from the list of directories
+const apps = fs.readdirSync(__dirname, { withFileTypes: true })
+  .filter(dir => dir.isDirectory())
+  .map(dir => dir.name)
+  .filter(dir => !(dir[0]=='.' || ['node_modules', 'staticfiles', 'redoodle'].includes(dir)));
 
 var entries = {};
 const pathsIn = glob.sync(`./*/static/*/src/jsx/*.js`);
