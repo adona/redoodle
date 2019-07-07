@@ -32,19 +32,29 @@ const cssRule = {
   ]
 }
 
+const minicssPlugin = new MiniCssExtractPlugin({
+  moduleFilename: (module) => module.name.replace('/js/', '/css/').replace(/\.js$/, '.css'),
+  chunkFilename: ({ chunk }) => chunk.name.replace('/js/', '/css/').replace(/\.js$/, '.css')
+});
+
 module.exports = {
   entry: entries,
   output: {
     path: path.resolve(__dirname),
     filename: '[name]'
   },
-  plugins: [
-    new MiniCssExtractPlugin({
-      moduleFilename: ({ name }) => name.replace('/js/', '/css/').replace(/\.js$/, '.css'),
-    })
-  ],
-  module: {
-    rules: [jsRule, cssRule]
-  },
-  devtool: 'source-map'
+  module: { rules: [jsRule, cssRule] },
+  plugins: [ minicssPlugin ],
+  devtool: 'source-map',
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /node_modules/,
+          chunks: 'all',
+          name: 'base/static/base/out/js/vendor.js',
+        },
+      }
+    }
+  }
 };
